@@ -1,0 +1,7 @@
+{
+  "name": "puriva-app",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

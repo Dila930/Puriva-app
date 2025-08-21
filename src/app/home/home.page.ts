@@ -135,22 +135,28 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   getFoodMeta(food: string | null | undefined): { emoji: string; iconClass: string; title: string } {
-    switch (food) {
-      case 'nasi':
-        return { emoji: '🍚', iconClass: 'activity-icon nasi', title: 'Nasi' };
-      case 'sayur':
-        return { emoji: '🥦', iconClass: 'activity-icon sayur', title: 'Sayuran' };
-      case 'ayam':
-        return { emoji: '🍗', iconClass: 'activity-icon ayam', title: 'Ayam' };
-      case 'ikan':
-        return { emoji: '🐟', iconClass: 'activity-icon ikan', title: 'Ikan' };
-      case 'daging':
-        return { emoji: '🥩', iconClass: 'activity-icon daging', title: 'Daging' };
-      case 'buah':
-        return { emoji: '🍎', iconClass: 'activity-icon buah', title: 'Buah' };
-      default:
-        return { emoji: '🍽️', iconClass: 'activity-icon', title: 'Sterilisasi' };
+    const f = (food || '').toString().trim().toLowerCase();
+    // Aliases/contains mapping to handle variations: sayuran, daging sapi, ikan goreng, dsb.
+    if (f.includes('nasi') || f.includes('beras')) {
+      return { emoji: '🍚', iconClass: 'activity-icon nasi', title: 'Nasi' };
     }
+    if (f.includes('sayur') || f.includes('sayuran') || f.includes('veget') || f.includes('veggie')) {
+      return { emoji: '🥦', iconClass: 'activity-icon sayur', title: 'Sayuran' };
+    }
+    if (f.includes('ayam') || f.includes('chicken') || f.includes('poultry')) {
+      return { emoji: '🍗', iconClass: 'activity-icon ayam', title: 'Ayam' };
+    }
+    if (f.includes('ikan') || f.includes('fish') || f.includes('tuna') || f.includes('salmon')) {
+      return { emoji: '🐟', iconClass: 'activity-icon ikan', title: 'Ikan' };
+    }
+    if (f.includes('daging') || f.includes('sapi') || f.includes('kambing') || f.includes('beef') || f.includes('meat')) {
+      return { emoji: '🥩', iconClass: 'activity-icon daging', title: 'Daging' };
+    }
+    if (f.includes('buah') || f.includes('apple') || f.includes('jeruk') || f.includes('banana') || f.includes('pisang') || f.includes('fruit')) {
+      return { emoji: '🍎', iconClass: 'activity-icon buah', title: 'Buah' };
+    }
+    // Fallback
+    return { emoji: '🍽️', iconClass: 'activity-icon', title: f ? f.charAt(0).toUpperCase() + f.slice(1) : 'Sterilisasi' };
   }
 
   private initializeNotifications(): void {
@@ -483,9 +489,9 @@ export class HomePage implements OnInit, OnDestroy {
 
         // Total today
         const totalRef = ref(this.db, `users/${user.uid}/stats/totalToday`);
-        const un2 = onValue(totalRef, (snap) => {
-          const num = snap.val();
-          this.totalToday = typeof num === 'number' ? num : 0;
+        const un2 = onValue(totalRef, (_snap) => {
+          // Do not set totalToday here; we compute it strictly from recentActivities timestamps
+          // Keep subscription to avoid unused listener warnings if needed for future features
           this.updateEfficiency();
         });
         this.rtdbUnsubs.push(un2);
@@ -509,6 +515,17 @@ export class HomePage implements OnInit, OnDestroy {
               food: it.food ?? null,
             } as any;
           });
+          // Recompute today's total strictly from timestamps within today (local time)
+          try {
+            const now = new Date();
+            const start = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0).getTime();
+            const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999).getTime();
+            const todayCount = this.recentActivities.filter(a => {
+              const at = typeof a.at === 'number' ? a.at : 0;
+              return at >= start && at <= end;
+            }).length;
+            this.totalToday = todayCount;
+          } catch { /* ignore */ }
           this.updateEfficiency();
           // Regenerate stats detail based on latest activities and selected range
           this.generateStats();

@@ -2,3 +2,12 @@
 .header { background: #EDF2FB; padding: calc(env(safe-area-inset-top, 0px) + 16px) 20px 24px; color: #1e293b; text-align: center; border-radius: 0 0 24px 24px; }
 .content { padding: 20px; background: #EDF2FB; min-height: calc(100vh - 120px); }
 .card { --background: #fff; margin: 10px 0; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+
+/* Transparent toolbar and simple back icon (no box) */
+ion-header {
+  ion-toolbar {
+    --background: transparent;
+    /* use primary icon color from HTML color attribute */
+    /* no ::part(native) box styling */
+  }
+}

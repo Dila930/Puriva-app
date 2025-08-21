@@ -1,431 +1,202 @@
-// Modern Account Settings Web App Styles
-// ========================================
-
-// Color Variables (consistent with profile)
-:root {
-  --primary-color: #6366f1;
-  --primary-dark: #4f46e5;
-  --primary-light: #a5b4fc;
-  --secondary-color: #10b981;
-  --background-primary: #ffffff;
-  --background-secondary: #EDF2FB; // unify with global
-  /* remove gradient usage */
-  --text-primary: #1e293b;
-  --text-secondary: #64748b;
-  --text-light: #94a3b8;
-  --border-color: #e2e8f0;
-  --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.05);
-  --shadow-medium: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-large: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-  --danger-color: #ef4444;
-  --warning-color: #f59e0b;
-  --success-color: #10b981;
-}
-
-// Base Content Styles
+// Account Settings Page - Clean & Modern
 .profile-detail {
-  --background: var(--background-secondary);
-  min-height: 100vh;
-}
-
-// Header Section
-.header {
-  background: var(--background-secondary);
-  padding: 60px 24px 40px;
-  margin-bottom: 24px;
-  position: relative;
-  overflow: hidden;
-
-  // Glassmorphism effect
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: transparent;
-    backdrop-filter: none;
-  }
-
-  // Decorative elements
-  &::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -10%;
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    background: transparent;
-    filter: none;
-  }
-
-  * {
-    position: relative;
-    z-index: 2;
-  }
-
-  h1 {
-    color: var(--text-primary);
-    font-size: 32px;
-    font-weight: 700;
-    margin: 0 0 8px 0;
-    text-shadow: none;
-  }
-
-  p {
-    color: var(--text-secondary);
-    font-size: 16px;
-    font-weight: 400;
-    margin: 0;
-    line-height: 1.5;
-  }
-}
-
-// Content Section
-.content {
-  max-width: 480px;
-  margin: 0 auto;
-  padding: 0 16px 100px;
-}
-
-// Ion List Override
-ion-list {
-  background: transparent;
-  padding: 0;
-}
-
-// Card Items
-ion-item.card {
-  --background: var(--background-primary);
-  --border-radius: 16px;
-  --padding-start: 0;
-  --padding-end: 0;
-  --inner-padding-start: 24px;
-  --inner-padding-end: 24px;
-  --inner-padding-top: 20px;
-  --inner-padding-bottom: 20px;
-  --min-height: 72px;
+  --background: #f5f7fa;
   
-  margin-bottom: 16px;
-  border-radius: 16px;
-  box-shadow: var(--shadow-medium);
-  border: 1px solid var(--border-color);
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-
-  // Hover effects
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-large);
-    border-color: var(--primary-light);
-    
-    &::before {
-      opacity: 1;
-    }
-
-    ion-label {
-      color: var(--primary-color);
-    }
-
-    &::after {
-      transform: translateX(4px);
-    }
-  }
-
-  // Active state
-  &:active {
-    transform: translateY(0) scale(0.98);
-    box-shadow: var(--shadow-medium);
-  }
-
-  // Gradient overlay on hover
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(90deg, rgba(99, 102, 241, 0.05) 0%, rgba(99, 102, 241, 0.02) 100%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-  }
-
-  // Arrow indicator
-  &::after {
-    content: '›';
-    position: absolute;
-    right: 24px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 20px;
-    color: var(--text-light);
-    font-weight: 300;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-}
-
-// Ion Label Override
-ion-item.card ion-label {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin: 0;
-  padding-right: 40px; // Space for arrow
-  transition: color 0.3s ease;
-}
-
-// Specific Card Styles with Icons
-ion-item.card:nth-child(1) {
-  &::before {
-    background: linear-gradient(90deg, rgba(16, 185, 129, 0.05) 0%, rgba(16, 185, 129, 0.02) 100%);
-  }
-  
-  ion-label::before {
-    content: '👤';
-    margin-right: 12px;
-    font-size: 18px;
-    display: inline-block;
-    width: 24px;
-  }
-
-  &:hover ion-label {
-    color: var(--success-color);
-  }
-}
-
-ion-item.card:nth-child(2) {
-  &::before {
-    background: linear-gradient(90deg, rgba(245, 158, 11, 0.05) 0%, rgba(245, 158, 11, 0.02) 100%);
-  }
-  
-  ion-label::before {
-    content: '🔐';
-    margin-right: 12px;
-    font-size: 18px;
-    display: inline-block;
-    width: 24px;
-  }
-
-  &:hover ion-label {
-    color: var(--warning-color);
-  }
-}
-
-ion-item.card:nth-child(3) {
-  &::before {
-    background: linear-gradient(90deg, rgba(99, 102, 241, 0.05) 0%, rgba(99, 102, 241, 0.02) 100%);
-  }
-  
-  ion-label::before {
-    content: '🔔';
-    margin-right: 12px;
-    font-size: 18px;
-    display: inline-block;
-    width: 24px;
-  }
-
-  &:hover ion-label {
-    color: var(--primary-color);
-  }
-}
-
-// Loading State
-ion-item.card.loading {
-  opacity: 0.6;
-  pointer-events: none;
-  
-  &::after {
-    animation: pulse 1.5s ease-in-out infinite;
-  }
-}
-
-// Entrance Animations
-ion-item.card {
-  animation: slideInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-ion-item.card:nth-child(1) {
-  animation-delay: 0.1s;
-}
-
-ion-item.card:nth-child(2) {
-  animation-delay: 0.2s;
-}
-
-ion-item.card:nth-child(3) {
-  animation-delay: 0.3s;
-}
-
-@keyframes slideInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
-// Ripple Effect
-ion-item.card {
-  position: relative;
-  overflow: hidden;
-}
-
-ion-item.card .ripple {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(99, 102, 241, 0.3);
-  transform: scale(0);
-  animation: ripple-animation 0.6s linear;
-  pointer-events: none;
-}
-
-@keyframes ripple-animation {
-  to {
-    transform: scale(4);
-    opacity: 0;
-  }
-}
-
-// Dark Mode Support
-/* Dark mode styles removed to enforce consistent light theme */
-
-// Responsive Design
-@media (max-width: 768px) {
   .header {
-    padding: 50px 20px 32px;
+    background: linear-gradient(135deg, var(--ion-color-primary) 0%, var(--ion-color-primary-shade) 100%);
+    color: white;
+    padding: 1.5rem 1.5rem 2.5rem;
+    margin-top: -56px;
+    padding-top: calc(56px + 1.5rem);
+    position: relative;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -15px;
+      left: 0;
+      right: 0;
+      height: 30px;
+      background: linear-gradient(135deg, var(--ion-color-primary) 0%, var(--ion-color-primary-shade) 100%);
+      border-radius: 0 0 50% 50%;
+    }
     
     h1 {
-      font-size: 28px;
+      font-size: 1.6rem;
+      font-weight: 600;
+      margin: 0 0 0.5rem 0;
+      letter-spacing: -0.3px;
     }
     
     p {
-      font-size: 15px;
+      font-size: 0.95rem;
+      margin: 0;
+      opacity: 0.9;
+      font-weight: 400;
     }
   }
   
   .content {
-    padding: 0 12px 100px;
-  }
-  
-  ion-item.card {
-    --inner-padding-start: 20px;
-    --inner-padding-end: 20px;
-    --inner-padding-top: 18px;
-    --inner-padding-bottom: 18px;
-    --min-height: 64px;
+    padding: 1.5rem 1rem;
+    position: relative;
+    z-index: 2;
     
-    margin-bottom: 12px;
-    border-radius: 12px;
-    
-    &::after {
-      right: 20px;
+    ion-list {
+      background: transparent;
+      padding: 0;
+      
+      ion-item.card {
+        --background: #3a4454;
+        --border-radius: 12px;
+        --padding-start: 1.25rem;
+        --padding-end: 1.25rem;
+        --min-height: 64px;
+        margin-bottom: 0.75rem;
+        
+        // Clean shadow
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        border: none;
+        
+        // Smooth transitions
+        transition: all 0.2s ease;
+        
+        &:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        &:last-child {
+          margin-bottom: 0;
+        }
+        
+        ion-label {
+          font-weight: 500;
+          font-size: 0.95rem;
+          color: white;
+          margin: 0;
+        }
+        
+        ion-button {
+          --border-radius: 8px;
+          --padding-start: 0.875rem;
+          --padding-end: 0.875rem;
+          --height: 32px;
+          font-weight: 500;
+          font-size: 0.8rem;
+          text-transform: none;
+          
+          &:not([fill="clear"]) {
+            --background: var(--ion-color-primary);
+            --background-hover: var(--ion-color-primary-shade);
+            --color: white;
+          }
+        }
+        
+        ion-toggle {
+          --track-background: #5a6474;
+          --track-background-checked: var(--ion-color-primary);
+          --handle-background: white;
+          --handle-background-checked: white;
+          transform: scale(0.85);
+          
+          &::part(track) {
+            border-radius: 12px;
+          }
+          
+          &::part(handle) {
+            border-radius: 50%;
+          }
+        }
+      }
     }
-  }
-  
-  ion-item.card ion-label {
-    font-size: 15px;
-    padding-right: 36px;
   }
 }
 
-@media (max-width: 360px) {
-  .header {
-    padding: 40px 16px 24px;
+// Toolbar styling
+ion-header {
+  ion-toolbar {
+    --background: transparent; /* transparent header */
+    --color: white;
+    --border-width: 0;
     
-    h1 {
-      font-size: 24px;
+    ion-title {
+      font-weight: 600;
+      font-size: 1rem;
     }
     
-    p {
-      font-size: 14px;
-    }
-  }
-  
-  ion-item.card {
-    --inner-padding-start: 16px;
-    --inner-padding-end: 16px;
-    --inner-padding-top: 16px;
-    --inner-padding-bottom: 16px;
-    --min-height: 56px;
-    
-    &::after {
-      right: 16px;
-      font-size: 18px;
-    }
-  }
-  
-  ion-item.card ion-label {
-    font-size: 14px;
-    padding-right: 32px;
-    
-    &::before {
-      font-size: 16px;
-      margin-right: 8px;
-      width: 20px;
+    ion-back-button {
+      --color: white;
+      --icon-font-size: 1.4rem;
+      /* remove box styling */
     }
   }
 }
 
-// Focus States for Accessibility
-ion-item.card:focus-within {
-  outline: 2px solid var(--primary-color);
-  outline-offset: 2px;
-  border-radius: 16px;
+// Responsive adjustments
+@media (min-width: 768px) {
+  .profile-detail {
+    .header {
+      padding: 2rem 2rem 3rem;
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      p {
+        font-size: 1rem;
+      }
+    }
+    
+    .content {
+      padding: 2rem;
+      max-width: 600px;
+      margin: 0 auto;
+      
+      ion-list {
+        ion-item.card {
+          --min-height: 72px;
+          --padding-start: 1.5rem;
+          --padding-end: 1.5rem;
+          margin-bottom: 1rem;
+          
+          ion-label {
+            font-size: 1rem;
+          }
+          
+          ion-button {
+            --height: 36px;
+            font-size: 0.85rem;
+          }
+          
+          ion-toggle {
+            transform: scale(0.9);
+          }
+        }
+      }
+    }
+  }
 }
 
-// Custom Button Alternative (if needed)
-.settings-button {
-  width: 100%;
-  background: var(--background-primary);
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  padding: 20px 24px;
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: var(--shadow-medium);
-  text-align: left;
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text-primary);
-  
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-large);
-    border-color: var(--primary-light);
-    color: var(--primary-color);
-  }
-  
-  &::after {
-    content: '›';
-    font-size: 20px;
-    color: var(--text-light);
-    transition: all 0.3s ease;
-  }
-  
-  &:hover::after {
-    transform: translateX(4px);
-    color: var(--primary-color);
+// Dark mode adjustments
+@media (prefers-color-scheme: dark) {
+  .profile-detail {
+    --background: #1a1a1a;
+    
+    .content {
+      ion-list {
+        ion-item.card {
+          --background: #2d3748;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+          
+          &:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+          }
+          
+          ion-toggle {
+            --track-background: #4a5568;
+          }
+        }
+      }
+    }
   }
 }

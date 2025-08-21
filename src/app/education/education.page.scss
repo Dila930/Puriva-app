@@ -227,6 +227,12 @@ ion-fab.fab-above-bottom-nav ion-fab-button {
     color: #7f8c8d;
     line-height: 1.4;
     margin-bottom: 12px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    line-clamp: 3; // standard property for some engines
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   
   .featured-meta {
@@ -335,6 +341,12 @@ ion-fab.fab-above-bottom-nav ion-fab-button {
       line-height: 1.4;
       margin-bottom: 8px;
       flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      line-clamp: 3; // standard property for some engines
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     
     .news-meta {

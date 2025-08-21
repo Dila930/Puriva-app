@@ -18,6 +18,34 @@
   </ion-item>
 
   <ion-item lines="full">
+    <ion-label position="stacked">URL Gambar (opsional)</ion-label>
+    <ion-input [(ngModel)]="imageUrl" placeholder="https://..."></ion-input>
+  </ion-item>
+
+  <div *ngIf="imageUrl" style="margin:12px 0; display:flex; justify-content:center;">
+    <img [src]="imageUrl" alt="Preview Gambar" style="max-width:100%; max-height:220px; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.1);"/>
+  </div>
+
+  <!-- Local upload -->
+  <div style="display:flex; align-items:center; gap:8px; margin:8px 0 4px;">
+    <div style="flex:1; height:1px; background:#e2e8f0;"></div>
+    <div style="font-size:12px; color:#64748b;">atau</div>
+    <div style="flex:1; height:1px; background:#e2e8f0;"></div>
+  </div>
+  <input #fileChooser type="file" accept="image/jpeg,image/png,image/webp" hidden (change)="onFileSelected($event)" />
+  <ion-button expand="block" fill="outline" (click)="fileChooser.click()" [disabled]="isUploading || isSaving">
+    <ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
+    Unggah Gambar dari Perangkat
+  </ion-button>
+  <div style="text-align:center; font-size:12px; color:#64748b; margin-top:6px;">
+    Maksimal 1 foto, ukuran ≤ 1MB (JPG/PNG/WebP)
+  </div>
+  <div *ngIf="isUploading" style="margin-top:8px;">
+    <ion-progress-bar [value]="uploadProgress / 100"></ion-progress-bar>
+    <div style="text-align:center; font-size:12px; color:#475569; margin-top:4px;">{{ uploadProgress | number:'1.0-0' }}%</div>
+  </div>
+
+  <ion-item lines="full">
     <ion-label position="stacked">Konten</ion-label>
     <ion-textarea [(ngModel)]="content" auto-grow="true" rows="8" placeholder="Tulis isi berita..."></ion-textarea>
   </ion-item>

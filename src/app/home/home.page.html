@@ -91,7 +91,7 @@
       </div>
       <ul class="activity-list">
         <li class="activity-item" *ngFor="let activity of recentActivities">
-          <div class="activity-icon" [ngClass]="activity.iconClass"></div>
+          <div class="activity-icon" [ngClass]="activity.iconClass">{{ activity.emoji }}</div>
           <div class="activity-info">
             <div class="activity-item-title">{{ activity.title }}</div>
             <div class="activity-item-time">{{ activity.timeAgo }}</div>

@@ -3,7 +3,6 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/profile"></ion-back-button>
     </ion-buttons>
-    <ion-title>Pusat Bantuan</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -13,55 +12,58 @@
     <p>FAQ, hubungi CS & panduan.</p>
   </div>
   <div class="content">
-    <ion-list lines="none">
-      <ion-item class="card">
-        <ion-label><strong>FAQ</strong></ion-label>
-      </ion-item>
+    <ion-accordion-group multiple="true" expand="inset">
+      <ion-accordion value="faq">
+        <ion-item slot="header" class="card">
+          <ion-label><strong>FAQ</strong></ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <ion-list lines="none">
+            <ion-item class="card" detail="true"
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=fadhilahnormaghfiroh@gmail.com&su=%5BPURIVA%20Support%5D%20Lupa%20Kata%20Sandi&body=Halo%20Tim%20PURIVA%2C%0A%0ASaya%20membutuhkan%20bantuan%20untuk%20reset%20kata%20sandi.%0AEmail%20akun%3A%20_____%0ADevice%20(Opsional)%3A%20Android%2FiOS%0AError%20yang%20muncul%20(jika%20ada)%3A%20_____%0A%0ATerima%20kasih." target="_blank" rel="noopener">
+              <ion-label>Lupa Kata Sandi</ion-label>
+            </ion-item>
+            <ion-item class="card" detail="true"
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=fadhilahnormaghfiroh@gmail.com&su=%5BPURIVA%20Support%5D%20Tidak%20Bisa%20Login&body=Halo%20Tim%20PURIVA%2C%0A%0ASaya%20tidak%20bisa%20login.%0AEmail%20akun%3A%20_____%0AWaktu%20kejadian%3A%20_____%0APesan%20error%20(jika%20ada)%3A%20_____%0ADevice%20%2F%20OS%3A%20_____%0AVersi%20aplikasi%20(jika%20ada)%3A%20_____%0A%0ATerima%20kasih." target="_blank" rel="noopener">
+              <ion-label>Tidak Bisa Login</ion-label>
+            </ion-item>
+            <ion-item class="card" detail="true"
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=fadhilahnormaghfiroh@gmail.com&su=%5BPURIVA%20Support%5D%20Data%20Tidak%20Sinkron&body=Halo%20Tim%20PURIVA%2C%0A%0ASaya%20mengalami%20masalah%20sinkronisasi%20data.%0ARincian%20data%20yang%20tidak%20sesuai%3A%20_____%0AWaktu%20kejadian%3A%20_____%0ADevice%20%2F%20OS%3A%20_____%0AKoneksi%3A%20Wi-Fi%2FData%20Seluler%0A%0ATerima%20kasih." target="_blank" rel="noopener">
+              <ion-label>Data Tidak Sinkron</ion-label>
+            </ion-item>
+            <ion-item class="card" detail="true"
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=fadhilahnormaghfiroh@gmail.com&su=%5BPURIVA%20Support%5D%20Permintaan%20Fitur&body=Halo%20Tim%20PURIVA%2C%0A%0ASaya%20ingin%20mengusulkan%20fitur%3A%20_____%0AManfaat%20untuk%20pengguna%3A%20_____%0AWorkflow%20yang%20diinginkan%3A%20_____%0APrioritas%3A%20Rendah%2FSedang%2FTinggi%0A%0ATerima%20kasih." target="_blank" rel="noopener">
+              <ion-label>Permintaan Fitur</ion-label>
+            </ion-item>
+            <ion-item class="card" detail="true"
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=fadhilahnormaghfiroh@gmail.com&su=%5BPURIVA%20Support%5D%20Laporan%20Bug&body=Halo%20Tim%20PURIVA%2C%0A%0ASaya%20menemukan%20bug.%0ALangkah%20reproduksi%3A%0A1.%20_____%0A2.%20_____%0A3.%20_____%0A%0APesan%20error%2Fcuplikan%20layar%3A%20_____%0ADevice%20%2F%20OS%3A%20_____%0AVersi%20aplikasi%3A%20_____%0A%0ATerima%20kasih." target="_blank" rel="noopener">
+              <ion-label>Laporan Bug</ion-label>
+            </ion-item>
+            <ion-item class="card" detail="true"
+              href="https://mail.google.com/mail/?view=cm&fs=1&to=fadhilahnormaghfiroh@gmail.com&su=%5BPURIVA%20Support%5D%20Bantuan%20Umum&body=Halo%20Tim%20PURIVA%2C%0A%0ASaya%20membutuhkan%20bantuan%20terkait%3A%20_____%0A%0ATerima%20kasih." target="_blank" rel="noopener">
+              <ion-label><strong>Hubungi CS</strong></ion-label>
+            </ion-item>
+          </ion-list>
+        </div>
+      </ion-accordion>
 
-      <!-- Direct email items for each FAQ topic -->
-      <ion-item class="card" detail="true"
-        href="https://mail.google.com/mail/?view=cm&fs=1&to=fadhilahnormaghfiroh@gmail.com&su=%5BPURIVA%20Support%5D%20Lupa%20Kata%20Sandi&body=Halo%20Tim%20PURIVA%2C%0A%0ASaya%20membutuhkan%20bantuan%20untuk%20reset%20kata%20sandi.%0AEmail%20akun%3A%20_____%0ADevice%20(Opsional)%3A%20Android%2FiOS%0AError%20yang%20muncul%20(jika%20ada)%3A%20_____%0A%0ATerima%20kasih." target="_blank" rel="noopener">
-        <ion-label>Lupa Kata Sandi</ion-label>
-      </ion-item>
+      <ion-accordion value="guide">
+        <ion-item slot="header" class="card">
+          <ion-label><strong>Panduan Aplikasi</strong></ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <p>Pelajari cara menggunakan fitur utama seperti Control Panel, Statistik, dan Berita. (Konten panduan mendetail dapat ditambahkan di rilis berikutnya.)</p>
+        </div>
+      </ion-accordion>
 
-      <ion-item class="card" detail="true"
-        href="https://mail.google.com/mail/?view=cm&fs=1&to=fadhilahnormaghfiroh@gmail.com&su=%5BPURIVA%20Support%5D%20Tidak%20Bisa%20Login&body=Halo%20Tim%20PURIVA%2C%0A%0ASaya%20tidak%20bisa%20login.%0AEmail%20akun%3A%20_____%0AWaktu%20kejadian%3A%20_____%0APesan%20error%20(jika%20ada)%3A%20_____%0ADevice%20%2F%20OS%3A%20_____%0AVersi%20aplikasi%20(jika%20ada)%3A%20_____%0A%0ATerima%20kasih." target="_blank" rel="noopener">
-        <ion-label>Tidak Bisa Login</ion-label>
-      </ion-item>
-
-      <ion-item class="card" detail="true"
-        href="https://mail.google.com/mail/?view=cm&fs=1&to=fadhilahnormaghfiroh@gmail.com&su=%5BPURIVA%20Support%5D%20Data%20Tidak%20Sinkron&body=Halo%20Tim%20PURIVA%2C%0A%0ASaya%20mengalami%20masalah%20sinkronisasi%20data.%0ARincian%20data%20yang%20tidak%20sesuai%3A%20_____%0AWaktu%20kejadian%3A%20_____%0ADevice%20%2F%20OS%3A%20_____%0AKoneksi%3A%20Wi-Fi%2FData%20Seluler%0A%0ATerima%20kasih." target="_blank" rel="noopener">
-        <ion-label>Data Tidak Sinkron</ion-label>
-      </ion-item>
-
-      <ion-item class="card" detail="true"
-        href="https://mail.google.com/mail/?view=cm&fs=1&to=fadhilahnormaghfiroh@gmail.com&su=%5BPURIVA%20Support%5D%20Permintaan%20Fitur&body=Halo%20Tim%20PURIVA%2C%0A%0ASaya%20ingin%20mengusulkan%20fitur%3A%20_____%0AManfaat%20untuk%20pengguna%3A%20_____%0AWorkflow%20yang%20diinginkan%3A%20_____%0APrioritas%3A%20Rendah%2FSedang%2FTinggi%0A%0ATerima%20kasih." target="_blank" rel="noopener">
-        <ion-label>Permintaan Fitur</ion-label>
-      </ion-item>
-
-      <ion-item class="card" detail="true"
-        href="https://mail.google.com/mail/?view=cm&fs=1&to=fadhilahnormaghfiroh@gmail.com&su=%5BPURIVA%20Support%5D%20Laporan%20Bug&body=Halo%20Tim%20PURIVA%2C%0A%0ASaya%20menemukan%20bug.%0ALangkah%20reproduksi%3A%0A1.%20_____%0A2.%20_____%0A3.%20_____%0A%0APesan%20error%2Fcuplikan%20layar%3A%20_____%0ADevice%20%2F%20OS%3A%20_____%0AVersi%20aplikasi%3A%20_____%0A%0ATerima%20kasih." target="_blank" rel="noopener">
-        <ion-label>Laporan Bug</ion-label>
-      </ion-item>
-
-      <ion-item class="card" detail="true"
-        href="https://mail.google.com/mail/?view=cm&fs=1&to=fadhilahnormaghfiroh@gmail.com&su=%5BPURIVA%20Support%5D%20Bantuan%20Umum&body=Halo%20Tim%20PURIVA%2C%0A%0ASaya%20membutuhkan%20bantuan%20terkait%3A%20_____%0A%0ATerima%20kasih." target="_blank" rel="noopener">
-        <ion-label><strong>Hubungi CS</strong></ion-label>
-      </ion-item>
-
-      <ion-item class="card">
-        <ion-label><strong>Panduan Aplikasi</strong></ion-label>
-      </ion-item>
-      <div class="ion-padding-start ion-padding-end ion-padding-bottom">
-        <p>Pelajari cara menggunakan fitur utama seperti Control Panel, Statistik, dan Berita. (Konten panduan mendetail dapat ditambahkan di rilis berikutnya.)</p>
-      </div>
-
-      <ion-item class="card">
-        <ion-label><strong>Tentang Pengembang</strong></ion-label>
-      </ion-item>
-      <div class="ion-padding-start ion-padding-end ion-padding-bottom">
-        <p>Tim PURIVA mengembangkan solusi Smart UV Chamber untuk mendukung Program Makan Gratis Indonesia. Untuk kerja sama, silakan hubungi kami melalui email CS.</p>
-      </div>
-    </ion-list>
+      <ion-accordion value="about">
+        <ion-item slot="header" class="card">
+          <ion-label><strong>Tentang Pengembang</strong></ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <p>Tim PURIVA mengembangkan solusi Smart UV Chamber untuk mendukung Program Makan Gratis Indonesia. Untuk kerja sama, silakan hubungi kami melalui email CS.</p>
+        </div>
+      </ion-accordion>
+    </ion-accordion-group>
   </div>
 </ion-content>

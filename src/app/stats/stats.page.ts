@@ -35,6 +35,14 @@ export class StatsPage implements OnInit, OnDestroy {
   statsDetail: { label: string; value: number }[] = [];
   statsTotals: { total: number; berhasil: number; gagal: number; totalTrend: number; berhasilTrend: number; gagalTrend: number; efektivitasTrend: number } = { total: 0, berhasil: 0, gagal: 0, totalTrend: 0, berhasilTrend: 0, gagalTrend: 0, efektivitasTrend: 0 };
   recentActivities: Array<{ status: 'completed' | 'processing' | 'stopped'; at?: number }> = [];
+  // Chart colors for legend
+  legendColors: string[] = [
+    'linear-gradient(135deg, #60a5fa, #3b82f6)',
+    'linear-gradient(135deg, #34d399, #22c55e)',
+    'linear-gradient(135deg, #f59e0b, #fbbf24)',
+    'linear-gradient(135deg, #f87171, #ef4444)',
+    'linear-gradient(135deg, #a78bfa, #8b5cf6)'
+  ];
 
   // UI state
   showFilters = false;
@@ -82,6 +90,19 @@ export class StatsPage implements OnInit, OnDestroy {
     return Math.round((value / max) * 100);
   }
 
+  // Bar height for trend chart (0-100%)
+  getBarHeight(value: number): number {
+    const max = this.getMax(this.statsDetail);
+    if (max <= 0) return 0;
+    return Math.max(0, Math.min(100, Math.round((value / max) * 100)));
+  }
+
+  // Legend color safe accessor
+  getLegendColor(index: number): string {
+    if (!this.legendColors?.length) return 'linear-gradient(135deg, #e5e7eb, #d1d5db)';
+    return this.legendColors[index % this.legendColors.length];
+  }
+
   getStatusClass(status: string): string {
     if (status === 'berhasil') return 'success';
     if (status === 'gagal') return 'failed';
@@ -109,6 +130,14 @@ export class StatsPage implements OnInit, OnDestroy {
     this.selectedPeriod = v ?? 'daily';
     const map: any = { daily: 'day', weekly: 'week', monthly: 'month' };
     this.selectedStatsRange = map[this.selectedPeriod] ?? 'day';
+    this.generateStats();
+  }
+
+  // Direct handler for button-based selector in new template
+  changePeriod(period: 'daily' | 'weekly' | 'monthly'): void {
+    this.selectedPeriod = period;
+    const map: any = { daily: 'day', weekly: 'week', monthly: 'month' };
+    this.selectedStatsRange = map[period] ?? 'day';
     this.generateStats();
   }
 

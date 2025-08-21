@@ -1,1 +1,222 @@
-.ion-padding-top { padding-top: 16px; }
+// Style untuk halaman Tambah Diskusi
+ion-content {
+    --background: #f8f9fa;
+    
+    .ion-padding {
+      padding: 16px;
+    }
+  }
+  
+  // Header styling
+  ion-header {
+    ion-toolbar {
+      --background: var(--ion-color-primary);
+      --color: white;
+      
+      ion-title {
+        font-weight: 600;
+        font-size: 1.2rem;
+      }
+    }
+  }
+  
+  // Form items styling
+  ion-item {
+    --background: white;
+    --border-radius: 12px;
+    --inner-padding-end: 16px;
+    --inner-padding-start: 16px;
+    --padding-start: 0;
+    --padding-end: 0;
+    --min-height: 56px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border: 1px solid #e9ecef;
+    
+    ion-label {
+      color: #495057;
+      font-weight: 500;
+      margin-bottom: 8px;
+      
+      &[position="stacked"] {
+        transform: none;
+        font-size: 0.9rem;
+      }
+    }
+    
+    // Input field styling
+    ion-input {
+      --color: #212529;
+      --placeholder-color: #6c757d;
+      font-size: 1rem;
+      
+      &::part(native) {
+        padding-top: 4px;
+      }
+    }
+    
+    // Select field styling
+    ion-select {
+      --color: #212529;
+      --placeholder-color: #6c757d;
+      font-size: 1rem;
+      
+      &::part(icon) {
+        color: var(--ion-color-primary);
+      }
+    }
+    
+    // Textarea styling
+    ion-textarea {
+      --color: #212529;
+      --placeholder-color: #6c757d;
+      font-size: 1rem;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.5;
+      
+      &::part(native) {
+        padding-top: 8px;
+        resize: vertical;
+      }
+    }
+    
+    // Full lines styling untuk textarea
+    &[lines="full"] {
+      --min-height: 120px;
+      align-items: flex-start;
+      
+      ion-label {
+        padding-top: 16px;
+      }
+    }
+    
+    // Hover effects
+    &:hover {
+      --border-color: var(--ion-color-primary-tint);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    // Focus state
+    &.item-has-focus {
+      --border-color: var(--ion-color-primary);
+      box-shadow: 0 0 0 2px rgba(var(--ion-color-primary-rgb), 0.2);
+    }
+  }
+  
+  // Button styling
+  ion-row {
+    margin-top: 24px;
+    
+    ion-button {
+      --border-radius: 12px;
+      height: 48px;
+      font-weight: 600;
+      font-size: 1rem;
+      margin: 0;
+      
+      &[color="medium"] {
+        --background: #6c757d;
+        --color: white;
+        
+        &:hover {
+          --background: #5a6268;
+        }
+        
+        &[disabled] {
+          --background: #e9ecef;
+          --color: #adb5bd;
+        }
+      }
+      
+      &[color="primary"] {
+        --box-shadow: 0 4px 12px rgba(var(--ion-color-primary-rgb), 0.3);
+        
+        &:hover {
+          --box-shadow: 0 6px 16px rgba(var(--ion-color-primary-rgb), 0.4);
+          transform: translateY(-2px);
+        }
+        
+        &[disabled] {
+          --background: #e9ecef;
+          --color: #adb5bd;
+          --box-shadow: none;
+          transform: none;
+        }
+      }
+    }
+  }
+  
+  // Responsive design
+  @media (max-width: 768px) {
+    ion-content .ion-padding {
+      padding: 12px;
+    }
+    
+    ion-item {
+      margin-bottom: 12px;
+      --inner-padding-end: 12px;
+      --inner-padding-start: 12px;
+    }
+    
+    ion-row {
+      margin-top: 20px;
+      
+      ion-button {
+        height: 44px;
+        font-size: 0.95rem;
+      }
+    }
+  }
+  
+  // Loading state
+  .saving-state {
+    ion-button[disabled] {
+      position: relative;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        border: 2px solid transparent;
+        border-top: 2px solid currentColor;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+  }
+  
+  @keyframes spin {
+    0% { transform: translateY(-50%) rotate(0deg); }
+    100% { transform: translateY(-50%) rotate(360deg); }
+  }
+  
+  // Dark mode support
+  @media (prefers-color-scheme: dark) {
+    ion-content {
+      --background: #1a1a1a;
+    }
+    
+    ion-item {
+      --background: #2d2d2d;
+      --border-color: #404040;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      
+      ion-label {
+        color: #e9ecef;
+      }
+      
+      ion-input, ion-select, ion-textarea {
+        --color: #ffffff;
+        --placeholder-color: #adb5bd;
+      }
+      
+      &:hover {
+        --border-color: var(--ion-color-primary-tint);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      }
+    }
+  }

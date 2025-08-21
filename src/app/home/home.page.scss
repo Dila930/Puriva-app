@@ -407,6 +407,10 @@ $sayur-gradient: linear-gradient(135deg, #d299c2 0%, $puriva-yellow 100%);
 .activity-icon.nasi { background: linear-gradient(135deg, #fbbf24, #f59e0b); }
 .activity-icon.ayam { background: linear-gradient(135deg, #10b981, #059669); }
 .activity-icon.sayur { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+/* Tambahan agar ikon cocok dengan nama */
+.activity-icon.ikan { background: linear-gradient(135deg, #38bdf8, #0ea5e9); }
+.activity-icon.daging { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+.activity-icon.buah { background: linear-gradient(135deg, #f59e0b, #f97316); }
 
 .activity-info { flex: 1; }
 

@@ -1,225 +1,548 @@
-// News detail page styling - consistent with PURIVA theme
+// News Detail Page - Full Screen & Beautiful
 .news-detail-content {
-    --background: #ffffff;
-    
-    .container {
-      max-width: 430px;
-      margin: 0 auto;
-    }
-  }
+  --background: #EDF2FB;
+  min-height: 100vh;
   
-  // Header image styling
-  .news-header-image {
-    height: 250px;
-    background-size: cover;
-    background-position: center;
-    background-color: #e8f4ff;
-    position: relative;
-    background-image: linear-gradient(135deg, #4169E1, #667eea);
+  .container {
+    min-height: 100vh;
+    padding-bottom: 0;
     
-    .header-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 50%);
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      padding: 20px;
-      
-      .back-button {
-        background: rgba(255,255,255,0.9);
-        border: none;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        backdrop-filter: blur(10px);
-        transition: all 0.3s ease;
-        
-        &:hover {
-          background: rgba(255,255,255,1);
-          transform: scale(1.05);
-        }
-        
-        ion-icon {
-          color: #2c3e50;
-          font-size: 20px;
-        }
-      }
-      
-      .news-category-badge {
-        padding: 6px 16px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-        color: white;
-        backdrop-filter: blur(10px);
-        
-        &.category-technology {
-          background: rgba(65, 105, 225, 0.9);
-        }
-        
-        &.category-program {
-          background: rgba(126, 211, 33, 0.9);
-        }
-        
-        &.category-update {
-          background: rgba(245, 166, 35, 0.9);
-        }
-        
-        &.category-certification {
-          background: rgba(80, 227, 194, 0.9);
-        }
-        
-        &.category-tips {
-          background: rgba(144, 19, 254, 0.9);
-        }
-      }
-    }
-  }
-  
-  // Article content styling
-  .article-content {
-    padding: 24px 20px;
-    
-    .article-header {
-      margin-bottom: 24px;
-      
-      .article-title {
-        font-size: 24px;
-        font-weight: bold;
-        color: #2c3e50;
-        line-height: 1.3;
-        margin-bottom: 12px;
-      }
-      
-      .article-meta {
-        display: flex;
-        align-items: center;
-        font-size: 13px;
-        color: #7f8c8d;
-        
-        .article-date {
-          font-weight: 500;
-        }
-        
-        .meta-dot {
-          margin: 0 8px;
-        }
-        
-        .article-read-time {
-          opacity: 0.8;
-        }
-      }
-    }
-    
-    .article-body {
-      line-height: 1.7;
-      color: #2c3e50;
-      
-      p {
-        font-size: 15px;
-        margin-bottom: 16px;
-        text-align: justify;
-      }
-      
-      h3 {
-        font-size: 18px;
-        font-weight: 600;
-        color: #2c3e50;
-        margin: 24px 0 12px 0;
-      }
-      
-      ul {
-        margin: 16px 0;
-        padding-left: 20px;
-        
-        li {
-          font-size: 15px;
-          margin-bottom: 8px;
-          color: #2c3e50;
-        }
-      }
-    }
-    
-    .article-footer {
-      margin-top: 32px;
-      padding-top: 24px;
-      border-top: 1px solid #e8f4ff;
-      
-      .btn-back {
-        background: linear-gradient(135deg, #4169E1, #667eea);
-        color: white;
-        border: none;
-        border-radius: 12px;
-        padding: 12px 24px;
-        font-size: 14px;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(65, 105, 225, 0.3);
-        
-        &:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 6px 20px rgba(65, 105, 225, 0.4);
-        }
-        
-        ion-icon {
-          font-size: 16px;
-        }
-      }
-    }
-  }
-  
-  // Responsive design for iPhone 16 Pro
-  @media (max-width: 430px) {
     .news-header-image {
-      height: 220px;
+      height: 50vh;
+      min-height: 300px;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      
+      // Beautiful gradient overlay
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          180deg,
+          rgba(0, 0, 0, 0.4) 0%,
+          rgba(0, 0, 0, 0.1) 40%,
+          rgba(0, 0, 0, 0.8) 100%
+        );
+        z-index: 1;
+      }
       
       .header-overlay {
-        padding: 16px;
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        padding: 2rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        
+        .header-top {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+        }
         
         .back-button {
-          width: 36px;
-          height: 36px;
+          background: rgba(255, 255, 255, 0.25);
+          border: none;
+          border-radius: 50%;
+          width: 48px;
+          height: 48px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          backdrop-filter: blur(15px);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          cursor: pointer;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+          
+          &:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+          }
+          
+          &:active {
+            transform: scale(0.95);
+          }
           
           ion-icon {
-            font-size: 18px;
+            color: white;
+            font-size: 1.5rem;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+          }
+        }
+        
+        .news-category-badge {
+          background: rgba(255, 255, 255, 0.95);
+          padding: 0.75rem 1.25rem;
+          border-radius: 25px;
+          font-size: 0.8rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          backdrop-filter: blur(15px);
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.4);
+          
+          &.category-technology {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+          }
+          
+          &.category-program {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(17, 153, 142, 0.4);
+          }
+          
+          &.category-update {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            color: #2d3436;
+            box-shadow: 0 4px 15px rgba(255, 234, 167, 0.4);
+          }
+          
+          &.category-announcement {
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(162, 155, 254, 0.4);
+          }
+        }
+        
+        .header-bottom {
+          padding-top: 2rem;
+          
+          .header-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: white;
+            margin: 0;
+            line-height: 1.2;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            letter-spacing: -0.5px;
+          }
+          
+          .header-meta {
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            font-weight: 500;
+            
+            .meta-item {
+              display: flex;
+              align-items: center;
+              gap: 0.5rem;
+              
+              ion-icon {
+                font-size: 1rem;
+              }
+            }
+            
+            .meta-dot {
+              width: 4px;
+              height: 4px;
+              background: rgba(255, 255, 255, 0.7);
+              border-radius: 50%;
+            }
           }
         }
       }
     }
     
     .article-content {
-      padding: 20px 16px;
+      background: white;
+      position: relative;
+      z-index: 3;
+      min-height: 50vh;
+      padding: 2.5rem 1.5rem;
       
       .article-header {
-        .article-title {
-          font-size: 22px;
+        margin-bottom: 2.5rem;
+        
+        .article-actions {
+          display: flex;
+          gap: 0.75rem;
+          flex-wrap: wrap;
+          
+          ion-button {
+            --border-radius: 16px;
+            --padding-start: 1.25rem;
+            --padding-end: 1.25rem;
+            --height: 44px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            
+            &:hover {
+              transform: translateY(-2px);
+            }
+            
+            &[color="primary"] {
+              --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+              --box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            }
+            
+            &[color="danger"] {
+              --background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+              --box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            }
+            
+            ion-icon {
+              font-size: 1.1rem;
+            }
+          }
         }
       }
       
       .article-body {
+        line-height: 1.8;
+        color: #2c3e50;
+        font-size: 1.05rem;
+        
         p {
-          font-size: 14px;
+          margin-bottom: 1.75rem;
+          text-align: justify;
+          
+          &:first-of-type {
+            font-size: 1.15rem;
+            font-weight: 500;
+            color: #34495e;
+          }
+          
+          &:last-of-type {
+            margin-bottom: 0;
+          }
         }
         
         h3 {
-          font-size: 17px;
+          font-size: 1.4rem;
+          font-weight: 700;
+          color: #2c3e50;
+          margin: 3rem 0 1.5rem 0;
+          padding: 0 0 1rem 0;
+          border-bottom: 3px solid #e9ecef;
+          position: relative;
+          
+          &::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+          }
         }
         
-        ul li {
-          font-size: 14px;
+        ul {
+          margin: 2rem 0;
+          padding: 0;
+          list-style: none;
+          
+          li {
+            position: relative;
+            padding: 1rem 1.5rem 1rem 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 16px;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            
+            &:hover {
+              transform: translateX(5px);
+              box-shadow: 0 4px 15px rgba(102, 126, 234, 0.15);
+            }
+            
+            &::before {
+              content: '✨';
+              position: absolute;
+              left: 1rem;
+              top: 50%;
+              transform: translateY(-50%);
+              font-size: 1.2rem;
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              background-clip: text;
+            }
+            
+            &:last-child {
+              margin-bottom: 0;
+            }
+          }
+        }
+        
+        .category-content {
+          margin-top: 3rem;
+          padding: 2rem;
+          background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+          border-radius: 20px;
+          border: 1px solid #dee2e6;
+        }
+      }
+      
+      .article-footer {
+        margin-top: 4rem;
+        padding-top: 2.5rem;
+        border-top: 2px solid #e9ecef;
+        
+        .btn-back {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 1rem;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          border: none;
+          border-radius: 16px;
+          padding: 1.25rem 2rem;
+          font-weight: 600;
+          font-size: 1rem;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          cursor: pointer;
+          width: 100%;
+          max-width: 300px;
+          margin: 0 auto;
+          box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+          
+          &:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+          }
+          
+          &:active {
+            transform: scale(0.98);
+          }
+          
+          ion-icon {
+            font-size: 1.25rem;
+            transition: transform 0.3s ease;
+          }
+          
+          &:hover ion-icon {
+            transform: translateX(-3px);
+          }
         }
       }
     }
   }
+}
+
+// Full screen toolbar (hidden)
+ion-header {
+  ion-toolbar {
+    --background: transparent;
+    --color: transparent;
+    --border-width: 0;
+    position: absolute;
+    top: -100px;
+    z-index: -1;
+    
+    ion-title {
+      display: none;
+    }
+  }
+}
+
+// Responsive enhancements
+@media (min-width: 768px) {
+  .news-detail-content {
+    .container {
+      .news-header-image {
+        height: 60vh;
+        min-height: 400px;
+        
+        .header-overlay {
+          padding: 3rem 2.5rem;
+          
+          .back-button {
+            width: 52px;
+            height: 52px;
+            
+            ion-icon {
+              font-size: 1.6rem;
+            }
+          }
+          
+          .news-category-badge {
+            font-size: 0.85rem;
+            padding: 0.875rem 1.5rem;
+          }
+          
+          .header-bottom {
+            .header-title {
+              font-size: 2.5rem;
+              max-width: 80%;
+            }
+            
+            .header-meta {
+              font-size: 1rem;
+            }
+          }
+        }
+      }
+      
+      .article-content {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 3.5rem 3rem;
+        
+        .article-body {
+          font-size: 1.1rem;
+          
+          p {
+            margin-bottom: 2rem;
+            
+            &:first-of-type {
+              font-size: 1.25rem;
+            }
+          }
+          
+          h3 {
+            font-size: 1.6rem;
+            margin: 3.5rem 0 2rem 0;
+          }
+          
+          ul li {
+            padding: 1.25rem 2rem 1.25rem 3.5rem;
+            margin-bottom: 1.25rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (min-width: 1200px) {
+  .news-detail-content {
+    .container {
+      .news-header-image {
+        height: 70vh;
+        
+        .header-overlay {
+          padding: 4rem 4rem;
+          
+          .header-bottom {
+            .header-title {
+              font-size: 3rem;
+            }
+          }
+        }
+      }
+      
+      .article-content {
+        max-width: 900px;
+        padding: 4rem 4rem;
+        
+        .article-body {
+          font-size: 1.15rem;
+          
+          h3 {
+            font-size: 1.75rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Dark mode improvements
+@media (prefers-color-scheme: dark) {
+  .news-detail-content {
+    --background: #EDF2FB;
+    
+    .container {
+      .article-content {
+        background: #ffffff;
+        
+        .article-body {
+          color: #2c3e50;
+          
+          p:first-of-type { color: #34495e; }
+          
+          h3 {
+            color: #2c3e50;
+            border-bottom-color: #e9ecef;
+          }
+          
+          ul li {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-left-color: #667eea;
+            
+            &:hover {
+              box-shadow: 0 4px 15px rgba(102, 126, 234, 0.15);
+            }
+          }
+          
+          .category-content {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-color: #dee2e6;
+          }
+        }
+        
+        .article-footer {
+          border-top-color: #e9ecef;
+        }
+      }
+    }
+  }
+}
+
+// Loading states with better animations
+.article-content.loading {
+  .article-body {
+    p, h3 {
+      background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 8px;
+      color: transparent !important;
+    }
+    
+    p {
+      height: 1.5rem;
+      margin-bottom: 1.5rem;
+      
+      &:nth-child(odd) { width: 100%; }
+      &:nth-child(even) { width: 85%; }
+    }
+    
+    h3 {
+      height: 2rem;
+      width: 60%;
+      margin: 2rem 0 1rem 0;
+    }
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+// Smooth scroll behavior
+html {
+  scroll-behavior: smooth;
+}
+
+// Fix for iOS safe areas
+@supports (padding: max(0px)) {
+  .news-detail-content .container .news-header-image .header-overlay {
+    padding-top: max(2rem, env(safe-area-inset-top));
+  }
+}

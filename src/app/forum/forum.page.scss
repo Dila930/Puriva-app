@@ -3,6 +3,34 @@
   --padding-bottom: 88px;
 }
 
+/* New stat pill style used in header for active users, threads, comments */
+.stat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 999px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+
+  ion-icon {
+    font-size: 14px;
+  }
+
+  .count { min-width: 16px; }
+}
+
+.dot.online {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #2ecc71;
+  box-shadow: 0 0 0 2px rgba(46, 204, 113, 0.2);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -77,7 +105,10 @@ ion-fab.fab-above-bottom-nav ion-fab-button {
 
 .forum-stats {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
   text-align: center;
   color: rgba(255,255,255,0.9);
   font-size: 12px;
@@ -87,6 +118,32 @@ ion-fab.fab-above-bottom-nav ion-fab-button {
   font-size: 16px;
   font-weight: bold;
   margin-bottom: 2px;
+}
+
+/* Active users badge to display real-time viewer count */
+.active-users-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 999px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #2ecc71; /* green online */
+    box-shadow: 0 0 0 2px rgba(46, 204, 113, 0.2);
+  }
+
+  .count {
+    min-width: 16px;
+  }
 }
 
 .main-content {
@@ -100,6 +157,7 @@ ion-fab.fab-above-bottom-nav ion-fab-button {
   padding: 20px;
   border-radius: 20px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  margin-bottom: 16px; /* prevent collision with categories */
 }
 
 .create-thread-btn {
@@ -141,6 +199,7 @@ ion-fab.fab-above-bottom-nav ion-fab-button {
   padding: 20px;
   border-radius: 20px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  margin-bottom: 16px; /* spacing below categories to avoid overlap */
 }
 
 .section-title {
@@ -202,6 +261,7 @@ ion-fab.fab-above-bottom-nav ion-fab-button {
   padding: 20px;
   border-radius: 20px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  margin-top: 16px; /* ensure separation from previous blocks */
 }
 
 .thread-list {
@@ -394,6 +454,12 @@ ion-fab.fab-above-bottom-nav ion-fab-button {
   margin-bottom: 10px;
 }
 
+.comment-item.my-comment {
+  background: #eef6ff;
+  border: 1px solid #cfe3ff;
+  box-shadow: 0 2px 8px rgba(65, 105, 225, 0.08);
+}
+
 .comment-author {
   font-size: 12px;
   font-weight: 600;
@@ -414,6 +480,29 @@ ion-fab.fab-above-bottom-nav ion-fab-button {
 .comment-time {
   font-size: 10px;
   color: #95a5a6;
+}
+
+.comment-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.comment-actions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.comment-actions ion-button {
+  --padding-start: 6px;
+  --padding-end: 6px;
+  height: 28px;
+  font-size: 12px;
+}
+
+.comment-like-btn.liked {
+  color: #4169E1;
 }
 
 .reply-form {
@@ -831,6 +920,97 @@ ion-fab.fab-above-bottom-nav ion-fab-button {
   margin-bottom: 15px;
 }
 
+/* Create Thread Modal - toolbar/header to match hero gradient */
+.create-thread-content ion-header ion-toolbar {
+  --background: linear-gradient(159deg, #4169E1 0%, #89CFF0 100%);
+  --color: #fff;
+  --border-width: 0;
+  box-shadow: none;
+}
+
+/* Create Thread Modal - form controls styling to match forum-create */
+.create-thread-form {
+  background: transparent;
+
+  ion-item {
+    --background: #ffffff;
+    --border-radius: 15px;
+    --inner-border-width: 0 0 0 0;
+    --padding-start: 12px;
+    --padding-end: 12px;
+    border: 2px solid #e8f4ff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    margin-bottom: 14px;
+  }
+
+  ion-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 6px;
+  }
+
+  ion-input,
+  ion-textarea,
+  ion-select {
+    --color: #2c3e50;
+    --placeholder-color: #95a5a6;
+    --padding-start: 12px;
+    --padding-end: 12px;
+  }
+
+  ion-textarea {
+    --background: #ffffff;
+    --border-radius: 12px;
+  }
+
+  /* Primary submit button */
+  ion-button {
+    --background: linear-gradient(135deg, #4169E1, #667eea);
+    --color: #fff;
+    --border-radius: 15px;
+    height: 48px;
+    font-weight: 600;
+    box-shadow: 0 6px 20px rgba(65, 105, 225, 0.25);
+  }
+}
+
+/* Dark mode support for the modal */
+:host-context(.dark) {
+  .create-thread-content {
+    --background: linear-gradient(135deg, #0f172a 0%, #111827 100%);
+  }
+
+  .create-thread-form {
+    ion-item {
+      --background: #0b1220;
+      border-color: #1f2a44;
+      box-shadow: none;
+    }
+
+    ion-label {
+      color: #e5e7eb;
+    }
+
+    ion-input,
+    ion-textarea,
+    ion-select {
+      --color: #e5e7eb;
+      --placeholder-color: #94a3b8;
+    }
+
+    ion-button {
+      --background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      box-shadow: 0 6px 20px rgba(124, 58, 237, 0.25);
+    }
+  }
+
+  ion-header ion-toolbar {
+    --background: linear-gradient(159deg, #1f2937 0%, #111827 100%);
+    --color: #fff;
+  }
+}
+
 @media (max-width: 430px) {
   .forum-container {
     padding: 15px;
@@ -838,6 +1018,10 @@ ion-fab.fab-above-bottom-nav ion-fab-button {
   
   .header {
     padding: 20px;
+  }
+
+  .forum-stats {
+    gap: 8px;
   }
   
   .categories-grid {

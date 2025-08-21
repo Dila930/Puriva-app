@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule, ActionSheetController, AlertController, ToastController } from '@ionic/angular';
 import { Router, RouterModule } from '@angular/router';
 import { BottomNavComponent } from '../components/bottom-nav/bottom-nav.component';
-import { Database, ref, onValue, query, orderByChild } from '@angular/fire/database';
+import { Database, ref, onValue, query, orderByChild, get, set, update } from '@angular/fire/database';
 import { Auth } from '@angular/fire/auth';
 import { isAdmin } from '../utils/admin-ids';
 
@@ -29,6 +29,38 @@ export class EducationPage implements OnInit, OnDestroy {
   get activeTab(): string {
     const url = this.router.url.split('/')[1];
     return url || 'home';
+  }
+
+  // Reactions API used by template
+  getNewsCounts(id: string): { likes: number; dislikes: number } {
+    return this.newsCounts[id] || { likes: 0, dislikes: 0 };
+    }
+  getMyNewsReaction(id: string): 'like'|'dislike'|null {
+    return this.myNewsReactions[id] || null;
+  }
+  async onNewsReact(ev: Event, id: string, kind: 'like'|'dislike'): Promise<void> {
+    ev.stopPropagation();
+    const user = this.auth.currentUser;
+    if (!user) return;
+    const voteRef = ref(this.db, `news/reactions/${id}/${user.uid}`);
+    const current = this.getMyNewsReaction(id);
+    try {
+      if (current === kind) {
+        // unvote
+        await set(voteRef, null as any);
+      } else {
+        await set(voteRef, kind);
+      }
+      // optionally update aggregates on item node
+      // read current counts and write to `news/items/{id}/reactions`
+      const counts = this.getNewsCounts(id);
+      const next = { ...counts };
+      if (current) { if (current === 'like') next.likes = Math.max(0, next.likes - 1); else next.dislikes = Math.max(0, next.dislikes - 1); }
+      if (current !== kind) { if (kind === 'like') next.likes += 1; else next.dislikes += 1; }
+      await update(ref(this.db, `news/items/${id}`), { reactions: next });
+    } catch (e) {
+      console.warn('onNewsReact failed', e);
+    }
   }
 
   // Per-item actions
@@ -95,6 +127,33 @@ export class EducationPage implements OnInit, OnDestroy {
     this.selectedIds.clear();
   }
 
+  async confirmDeleteSelected(): Promise<void> {
+    if (!this.isAdmin || this.selectedIds.size === 0) return;
+    const alert = await this.alertCtrl.create({
+      header: 'Hapus Berita Terpilih',
+      message: `Yakin ingin menghapus ${this.selectedIds.size} berita?`,
+      buttons: [
+        { text: 'Batal', role: 'cancel' },
+        { text: 'Hapus', role: 'destructive', handler: () => this.deleteSelectedNews() },
+      ]
+    });
+    await alert.present();
+  }
+
+  private async deleteSelectedNews(): Promise<void> {
+    if (!this.isAdmin || this.selectedIds.size === 0) return;
+    try {
+      const updates: Record<string, any> = {};
+      this.selectedIds.forEach(id => { updates[`news/items/${id}`] = null; });
+      await update(ref(this.db), updates);
+      this.presentToast('Berita terpilih dihapus', 'success');
+      this.exitSelectionMode();
+    } catch (e) {
+      console.warn('deleteSelectedNews failed', e);
+      this.presentToast('Gagal menghapus beberapa berita', 'danger');
+    }
+  }
+
   private async presentToast(message: string, color: 'success' | 'warning' | 'danger') {
     const t = await this.toast.create({ message, duration: 1500, color });
     await t.present();
@@ -107,12 +166,15 @@ export class EducationPage implements OnInit, OnDestroy {
   newsItems: Array<{ id: string; title: string; category: string; content: string; createdAt: number; authorUid: string; authorEmail?: string; authorMaskedEmail?: string }>= [];
 
   // UI-model list consumed by template
-  filteredNews: Array<{ id: string; title: string; description: string; category: string; categoryLabel: string; icon: string; date: string; readTime: number }>= [];
-  featuredNews: { id: string; title: string; description: string; category: string; categoryLabel: string; icon: string; date: string; readTime: number } = {
-    id: '', title: '', description: '', category: 'semua', categoryLabel: 'Umum', icon: '📰', date: '', readTime: 1
+  filteredNews: Array<{ id: string; title: string; description: string; category: string; categoryLabel: string; icon: string; date: string; readTime: number; thumbnail?: string }>= [];
+  featuredNews: { id: string; title: string; description: string; category: string; categoryLabel: string; icon: string; date: string; readTime: number; thumbnail?: string } = {
+    id: '', title: '', description: '', category: 'semua', categoryLabel: 'Umum', icon: '📰', date: '', readTime: 1, thumbnail: ''
   };
   private unsubscribeFn?: () => void;
   get isAdmin(): boolean { return isAdmin(this.auth); }
+  // reactions state
+  private newsCounts: Record<string, { likes: number; dislikes: number }> = {};
+  private myNewsReactions: Record<string, 'like' | 'dislike' | null> = {};
 
   // Selection mode state
   selectionMode = false;
@@ -136,6 +198,29 @@ export class EducationPage implements OnInit, OnDestroy {
       this.featuredNews = ui[0] || this.featuredNews;
       // Apply current filters to produce filteredNews
       this.applyFilters(ui);
+    });
+
+    // Listen to all reactions summary and my votes
+    onValue(ref(this.db, 'news/reactions'), (snap) => {
+      const all = (snap.val() || {}) as Record<string, Record<string, 'like'|'dislike'>>;
+      const counts: Record<string, { likes: number; dislikes: number }> = {};
+      Object.entries(all).forEach(([newsId, users]) => {
+        let likes = 0, dislikes = 0;
+        Object.values(users || {}).forEach((v) => {
+          if (v === 'like') likes++; else if (v === 'dislike') dislikes++;
+        });
+        counts[newsId] = { likes, dislikes };
+      });
+      this.newsCounts = counts;
+      // also refresh my reactions map if user exists
+      const uid = this.auth.currentUser?.uid;
+      if (uid) {
+        const mine: Record<string, 'like'|'dislike'|null> = {};
+        Object.entries(all).forEach(([newsId, users]) => {
+          mine[newsId] = (users && (users as any)[uid]) || null;
+        });
+        this.myNewsReactions = mine;
+      }
     });
   }
 
@@ -179,8 +264,8 @@ export class EducationPage implements OnInit, OnDestroy {
       description: match.description,
       // detail page reads `content`
       content: match.description,
-      // no thumbnail in list; leave empty string
-      thumbnail: '',
+      // pass thumbnail if any
+      thumbnail: match.thumbnail || '',
       date: match.date,
       readTime: match.readTime,
       category: mapCategory(match.category),
@@ -200,7 +285,7 @@ export class EducationPage implements OnInit, OnDestroy {
   }
 
   // Internal helpers
-  private toUiNews(it: any): { id: string; title: string; description: string; category: string; categoryLabel: string; icon: string; date: string; readTime: number } {
+  private toUiNews(it: any): { id: string; title: string; description: string; category: string; categoryLabel: string; icon: string; date: string; readTime: number; thumbnail?: string } {
     const cat = (it.category || 'Umum').toString().toLowerCase();
     const map: Record<string, { label: string; icon: string }> = {
       'teknologi': { label: 'Teknologi', icon: '💻' },
@@ -223,11 +308,12 @@ export class EducationPage implements OnInit, OnDestroy {
       categoryLabel: meta.label,
       icon: meta.icon,
       date: this.formatDate(it.createdAt),
-      readTime
+      readTime,
+      thumbnail: (it.thumbnail || '').toString()
     };
   }
 
-  private applyFilters(source?: Array<{ id: string; title: string; description: string; category: string; categoryLabel: string; icon: string; date: string; readTime: number }>): void {
+  private applyFilters(source?: Array<{ id: string; title: string; description: string; category: string; categoryLabel: string; icon: string; date: string; readTime: number; thumbnail?: string }>): void {
     const base = source || this.newsItems.map((it: any) => this.toUiNews(it));
     const q = (this.searchQuery || '').toLowerCase();
     const cat = this.currentFilter;

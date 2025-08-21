@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
@@ -7,6 +7,7 @@ import { Auth } from '@angular/fire/auth';
 import { Database, ref, push, set, update, get, child } from '@angular/fire/database';
 import { isAdmin } from '../utils/admin-ids';
 import { ActivatedRoute } from '@angular/router';
+import { CloudinaryService } from '../services/cloudinary.service';
 
 @Component({
   selector: 'app-news-create',
@@ -19,13 +20,27 @@ export class NewsCreatePage implements OnInit {
   title = '';
   category = 'Umum';
   content = '';
+  imageUrl = '';
   isSaving = false;
+  // upload state
+  isUploading = false;
+  uploadProgress = 0;
   editId?: string;
   existing: any | null = null;
+  readonly maxUploadSize = 1 * 1024 * 1024; // 1MB
+  readonly allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
 
   categories = ['Umum', 'Teknologi', 'Kesehatan', 'Panduan'];
 
-  constructor(private router: Router, private auth: Auth, private db: Database, private toast: ToastController, private route: ActivatedRoute) {}
+  constructor(
+    private router: Router,
+    private auth: Auth,
+    private db: Database,
+    private toast: ToastController,
+    private route: ActivatedRoute,
+    private zone: NgZone,
+    private cloud: CloudinaryService,
+  ) {}
 
   get isEdit(): boolean { return !!this.editId; }
 
@@ -40,6 +55,7 @@ export class NewsCreatePage implements OnInit {
           this.title = val.title || '';
           this.category = val.category || 'Umum';
           this.content = val.content || '';
+          this.imageUrl = val.thumbnail || '';
         }
       } catch (e) {
         console.warn('failed load news for edit', e);
@@ -70,6 +86,7 @@ export class NewsCreatePage implements OnInit {
           title: this.title.trim(),
           category: this.category,
           content: this.content.trim(),
+          thumbnail: (this.imageUrl || '').trim(),
           updatedAt: Date.now(),
         });
         await this.presentToast('Berita berhasil diperbarui', 'success');
@@ -83,6 +100,7 @@ export class NewsCreatePage implements OnInit {
           title: this.title.trim(),
           category: this.category,
           content: this.content.trim(),
+          thumbnail: (this.imageUrl || '').trim(),
           createdAt: Date.now(),
           authorUid: user.uid,
           authorEmail: user.email || null,
@@ -96,6 +114,47 @@ export class NewsCreatePage implements OnInit {
       await this.presentToast('Gagal menyimpan berita', 'danger');
     } finally {
       this.isSaving = false;
+    }
+  }
+
+  async onFileSelected(evt: Event): Promise<void> {
+    const input = evt.target as HTMLInputElement;
+    const file = input?.files && input.files[0];
+    if (!file) return;
+    // Validate type
+    if (!this.allowedTypes.includes(file.type)) {
+      await this.presentToast('Format tidak didukung. Gunakan JPG, PNG, atau WebP.', 'warning');
+      if (input) input.value = '';
+      return;
+    }
+    // Validate size
+    if (file.size > this.maxUploadSize) {
+      const mb = (this.maxUploadSize / (1024*1024)).toFixed(0);
+      await this.presentToast(`Ukuran terlalu besar. Maksimal ${mb}MB.`, 'warning');
+      if (input) input.value = '';
+      return;
+    }
+    const user = this.auth.currentUser;
+    if (!user) {
+      await this.presentToast('Harap login untuk mengunggah gambar', 'warning');
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    try {
+      this.isUploading = true;
+      this.uploadProgress = 0;
+      const result = await this.cloud.uploadImage(file, (pct) => {
+        this.zone.run(() => { this.uploadProgress = pct; });
+      });
+      this.zone.run(() => { this.imageUrl = result.secure_url || result.url; this.uploadProgress = 100; });
+      await this.presentToast('Gambar berhasil diunggah', 'success');
+    } catch (e) {
+      console.warn('upload image failed', e);
+      await this.presentToast('Gagal mengunggah gambar', 'danger');
+    } finally {
+      this.zone.run(() => { this.isUploading = false; });
+      if (input) input.value = '';
     }
   }
 

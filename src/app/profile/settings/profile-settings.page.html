@@ -3,7 +3,6 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/profile"></ion-back-button>
     </ion-buttons>
-    <ion-title>Pengaturan Akun</ion-title>
   </ion-toolbar>
   </ion-header>
 
@@ -14,19 +13,19 @@
   </div>
   <div class="content">
     <ion-list lines="none">
-      <ion-item class="card">
+      <ion-item class="card" detail="false">
         <ion-label>Ubah Nama Tampilan</ion-label>
         <ion-button slot="end" size="small" (click)="changeDisplayName()">Ubah</ion-button>
       </ion-item>
-      <ion-item class="card">
+      <ion-item class="card" detail="false">
         <ion-label>Ganti Kata Sandi</ion-label>
         <ion-button slot="end" size="small" (click)="changePassword()">Ganti</ion-button>
       </ion-item>
-      <ion-item class="card">
+      <ion-item class="card" detail="false">
         <ion-label>Preferensi Notifikasi</ion-label>
         <ion-toggle slot="end" [(ngModel)]="notifEmail">Email</ion-toggle>
       </ion-item>
-      <ion-item class="card">
+      <ion-item class="card" detail="false">
         <ion-label>Privasi Akun</ion-label>
         <ion-button slot="end" size="small" (click)="openPrivacy()">Kelola</ion-button>
       </ion-item>

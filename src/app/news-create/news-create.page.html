@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{ isEdit ? 'Edit Berita' : 'Tambah Berita' }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-item>
+    <ion-label position="stacked">Judul</ion-label>
+    <ion-input [(ngModel)]="title" placeholder="Judul berita"></ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Kategori</ion-label>
+    <ion-select [(ngModel)]="category">
+      <ion-select-option *ngFor="let c of categories" [value]="c">{{ c }}</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item lines="full">
+    <ion-label position="stacked">Konten</ion-label>
+    <ion-textarea [(ngModel)]="content" auto-grow="true" rows="8" placeholder="Tulis isi berita..."></ion-textarea>
+  </ion-item>
+
+  <ion-row class="ion-padding-top">
+    <ion-col size="6">
+      <ion-button expand="block" color="medium" (click)="cancel()" [disabled]="isSaving">Batal</ion-button>
+    </ion-col>
+    <ion-col size="6">
+      <ion-button expand="block" color="primary" (click)="save()" [disabled]="isSaving">{{ isEdit ? 'Perbarui' : 'Simpan' }}</ion-button>
+    </ion-col>
+  </ion-row>
+</ion-content>

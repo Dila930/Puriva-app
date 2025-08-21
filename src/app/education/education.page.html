@@ -1,0 +1,109 @@
+<ion-content [fullscreen]="true" class="news-content">
+  <div class="container">
+    <!-- Header Section -->
+    <div class="header fade-in-up">
+      <div class="page-title">📰 Berita & Update</div>
+      <div class="header-subtitle">Informasi terbaru seputar PURIVA</div>
+      
+      <!-- Category Filter -->
+      <div class="news-categories">
+        <button class="category-btn" 
+                [class.active]="currentFilter === 'semua'"
+                (click)="filterNews('semua')">Semua</button>
+        <button class="category-btn" 
+                [class.active]="currentFilter === 'teknologi'"
+                (click)="filterNews('teknologi')">Teknologi</button>
+        <button class="category-btn" 
+                [class.active]="currentFilter === 'program'"
+                (click)="filterNews('program')">Program</button>
+        <button class="category-btn" 
+                [class.active]="currentFilter === 'update'"
+                (click)="filterNews('update')">Update</button>
+        <button class="category-btn" 
+                [class.active]="currentFilter === 'tips'"
+                (click)="filterNews('tips')">Tips</button>
+      </div>
+      
+      <!-- Search Bar -->
+      <input type="text" 
+             class="search-bar" 
+             placeholder="🔍 Cari berita..." 
+             [(ngModel)]="searchQuery"
+             (input)="searchNews($event)">
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Selection mode bar -->
+      <div *ngIf="selectionMode" style="position: sticky; top: 0; z-index: 10; background: var(--ion-color-light); padding: 8px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+        <div>{{ selectedIds.size }} dipilih</div>
+        <ion-button size="small" fill="outline" (click)="exitSelectionMode()">Selesai</ion-button>
+      </div>
+      <!-- Featured News -->
+      <div class="featured-news slide-in-card" (click)="openNewsDetail(featuredNews)">
+        <div class="featured-image">
+          🔬
+          <div class="featured-badge">{{ featuredNews.categoryLabel }}</div>
+        </div>
+        <div class="featured-content">
+          <div class="featured-title">{{ featuredNews.title }}</div>
+          <div class="featured-excerpt">{{ featuredNews.description }}</div>
+          <div class="featured-meta">
+            <span>📅 {{ featuredNews.date }}</span>
+            <div class="read-more">Baca Selengkapnya</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- News List -->
+      <div class="news-list">
+        <div class="news-item slide-in-card" 
+             *ngFor="let news of filteredNews; let i = index" 
+             [attr.data-category]="news.category"
+             (click)="openNewsDetail(news)"
+             [style.animation-delay]="(0.3 + i * 0.1) + 's'"
+             [style.position]="'relative'">
+          <!-- More actions button -->
+          <div style="position: absolute; top: 8px; right: 8px; z-index: 5;" (click)="$event.stopPropagation()">
+            <ion-button fill="clear" size="small" (click)="openItemActions($event, news)">
+              <ion-icon name="ellipsis-vertical"></ion-icon>
+            </ion-button>
+          </div>
+
+          <!-- Selection overlay -->
+          <div *ngIf="selectionMode" (click)="toggleSelect($event, news.id)" style="position: absolute; top: 8px; left: 8px; z-index: 5;">
+            <ion-icon [name]="selectedIds.has(news.id) ? 'checkmark-circle' : 'ellipse-outline'" [style.font-size.px]="22"></ion-icon>
+          </div>
+          <div class="news-thumbnail" [ngClass]="news.category">
+            {{ news.icon }}
+            <div class="category-label">{{ news.categoryLabel }}</div>
+          </div>
+          <div class="news-content">
+            <div class="news-title">{{ news.title }}</div>
+            <div class="news-excerpt">{{ news.description }}</div>
+            <div class="news-meta">
+              <div class="news-date">📅 {{ news.date }}</div>
+              <div class="read-time">⏱️ {{ news.readTime }} menit baca</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Load More Button -->
+      <div class="load-more" (click)="loadMoreNews()" *ngIf="showLoadMore">
+        📄 {{ loadingMore ? '⏳ Memuat...' : 'Muat Berita Lainnya' }}
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<!-- FAB: Create News (admin only) -->
+<ion-fab class="fab-above-bottom-nav" vertical="bottom" horizontal="end" *ngIf="isAdmin">
+  <ion-fab-button color="primary" (click)="goToCreateNews()" aria-label="Tambah Berita">
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+  <ion-fab-list side="top"></ion-fab-list>
+  <ion-fab-list side="start"></ion-fab-list>
+</ion-fab>
+
+<app-bottom-nav [activeTab]="'news'"></app-bottom-nav>

@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/profile"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Riwayat Aktivitas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="profile-detail" [fullscreen]="true">
+  <div class="header">
+    <h1>Riwayat Aktivitas</h1>
+    <p>Lihat aktivitas Anda di PURIVA.</p>
+  </div>
+  <div class="content">
+    <ng-container *ngIf="items.length; else noData">
+      <ion-list lines="full">
+        <ion-item *ngFor="let it of items">
+          <ion-label>
+            <h2>{{ it.title }}</h2>
+            <p>{{ getTime(it.at) }}</p>
+          </ion-label>
+          <ion-badge [color]="it.status === 'completed' ? 'success' : it.status === 'stopped' ? 'danger' : 'warning'">
+            {{ it.status === 'completed' ? 'Selesai' : it.status === 'stopped' ? 'Gagal' : 'Berjalan' }}
+          </ion-badge>
+        </ion-item>
+      </ion-list>
+    </ng-container>
+    <ng-template #noData>
+      <div class="empty">Belum ada aktivitas.</div>
+    </ng-template>
+  </div>
+</ion-content>

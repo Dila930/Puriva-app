@@ -1,0 +1,618 @@
+// Ensure content is not obscured by bottom nav
+:host ion-content {
+  --padding-bottom: 88px;
+}
+
+// ======================================
+// 📌 Variables
+// ======================================
+$color-primary: #667eea;
+$color-secondary: #764ba2;
+$color-accent: #f093fb;
+$color-background: #f8fafc;
+$color-white: #ffffff;
+$color-text-dark: #1e293b;
+$color-text-gray: #64748b;
+$color-text-light: #94a3b8;
+$color-border: #e2e8f0;
+$color-shadow: rgba(0, 0, 0, 0.1);
+$color-success: #10b981;
+$color-warning: #f59e0b;
+$color-danger: #ef4444;
+
+// Spacing
+$space-xs: 8px;
+$space-s: 12px;
+$space-m: 16px;
+$space-l: 24px;
+$space-xl: 32px;
+$space-xxl: 48px;
+
+// Border Radius
+$radius-s: 8px;
+$radius-m: 12px;
+$radius-l: 16px;
+$radius-xl: 24px;
+$radius-full: 50px;
+
+// Shadows
+$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+$shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
+$shadow-xl: 0 12px 48px rgba(0, 0, 0, 0.15);
+
+// Transitions
+$transition-fast: all 0.2s ease;
+$transition-normal: all 0.3s ease;
+$transition-slow: all 0.5s ease;
+
+// ======================================
+// 📌 Profile Page Styles
+// ======================================
+.profile-content {
+  --background: #{$color-background};
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+}
+
+.container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, $color-primary 0%, $color-secondary 100%);
+  position: relative;
+}
+
+// ======================================
+// 📌 Header Section
+// ======================================
+.header {
+  background: linear-gradient(135deg, $color-primary 0%, $color-secondary 100%);
+  padding: $space-xxl $space-l $space-xl;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+
+  // Decorative background elements
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: float 20s ease-in-out infinite;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -30px;
+    left: -30px;
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: float 15s ease-in-out infinite reverse;
+  }
+}
+
+.header-title {
+  color: $color-white;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 $space-xl 0;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 2;
+}
+
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
+  color: $color-primary;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 800;
+  margin: 0 auto $space-l;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 2;
+  animation: avatarGlow 3s ease-in-out infinite alternate;
+}
+
+.profile-info {
+  position: relative;
+  z-index: 2;
+}
+
+.profile-name {
+  color: $color-white;
+  font-size: 20px; // larger than email (16px)
+  font-weight: 800;
+  margin-bottom: $space-xs;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
+}
+
+.profile-email {
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: $space-xs;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.15);
+}
+
+.profile-role {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  font-weight: 500;
+  padding: $space-xs $space-m;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: $radius-full;
+  display: inline-block;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+// ======================================
+// 📌 Stats Section
+// ======================================
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); // 3 kotak per baris
+  gap: $space-m;
+  padding: 0 $space-l $space-xl;
+  margin-top: $space-l; // beri jarak dari profile-role ke stats
+  position: relative;
+  z-index: 3;
+}
+
+// Dashboard-style stats grid alias
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 0 $space-l $space-xl;
+  margin-top: $space-l;
+}
+
+.stat-card {
+  background: $color-white;
+  padding: $space-m; // sedikit padat agar 3 muat
+  border-radius: $radius-l;
+  text-align: center;
+  box-shadow: $shadow-lg;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  transition: $transition-normal;
+  position: relative;
+  overflow: hidden;
+  // hapus batasan lebar agar mengikuti grid kolom
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, $color-primary, $color-accent);
+    transition: left 0.5s ease;
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: $shadow-xl;
+
+    &::before {
+      left: 0;
+    }
+  }
+
+  // Header area with icon and texts
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: $space-m;
+    text-align: left;
+  }
+
+  &__title {
+    font-size: 0.875rem;
+    color: $color-text-gray;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  &__value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: $color-text-dark;
+    margin-bottom: 0.25rem;
+  }
+
+  &__change {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+
+    &--positive { color: $color-success; }
+    &--negative { color: $color-danger; }
+  }
+}
+
+// Icon badge styles used in stat cards
+.icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  box-shadow: $shadow-md;
+
+  &--primary {
+    background: linear-gradient(135deg, $color-primary, lighten($color-primary, 20%));
+    color: $color-white;
+  }
+
+  &--success {
+    background: linear-gradient(135deg, $color-success, lighten($color-success, 20%));
+    color: $color-white;
+  }
+
+  &--warning {
+    background: linear-gradient(135deg, $color-warning, lighten($color-warning, 20%));
+    color: $color-white;
+  }
+
+  &--danger {
+    background: linear-gradient(135deg, $color-danger, lighten($color-danger, 20%));
+    color: $color-white;
+  }
+}
+
+.stat-number {
+  font-size: 24px;
+  font-weight: 800;
+  color: $color-text-dark;
+  margin-bottom: $space-xs;
+  background: linear-gradient(135deg, $color-primary 0%, $color-secondary 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: $color-text-gray;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+// ======================================
+// 📌 Menu Section
+// ======================================
+.menu-section {
+  background: $color-white;
+  margin: 0 $space-l;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-lg;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.menu-item {
+  border-bottom: 1px solid $color-border;
+  transition: $transition-fast;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.03) 0%, rgba(240, 147, 251, 0.03) 100%);
+  }
+
+  &:active {
+    transform: scale(0.98);
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(240, 147, 251, 0.05) 100%);
+  }
+}
+
+.menu-link {
+  display: flex;
+  align-items: center;
+  padding: $space-l;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.05), transparent);
+    transition: left 0.6s ease;
+  }
+
+  &:hover::before {
+    left: 100%;
+  }
+}
+
+.menu-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: $radius-m;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  margin-right: $space-m;
+  transition: $transition-normal;
+
+  &.icon-settings {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: $color-white;
+    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+  }
+
+  &.icon-activity {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: $color-white;
+    box-shadow: 0 4px 16px rgba(240, 147, 251, 0.3);
+  }
+
+  &.icon-help {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: $color-white;
+    box-shadow: 0 4px 16px rgba(79, 172, 254, 0.3);
+  }
+}
+
+.menu-content {
+  flex: 1;
+}
+
+.menu-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: $color-text-dark;
+  margin-bottom: $space-xs;
+  line-height: 1.3;
+}
+
+.menu-subtitle {
+  font-size: 13px;
+  color: $color-text-gray;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.menu-arrow {
+  font-size: 20px;
+  color: $color-text-light;
+  font-weight: 300;
+  transition: $transition-fast;
+  margin-left: $space-m;
+}
+
+.menu-item:hover .menu-arrow {
+  color: $color-primary;
+  transform: translateX(4px);
+}
+
+.menu-item:hover .menu-icon {
+  transform: scale(1.05) rotate(5deg);
+}
+
+// ======================================
+// 📌 Logout Section
+// ======================================
+.logout-section {
+  padding: $space-xl $space-l $space-xxl;
+}
+
+.logout-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: $color-white;
+  border: none;
+  padding: $space-l;
+  border-radius: $radius-xl;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: $transition-normal;
+  box-shadow: 0 6px 24px rgba(239, 68, 68, 0.3);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-m;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s ease;
+  }
+
+  &:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 10px 40px rgba(239, 68, 68, 0.4);
+
+    &::before {
+      left: 100%;
+    }
+  }
+
+  &:active {
+    transform: translateY(-1px) scale(0.98);
+  }
+}
+
+// ======================================
+// 📌 Animations
+// ======================================
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(5deg);
+  }
+}
+
+@keyframes avatarGlow {
+  0% {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  }
+  100% {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), 0 0 20px rgba(255, 255, 255, 0.3);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ======================================
+// 📌 Responsive Design
+// ======================================
+@media (max-width: 480px) {
+  .header {
+    padding: $space-xl $space-m $space-l;
+  }
+
+  .header-title {
+    font-size: 24px;
+  }
+
+  .profile-avatar {
+    width: 70px;
+    height: 70px;
+    font-size: 28px;
+  }
+
+  .stats-container {
+    padding: 0 $space-m $space-l;
+    gap: $space-s;
+  }
+
+  .stat-card {
+    padding: $space-m;
+  }
+
+  .stat-number {
+    font-size: 20px;
+  }
+
+  .menu-section {
+    margin: 0 $space-m;
+  }
+
+  .menu-link {
+    padding: $space-m;
+  }
+
+  .menu-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    margin-right: $space-m;
+  }
+
+  .menu-title {
+    font-size: 15px;
+  }
+
+  .menu-subtitle {
+    font-size: 12px;
+  }
+
+  .logout-section {
+    padding: $space-l $space-m $space-xl;
+  }
+
+  .logout-btn {
+    padding: $space-m;
+    font-size: 15px;
+  }
+}
+
+// ======================================
+// 📌 Dark Mode Support (Optional)
+// ======================================
+@media (prefers-color-scheme: dark) {
+  .container {
+    // Gunakan tema terang sesuai permintaan (EDF2FB)
+    background: #EDF2FB;
+  }
+
+  .stat-card {
+    background: $color-white;
+    border-color: $color-border;
+  }
+
+  .menu-section {
+    background: $color-white;
+    border-color: $color-border;
+  }
+
+  .menu-item {
+    border-bottom-color: $color-border;
+
+    &:hover {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(240, 147, 251, 0.05) 100%);
+    }
+  }
+
+  .menu-title {
+    color: $color-text-dark;
+  }
+
+  .menu-subtitle {
+    color: $color-text-gray;
+  }
+
+  .stat-number {
+    color: $color-text-dark;
+  }
+
+  .stat-label {
+    color: $color-text-gray;
+  }
+}

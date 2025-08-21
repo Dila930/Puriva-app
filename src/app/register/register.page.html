@@ -1,0 +1,124 @@
+<ion-content class="puriva-register-page">
+  <div class="puriva-login-container">
+    <div class="puriva-login-card">
+      <div class="puriva-login-header">
+        <div class="puriva-logo-section">
+          <div class="puriva-logo">PURIVA</div>
+          <div class="puriva-logo-subtitle">Smart UV Chamber untuk Program Makan Gratis</div>
+        </div>
+        <div class="puriva-welcome-text">Buat Akun Baru</div>
+        <div class="puriva-welcome-subtitle">Isi data diri Anda untuk mendaftar</div>
+      </div>
+
+      <form #registerForm="ngForm" class="puriva-form-section" novalidate (ngSubmit)="$event.preventDefault()">
+        <ion-list lines="none" class="ion-no-margin">
+          <!-- Username -->
+          <ion-item class="puriva-form-item">
+            <ion-label position="stacked">Username</ion-label>
+            <ion-input
+              type="text"
+              placeholder="Pilih username"
+              [(ngModel)]="username"
+              name="username"
+              required
+            ></ion-input>
+            <ion-icon name="person-outline" slot="start" class="puriva-input-icon"></ion-icon>
+          </ion-item>
+
+          <!-- Email -->
+          <ion-item class="puriva-form-item">
+            <ion-label position="stacked">Email</ion-label>
+            <ion-input
+              type="email"
+              placeholder="user@example.com"
+              [(ngModel)]="email"
+              name="email"
+              required
+              email
+            ></ion-input>
+            <ion-icon name="mail-outline" slot="start" class="puriva-input-icon"></ion-icon>
+          </ion-item>
+
+          <!-- Hanya Email dan Password diperlukan -->
+
+          <!-- Password -->
+          <ion-item class="puriva-form-item">
+            <ion-label position="stacked">Password</ion-label>
+            <ion-input
+              [type]="showPassword ? 'text' : 'password'"
+              placeholder="Buat password"
+              [(ngModel)]="password"
+              name="password"
+              required
+              minlength="6"
+            ></ion-input>
+            <ion-icon name="lock-closed-outline" slot="start" class="puriva-input-icon"></ion-icon>
+            <ion-button fill="clear" slot="end" (click)="togglePassword()">
+              <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+            </ion-button>
+          </ion-item>
+
+          <!-- Konfirmasi Password dihapus sesuai permintaan -->
+
+          <!-- Checkbox Persetujuan (wajib baca & setuju lewat modal) -->
+          <ion-item lines="none" class="puriva-checkbox-group">
+            <ion-checkbox slot="start" [checked]="agreeToTerms" (ionChange)="onTermsAttempt($event)"></ion-checkbox>
+            <ion-label class="ion-text-wrap">
+              Saya menyetujui
+              <a (click)="openPolicy()" class="puriva-register-link">Kebijakan Privasi</a>
+              Puriva
+            </ion-label>
+          </ion-item>
+
+          <!-- Tombol Daftar -->
+          <ion-button 
+            expand="block" 
+            class="puriva-btn-primary" 
+            type="button"
+            (click)="register()"
+            [disabled]="isLoading"
+          >
+            <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+            <span *ngIf="!isLoading">Daftar</span>
+          </ion-button>
+
+          <!-- Link ke Halaman Login -->
+          <div class="puriva-register-section">
+            Sudah punya akun?
+            <a (click)="goToLogin()" class="puriva-register-link">Masuk di sini</a>
+          </div>
+        </ion-list>
+      </form>
+      
+      <!-- Modal Kebijakan Privasi -->
+      <ion-modal [isOpen]="showPolicyModal" (didDismiss)="onPolicyDismiss()">
+        <ng-template>
+          <ion-header translucent>
+            <ion-toolbar>
+              <ion-title>Kebijakan Privasi</ion-title>
+              <ion-buttons slot="end">
+                <ion-button (click)="declinePolicy()">Tutup</ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content class="ion-padding">
+            <h2>Ringkasan Kebijakan</h2>
+            <p>
+              Kami mengumpulkan data yang Anda berikan saat pendaftaran (username, email) untuk keperluan autentikasi dan peningkatan layanan aplikasi. Data disimpan aman dan tidak dibagikan ke pihak ketiga tanpa persetujuan Anda, kecuali diwajibkan oleh hukum.
+            </p>
+            <ul>
+              <li>Penggunaan data untuk verifikasi akun dan notifikasi.</li>
+              <li>Anda dapat meminta penghapusan akun dan data terkait.</li>
+              <li>Detail lengkap tersedia pada dokumen kebijakan resmi aplikasi.</li>
+            </ul>
+
+            <div class="ion-text-center" style="margin-top: 24px;">
+              <ion-button color="primary" (click)="acceptPolicy()">Setuju</ion-button>
+              <ion-button fill="outline" color="medium" (click)="declinePolicy()">Tidak Setuju</ion-button>
+            </div>
+          </ion-content>
+        </ng-template>
+      </ion-modal>
+    </div>
+  </div>
+</ion-content>

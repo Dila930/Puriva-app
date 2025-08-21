@@ -1,0 +1,626 @@
+// ======================================
+// 📌 Variables & Mixins
+// ======================================
+
+// Color Palette
+$color-bg: #ffffff;
+$color-primary-start: #667eea;
+$color-primary-end: #764ba2;
+$color-secondary-start: #f093fb;
+$color-secondary-end: #f5576c;
+$color-text-dark: #1e293b;
+$color-text-gray: #475569;
+$color-placeholder: #94a3b8;
+$color-icon: #667eea;
+$color-white: #ffffff;
+$color-border: rgba(255, 255, 255, 0.25);
+$color-glass-light: rgba(255, 255, 255, 0.30);
+$color-glass-dark: rgba(255, 255, 255, 0.15);
+$color-blue-dark: #3b5cb8;
+$color-blue-link: #4169e1;
+
+// Spacing & Sizes
+$space-xs: 8px;
+$space-s: 16px;
+$space-m: 24px;
+$space-l: 32px;
+$space-xl: 48px;
+$radius-s: 12px;
+$radius-m: 18px;
+$radius-l: 24px;
+$radius-xl: 32px;
+$btn-height: 68px;
+
+// Typography
+$font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+// Transitions & Shadows
+$transition-main: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+$transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+$shadow-light: 0 10px 40px rgba(31, 38, 135, 0.15);
+$shadow-btn-primary: 0 8px 32px rgba(102, 126, 234, 0.35);
+
+// Mixins
+@mixin gradient-primary() {
+    background: linear-gradient(135deg, $color-primary-start 0%, $color-primary-end 50%, $color-secondary-start 100%);
+}
+
+@mixin glass-effect($blur: 25px) {
+    background: $color-glass-light;
+    backdrop-filter: blur($blur) saturate(200%);
+    border: 1px solid $color-border;
+}
+
+@mixin shimmer-border($padding: 2px) {
+    position: absolute;
+    inset: 0;
+    padding: $padding;
+    background: linear-gradient(135deg, $color-primary-start 0%, $color-primary-end 25%, $color-secondary-start 75%, $color-secondary-end 100%);
+    border-radius: $radius-xl;
+    mask: linear-gradient(white 0 0) content-box, linear-gradient(white 0 0);
+    mask-composite: xor;
+    -webkit-mask: linear-gradient(white 0 0) content-box, linear-gradient(white 0 0);
+    -webkit-mask-composite: xor;
+    opacity: 0.8;
+    animation: shimmer 4s ease-in-out infinite;
+}
+
+// ======================================
+// 📌 Global Styles
+// ======================================
+body {
+    font-family: $font-family;
+    background: $color-white;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+// Full-bleed layout: no outer padding/margins, card fills the screen
+ion-content.puriva-login-page {
+    --padding-start: 0;
+    --padding-end: 0;
+    --padding-top: 0;
+    --padding-bottom: 0;
+    --background: #{$color-white};
+}
+/* Antisipasi halaman register memakai kelas .puriva-register-page */
+ion-content.puriva-register-page {
+    --padding-start: 0;
+    --padding-end: 0;
+    --padding-top: 0;
+    --padding-bottom: 0;
+    --background: #{$color-white};
+}
+
+.puriva-login-page {
+    min-height: 100vh;
+    background: $color-white;
+    margin: 0;
+    padding: 0;
+}
+/* Jika ada halaman register */
+.puriva-register-page {
+    min-height: 100vh;
+    background: $color-white;
+    margin: 0;
+    padding: 0;
+}
+
+.puriva-login-container {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    background: $color-white;
+}
+
+.puriva-login-card {
+    border-radius: 0;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: $color-white;
+}
+
+// ======================================
+// 📌 Header
+// ======================================
+.puriva-login-header {
+    @include gradient-primary();
+    padding: $space-xl $space-l;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+
+    &::before, &::after {
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+        z-index: 0;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, transparent 70%);
+    }
+
+    &::before {
+        top: -80px;
+        right: -80px;
+        width: 180px;
+        height: 180px;
+        animation: float 25s ease-in-out infinite;
+    }
+
+    &::after {
+        bottom: -60px;
+        left: -60px;
+        width: 140px;
+        height: 140px;
+        background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+        animation: float 20s ease-in-out infinite reverse;
+    }
+}
+
+.puriva-logo-section {
+    margin-bottom: $space-l;
+    position: relative;
+    z-index: 2;
+}
+
+.puriva-logo {
+    font-size: 56px;
+    font-weight: 900;
+    background: linear-gradient(135deg, $color-white 0%, rgba(255, 255, 255, 0.85) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: $space-s;
+    letter-spacing: -3px;
+    text-shadow: 0 0 40px rgba(255, 255, 255, 0.6);
+    animation: glow 3s ease-in-out infinite alternate;
+}
+
+.puriva-logo-subtitle {
+    font-size: $space-s;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    line-height: 1.6;
+    max-width: 340px;
+    margin: 0 auto;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+}
+
+.puriva-welcome-text {
+    font-size: 32px;
+    font-weight: 800;
+    color: $color-white;
+    margin-bottom: $space-s;
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+    animation: slideInDown 0.8s ease-out;
+}
+
+.puriva-welcome-subtitle {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 400;
+    animation: fadeIn 1s ease-out 0.3s both;
+}
+
+// ======================================
+// 📌 Method Selector
+// ======================================
+.puriva-method-selector {
+    /* Diperkecil dan lebih center */
+    margin: $space-m auto;
+    width: 280px; /* Fixed width lebih kecil */
+    max-width: calc(100% - #{$space-l * 2});
+    background: $color-glass-dark;
+    backdrop-filter: blur(15px);
+    border-radius: $radius-l;
+    padding: $space-xs;
+    border: 1px solid $color-border;
+    box-shadow: inset 0 2px 12px rgba(0, 0, 0, 0.08);
+    display: flex;
+    gap: $space-xs;
+}
+
+.puriva-method-button {
+    background: transparent;
+    border: none;
+    color: $color-text-gray;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 12px 16px;
+    flex: 1;
+    border-radius: $radius-m;
+    cursor: pointer;
+    transition: $transition-main;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $space-xs;
+    min-height: 40px;
+
+    &.active {
+        background: rgba(255, 255, 255, 0.9);
+        color: $color-blue-dark;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1), inset 0 2px 0 rgba(255, 255, 255, 0.6);
+        transform: translateY(-2px) scale(1.02);
+    }
+
+    &:not(.active):hover {
+        background: rgba(255, 255, 255, 0.6);
+        transform: translateY(-1px);
+        color: $color-text-dark;
+    }
+
+    svg {
+        width: 16px;
+        height: 16px;
+        fill: currentColor;
+    }
+}
+
+// ======================================
+// 📌 Form
+// ======================================
+.puriva-form-section {
+    padding: 0 $space-l $space-xl;
+    background: $color-white;
+    animation: slideInUp 0.8s ease-out 0.2s both;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.puriva-form-item {
+    margin-bottom: $space-m;
+    border-radius: $radius-l;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    transition: $transition-main;
+    position: relative;
+    overflow: hidden;
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    padding: 0 $space-m;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+        transition: left 0.7s;
+    }
+
+    &:hover:not(:focus-within) {
+        transform: translateY(-3px);
+        background: $color-white;
+        box-shadow: 0 8px 35px rgba(0, 0, 0, 0.08);
+        border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    &:focus-within {
+        background: $color-white;
+        transform: translateY(-6px) scale(1.02);
+        box-shadow: 0 10px 40px rgba(102, 126, 234, 0.25);
+        border-color: rgba(102, 126, 234, 0.6);
+
+        .puriva-input-icon {
+            color: $color-blue-link;
+            transform: scale(1.15);
+        }
+
+        &::before {
+            left: 100%;
+        }
+    }
+}
+
+.puriva-form-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 18px;
+    font-weight: 600;
+    color: $color-text-dark;
+    padding: $space-m 0;
+
+    &::placeholder {
+        color: $color-placeholder;
+        font-weight: 500;
+        opacity: 0.8;
+    }
+}
+
+.puriva-input-icon {
+    color: $color-icon;
+    font-size: 22px;
+    margin-right: $space-s;
+    transition: $transition-bounce;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.08));
+}
+
+.puriva-toggle-password {
+    color: #64748b;
+    cursor: pointer;
+    transition: $transition-bounce;
+    font-size: 20px;
+    padding: 4px;
+    border-radius: $radius-s;
+
+    &:hover {
+        color: $color-icon;
+        transform: scale(1.1);
+        background: rgba(102, 126, 234, 0.1);
+    }
+}
+
+// ======================================
+// 📌 Checkbox
+// ======================================
+.puriva-checkbox-group {
+    display: flex;
+    align-items: center;
+    margin: $space-l 0;
+    cursor: pointer;
+    user-select: none;
+    transition: $transition-main;
+    padding: $space-s;
+    border-radius: $radius-m;
+
+    &:hover {
+        background: rgba(102, 126, 234, 0.05);
+    }
+}
+
+.puriva-custom-checkbox {
+    width: 28px;
+    height: 28px;
+    border: 2px solid #d1d5db;
+    border-radius: $radius-s;
+    background: $color-white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: $space-s;
+    transition: $transition-bounce;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+
+    &.checked {
+        background: linear-gradient(135deg, $color-primary-start 0%, $color-primary-end 25%, $color-secondary-start 75%, $color-secondary-end 100%);
+        border-color: transparent;
+        transform: scale(1.1);
+        box-shadow: 0 4px 24px rgba(102, 126, 234, 0.4);
+
+        &::after {
+            content: '✓';
+            color: $color-white;
+            font-size: $space-s;
+            font-weight: bold;
+            animation: checkmark 0.4s ease-in-out;
+        }
+    }
+}
+
+.puriva-checkbox-label {
+    font-size: $space-s;
+    color: $color-text-dark;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+// ======================================
+// 📌 Buttons
+// ======================================
+.puriva-btn-primary {
+    width: 100%;
+    height: $btn-height;
+    background: linear-gradient(135deg, $color-primary-start 0%, $color-primary-end 25%, $color-secondary-start 75%, $color-secondary-end 100%);
+    color: $color-white;
+    font-size: 18px;
+    font-weight: 700;
+    border: none;
+    border-radius: $radius-l;
+    cursor: pointer;
+    transition: $transition-main;
+    margin: $space-l 0 $space-m;
+    position: relative;
+    overflow: hidden;
+    box-shadow: $shadow-btn-primary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+        transition: left 0.8s;
+    }
+
+    &:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 15px 50px rgba(102, 126, 234, 0.5);
+        &::before {
+            left: 100%;
+        }
+    }
+}
+
+.puriva-btn-secondary {
+    width: 100%;
+    height: 56px;
+    background: $color-white;
+    border: 2px solid rgba(102, 126, 234, 0.3);
+    color: $color-icon;
+    font-size: $space-s;
+    font-weight: 600;
+    border-radius: $radius-l;
+    cursor: pointer;
+    transition: $transition-main;
+    margin: $space-s 0;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+        border-color: $color-blue-link;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        color: $color-blue-link;
+    }
+}
+
+// ======================================
+// 📌 Register Link
+// ======================================
+.puriva-register-section {
+    text-align: center;
+    margin-top: auto;
+    padding-top: $space-l;
+    font-size: $space-s;
+    color: $color-text-gray;
+    font-weight: 500;
+    line-height: 1.6;
+}
+
+.puriva-register-link {
+    color: $color-blue-link;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    transition: $transition-main;
+    position: relative;
+    padding: 2px 0;
+
+    &::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: 0;
+        left: 50%;
+        background: linear-gradient(90deg, $color-blue-link, $color-icon);
+        transition: $transition-main;
+        border-radius: 1px;
+    }
+
+    &:hover {
+        color: $color-blue-dark;
+        transform: translateY(-1px);
+
+        &::after {
+            width: 100%;
+            left: 0;
+        }
+    }
+}
+
+// ======================================
+// 📌 Animations
+// ======================================
+@keyframes materialIn {
+    0% { opacity: 0; transform: translateY(100px) scale(0.8) rotateX(45deg); }
+    100% { opacity: 1; transform: translateY(0) scale(1) rotateX(0deg); }
+}
+
+@keyframes shimmer {
+    0%, 100% { opacity: 0.8; }
+    50% { opacity: 1; }
+}
+
+@keyframes glow {
+    0% { text-shadow: 0 0 40px rgba(255, 255, 255, 0.6); }
+    100% {
+        text-shadow: 0 0 50px rgba(255, 255, 255, 0.9),
+                     0 0 70px rgba(102, 126, 234, 0.4),
+                     0 0 90px rgba(240, 147, 251, 0.3);
+    }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-40px) rotate(5deg); }
+}
+
+@keyframes slideInDown {
+    from { opacity: 0; transform: translateY(-50px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInUp {
+    from { opacity: 0; transform: translateY(60px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes checkmark {
+    0% { transform: scale(0) rotate(45deg); }
+    50% { transform: scale(1.3) rotate(45deg); }
+    100% { transform: scale(1) rotate(45deg); }
+}
+
+// ======================================
+// 📌 Responsive
+// ======================================
+@media (max-width: 480px) {
+    .puriva-login-container {
+        padding: 0;
+    }
+
+    .puriva-login-header {
+        padding: $space-xl $space-m;
+    }
+
+    .puriva-form-section {
+        padding: 0 $space-m $space-l;
+    }
+
+    .puriva-logo {
+        font-size: 44px;
+    }
+
+    .puriva-welcome-text {
+        font-size: 28px;
+    }
+
+    .puriva-method-selector {
+        width: 260px;
+        margin: $space-m auto;
+        max-width: calc(100% - #{$space-m * 2});
+    }
+
+    .puriva-method-button {
+        font-size: 13px;
+        padding: 10px 12px;
+        min-height: 36px;
+    }
+
+    .puriva-form-item {
+        min-height: 68px;
+    }
+
+    .puriva-btn-primary {
+        height: 64px;
+        font-size: 17px;
+    }
+}

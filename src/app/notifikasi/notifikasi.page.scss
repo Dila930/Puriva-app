@@ -1,0 +1,103 @@
+ion-toolbar.header {
+  --background: linear-gradient(135deg, #4338ca 0%, #7c3aed 50%, #ec4899 100%);
+  --color: #fff;
+  --border-width: 0;
+}
+
+ion-back-button {
+  --color: #fff;
+}
+
+ion-title {
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+ion-content {
+  --background: #f8fafc;
+}
+
+.container {
+  padding: 16px;
+}
+
+.notif-section {
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  margin: 0;
+  background: #fff;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1e293b;
+  padding-bottom: 0;
+}
+
+.section-title ion-icon {
+  margin-right: 8px;
+  color: #667eea;
+}
+
+ion-list {
+  background: transparent;
+}
+
+.notif-item {
+  --background: #fff;
+  --inner-padding-end: 16px;
+  --inner-border-width: 0;
+  --border-width: 0;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 12px 16px;
+}
+
+.notif-item:last-of-type {
+  border-bottom: none;
+}
+
+.notif-item-icon {
+  min-width: 40px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  margin-right: 16px;
+}
+
+.notif-item-icon ion-icon {
+  font-size: 1.2rem;
+  color: #fff;
+}
+
+.notif-item-icon.success {
+  background: #10b981;
+}
+
+.notif-item-icon.warning {
+  background: #f59e0b;
+}
+
+.notif-item-title {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 1rem;
+}
+
+.notif-item-time {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+.notif-badge {
+  font-weight: 600;
+  font-size: 0.7rem;
+  padding: 6px 10px;
+  border-radius: 10px;
+}

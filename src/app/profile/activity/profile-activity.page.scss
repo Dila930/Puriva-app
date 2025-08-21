@@ -1,0 +1,4 @@
+.profile-detail { --background: #EDF2FB; }
+.header { background: #EDF2FB; padding: calc(env(safe-area-inset-top, 0px) + 16px) 20px 24px; color: #1e293b; text-align: center; border-radius: 0 0 24px 24px; }
+.content { padding: 20px; background: #EDF2FB; min-height: calc(100vh - 120px); }
+.empty { background: #fff; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); padding: 24px; text-align: center; color: #64748b; }

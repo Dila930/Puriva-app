@@ -1,0 +1,27 @@
+<ion-footer>
+  <!-- Enhanced Bottom Navigation -->
+  <nav class="bottom-nav">
+    <div class="nav-items">
+      <div class="nav-item" [class.active]="activeTab === 'home'" (click)="goToHome()">
+        <ion-icon name="home-outline" class="nav-icon"></ion-icon>
+        <div class="nav-label">Beranda</div>
+      </div>
+      <div class="nav-item" [class.active]="activeTab === 'control'" (click)="goToControl()">
+        <ion-icon name="options-outline" class="nav-icon"></ion-icon>
+        <div class="nav-label">Control</div>
+      </div>
+      <div class="nav-item" [class.active]="activeTab === 'news'" (click)="goToNews()">
+        <ion-icon name="newspaper-outline" class="nav-icon"></ion-icon>
+        <div class="nav-label">Berita</div>
+      </div>
+      <div class="nav-item" [class.active]="activeTab === 'forum'" (click)="goToForum()">
+        <ion-icon name="chatbubbles-outline" class="nav-icon"></ion-icon>
+        <div class="nav-label">Forum</div>
+      </div>
+      <div class="nav-item" [class.active]="activeTab === 'profile'" (click)="goToProfile()">
+        <ion-icon name="person-outline" class="nav-icon"></ion-icon>
+        <div class="nav-label">Profil</div>
+      </div>
+    </div>
+  </nav>
+</ion-footer>

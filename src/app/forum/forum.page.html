@@ -1,0 +1,388 @@
+<ion-content [fullscreen]="true">
+  <div class="forum-container">
+    <!-- Header Section -->
+    <div class="header">
+      <div class="page-title">💬 Forum Diskusi</div>
+      <div class="header-subtitle">Berbagi pengalaman & tips PURIVA</div>
+      
+      <ion-searchbar 
+        class="search-bar" 
+        placeholder="🔍 Cari diskusi..." 
+        (ionInput)="searchThreads($event)"
+        [debounce]="300">
+      </ion-searchbar>
+      
+      <div class="forum-stats">
+        <div>
+          <div class="stat-number">{{ forumStats.totalThreads }}</div>
+          <div>Thread</div>
+        </div>
+        <div>
+          <div class="stat-number">{{ forumStats.totalComments }}</div>
+          <div>Komentar</div>
+        </div>
+        <div>
+          <div class="stat-number">{{ forumStats.activeUsers }}</div>
+          <div>User Aktif</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content" *ngIf="!showThreadDetail">
+      <!-- Action Section -->
+      <div class="action-section">
+        <div class="login-prompt" *ngIf="!isLoggedIn">
+          <div class="login-prompt-title">🔐 Login Diperlukan</div>
+          <div class="login-prompt-subtitle">Silakan login untuk berpartisipasi dalam forum</div>
+        </div>
+        
+        <ion-button 
+          class="create-thread-btn" 
+          expand="block"
+          (click)="openCreateThreadModal()">
+          <ion-icon name="add" slot="start"></ion-icon>
+          Buat Thread Baru
+        </ion-button>
+      </div>
+      
+      <!-- Categories Section -->
+      <div class="categories-section">
+        <div class="section-title">📂 Kategori</div>
+        <div class="categories-grid">
+          <div 
+            class="category-item" 
+            *ngFor="let category of categories"
+            [class.active]="currentCategory === category.key"
+            (click)="filterByCategory(category.key)">
+            <div class="category-icon">{{ category.icon }}</div>
+            <div class="category-name">{{ category.name }}</div>
+            <div class="category-count">{{ category.count }} thread</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Threads Section -->
+      <div class="threads-section">
+        <div class="section-title">🔥 Diskusi Terbaru</div>
+        
+        <div *ngIf="filteredThreads.length === 0" class="empty-state">
+          <div class="empty-icon">💬</div>
+          <div class="empty-message">Belum ada diskusi di forum hari ini</div>
+          <div class="empty-submessage">Jadilah yang pertama memulai diskusi!</div>
+        </div>
+        
+        <div class="thread-list" *ngIf="filteredThreads.length > 0">
+          <div 
+            class="thread-item" 
+            *ngFor="let thread of filteredThreads"
+            (click)="openThread(thread)">
+            
+            <div class="thread-header">
+              <span class="thread-status" *ngIf="thread.isPinned">📌</span>
+              <span class="thread-status" *ngIf="thread.isTrending">🔥</span>
+              <span class="thread-status" *ngIf="thread.status === 'solved'">✅</span>
+            </div>
+            
+            <div class="thread-title">{{ thread.title }}</div>
+            <div class="thread-excerpt">{{ getThreadExcerpt(thread.content) }}</div>
+            
+            <div class="thread-meta">
+              <div class="thread-author">
+                <span>{{ thread.author }}</span>
+                <span class="author-role" [ngClass]="thread.role">{{ getRoleText(thread.role) }}</span>
+              </div>
+              <div class="thread-stats">
+                <div class="stat-item">
+                  <ion-icon name="chatbubble-outline"></ion-icon>
+                  <span>{{ thread.comments.length }}</span>
+                </div>
+                <div class="stat-item">
+                  <ion-icon name="thumbs-up-outline"></ion-icon>
+                  <span>{{ thread.likes }}</span>
+                </div>
+                <div class="stat-item">
+                  <span>{{ getTimeAgo(thread.timestamp) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Thread Detail View -->
+    <div class="thread-detail" *ngIf="showThreadDetail && selectedThread">
+      <div class="thread-detail-header">
+        <ion-button fill="clear" (click)="backToForum()">
+          <ion-icon name="arrow-back" slot="start"></ion-icon>
+          Kembali ke Forum
+        </ion-button>
+        
+        <div class="thread-detail-title">{{ selectedThread.title }}</div>
+        <div class="thread-meta">
+          <div class="thread-author">
+            <span>{{ selectedThread.author }}</span>
+            <span class="author-role" [ngClass]="selectedThread.role">{{ getRoleText(selectedThread.role) }}</span>
+          </div>
+          <span>{{ getTimeAgo(selectedThread.timestamp) }}</span>
+        </div>
+        <div class="thread-manage" *ngIf="canManageThread(selectedThread)">
+          <ion-button size="small" fill="outline" color="medium" (click)="editThreadTitleContent(selectedThread.id)">
+            <ion-icon name="create-outline" slot="start"></ion-icon>
+            Edit
+          </ion-button>
+          <ion-button size="small" fill="outline" color="danger" (click)="deleteThread(selectedThread.id)">
+            <ion-icon name="trash-outline" slot="start"></ion-icon>
+            Hapus
+          </ion-button>
+        </div>
+      </div>
+      
+      <div class="thread-detail-content">{{ selectedThread.content }}</div>
+      
+      <div class="thread-actions" *ngIf="isLoggedIn">
+        <ion-button 
+          class="action-btn"
+          fill="outline"
+          [class.liked]="isThreadLiked(selectedThread.id)"
+          (click)="likeThread(selectedThread.id)">
+          <ion-icon name="thumbs-up" slot="start"></ion-icon>
+          {{ selectedThread.likes }}
+        </ion-button>
+        
+        <ion-button class="action-btn" fill="outline" (click)="reportThread(selectedThread.id)">
+          <ion-icon name="warning" slot="start"></ion-icon>
+          Report
+        </ion-button>
+        
+        <ion-button 
+          *ngIf="currentUser?.role === 'admin'"
+          class="action-btn admin-btn"
+          fill="outline"
+          (click)="toggleSolved(selectedThread.id)">
+          <ion-icon name="checkmark-circle" slot="start"></ion-icon>
+          {{ selectedThread.status === 'solved' ? 'Unsolved' : 'Mark Solved' }}
+        </ion-button>
+      </div>
+      
+      <!-- Comments Section -->
+      <div class="comments-section">
+        <div class="section-title">💬 Komentar ({{ selectedThread.comments.length }})</div>
+        
+        <div *ngIf="selectedThread.comments.length === 0" class="no-comments">
+          <div class="empty-icon">💭</div>
+          <div class="empty-message">Belum ada komentar</div>
+          <div class="empty-submessage">Jadilah yang pertama berkomentar!</div>
+        </div>
+        
+        <div class="comment-item" *ngFor="let comment of selectedThread.comments">
+          <div class="comment-author">
+            <span>{{ comment.author }}</span>
+            <span class="author-role" [ngClass]="comment.role">{{ getRoleText(comment.role) }}</span>
+          </div>
+          <div class="comment-content">{{ comment.content }}</div>
+          <div class="comment-time">{{ getTimeAgo(comment.timestamp) }}</div>
+        </div>
+        
+        <!-- Reply Form -->
+        <div class="reply-form" *ngIf="isLoggedIn">
+          <ion-textarea
+            class="reply-input"
+            placeholder="Tulis komentar..."
+            [(ngModel)]="newComment"
+            rows="3">
+          </ion-textarea>
+          <ion-button 
+            class="reply-submit"
+            expand="block"
+            (click)="submitReply()"
+            [disabled]="!newComment.trim()">
+            <ion-icon name="send" slot="start"></ion-icon>
+            Kirim Komentar
+          </ion-button>
+        </div>
+        
+        <div class="login-required" *ngIf="!isLoggedIn">
+          <ion-button fill="outline" (click)="showLoginPrompt()">
+            <ion-icon name="log-in" slot="start"></ion-icon>
+            Login untuk Berkomentar
+          </ion-button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Login Required Alert -->
+  <ion-alert
+    [isOpen]="showLoginAlert"
+    header="Login Diperlukan"
+    message="Silakan login untuk berpartisipasi dalam forum diskusi PURIVA"
+    [buttons]="loginAlertButtons"
+    (didDismiss)="showLoginAlert = false">
+  </ion-alert>
+
+  <!-- Login Modal -->
+  <ion-modal [isOpen]="showLoginModal" (didDismiss)="showLoginModal = false">
+    <ng-template>
+      <div class="login-container">
+        <div class="login-header">
+          <button class="close-btn" (click)="showLoginModal = false">&times;</button>
+          
+          <div class="logo-section">
+            <div class="logo-icon">🔬</div>
+            <div class="welcome-title">Selamat Datang</div>
+            <div class="welcome-subtitle">Masuk ke akun PURIVA Anda</div>
+          </div>
+        </div>
+        
+        <div class="login-form">
+          <form (ngSubmit)="performLogin()" #loginFormRef="ngForm">
+            <div class="form-group">
+              <label class="form-label">Email atau Username</label>
+              <input 
+                type="text" 
+                class="form-input" 
+                placeholder="kaisha826@gmail.com"
+                [(ngModel)]="loginForm.username"
+                name="username"
+                required
+              >
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Password</label>
+              <div class="password-container">
+                <input 
+                  [type]="showPassword ? 'text' : 'password'"
+                  class="form-input" 
+                  placeholder="••••••••"
+                  [(ngModel)]="loginForm.password"
+                  name="password"
+                  required
+                >
+                <button type="button" class="password-toggle" (click)="togglePassword()">
+                  {{ showPassword ? '🙈' : '👁️' }}
+                </button>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label">Pilih Role:</label>
+              <select 
+                class="role-dropdown" 
+                [(ngModel)]="loginForm.role"
+                name="role"
+                required>
+                <option value="">Pilih role Anda</option>
+                <option value="operator">👷 Operator</option>
+                <option value="teknisi">🔧 Teknisi</option>
+                <option value="admin">👨‍💼 Admin</option>
+              </select>
+            </div>
+            
+            <button 
+              type="submit" 
+              class="login-btn"
+              [disabled]="!loginForm.username || !loginForm.password || !loginForm.role || isLoading">
+              <span *ngIf="!isLoading && !loginSuccess">🔐 Masuk</span>
+              <span *ngIf="isLoading">Memproses...</span>
+              <span *ngIf="loginSuccess">Berhasil!</span>
+              <div class="loading-spinner" *ngIf="isLoading"></div>
+              <div class="success-checkmark" *ngIf="loginSuccess">✓</div>
+            </button>
+          </form>
+          
+          <div class="demo-section">
+            <div class="demo-title">Demo Accounts:</div>
+            <div class="demo-buttons">
+              <button class="demo-btn operator" (click)="quickLogin('operator')">
+                Login as Operator
+              </button>
+              <button class="demo-btn teknisi" (click)="quickLogin('teknisi')">
+                Login as Teknisi
+              </button>
+              <button class="demo-btn admin" (click)="quickLogin('admin')">
+                Login as Admin
+              </button>
+            </div>
+          </div>
+          
+          <div class="forgot-password">
+            <a href="#" class="forgot-link" (click)="forgotPassword()">Lupa password?</a>
+          </div>
+        </div>
+        
+        <div class="version-info">v1.2.0</div>
+      </div>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Create Thread Modal -->
+  <ion-modal [isOpen]="showCreateThreadModal" (didDismiss)="showCreateThreadModal = false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Buat Thread Baru</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="showCreateThreadModal = false">
+              <ion-icon name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      
+      <ion-content class="create-thread-content">
+        <div class="create-thread-form">
+          <form (ngSubmit)="createNewThread()">
+            <ion-item class="thread-input">
+              <ion-label position="floating">Judul Thread</ion-label>
+              <ion-input 
+                type="text" 
+                [(ngModel)]="newThreadForm.title"
+                name="title"
+                required>
+              </ion-input>
+            </ion-item>
+            
+            <ion-item class="thread-input">
+              <ion-label position="floating">Kategori</ion-label>
+              <ion-select 
+                [(ngModel)]="newThreadForm.category"
+                name="category"
+                placeholder="Pilih kategori">
+                <ion-select-option value="troubleshooting">Troubleshooting</ion-select-option>
+                <ion-select-option value="tips">Tips & Trik</ion-select-option>
+                <ion-select-option value="data">Data & Analitik</ion-select-option>
+                <ion-select-option value="news">Berita & Update</ion-select-option>
+                <ion-select-option value="diskusi">Diskusi Bebas</ion-select-option>
+              </ion-select>
+            </ion-item>
+            
+            <ion-item class="thread-input">
+              <ion-label position="floating">Konten Thread</ion-label>
+              <ion-textarea 
+                [(ngModel)]="newThreadForm.content"
+                name="content"
+                rows="6"
+                placeholder="Tulis konten thread Anda..."
+                required>
+              </ion-textarea>
+            </ion-item>
+            
+            <ion-button 
+              type="submit"
+              expand="block" 
+              class="create-thread-btn"
+              [disabled]="!newThreadForm.title || !newThreadForm.content || !newThreadForm.category">
+              <ion-icon name="add" slot="start"></ion-icon>
+              Buat Thread
+            </ion-button>
+          </form>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>
+
+<app-bottom-nav [activeTab]="'forum'"></app-bottom-nav>

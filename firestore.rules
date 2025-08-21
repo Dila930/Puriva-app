@@ -1,0 +1,46 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Users can read/write only their own profile document
+    match /users/{userId} {
+      allow create: if request.auth != null && request.auth.uid == userId;
+      allow read, update: if request.auth != null && request.auth.uid == userId;
+      allow delete: if false; // prevent deletes for safety (adjust as needed)
+    }
+
+    // Login logs: authenticated users can create a log for themselves
+    match /loginLogs/{logId} {
+      allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
+      // Allow users to read their own logs
+      allow read: if request.auth != null && resource.data.uid == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    // Sterilization aggregate per user: sterilisasi/{uid}
+    match /sterilisasi/{uid} {
+      // Read allowed only to the owner
+      allow read: if request.auth != null && request.auth.uid == uid;
+      // Create/Update allowed only to the owner; require the doc's uid field matches the auth uid when creating/updating
+      allow create: if request.auth != null && request.auth.uid == uid && request.resource.data.uid == request.auth.uid;
+      allow update: if request.auth != null && request.auth.uid == uid && request.resource.data.uid == request.auth.uid;
+      // Prevent deletes by default (adjust if needed)
+      allow delete: if false;
+    }
+
+    // Sterilization per-session logs: sterilisasiLogs/{uid_sessionId}
+    // We validate access using the uid field stored in the document rather than relying on the ID format
+    match /sterilisasiLogs/{logId} {
+      // Create allowed if the log is for the authenticated user
+      allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
+      // Read allowed only if the log belongs to the authenticated user
+      allow read: if request.auth != null && resource.data.uid == request.auth.uid;
+      // Updates allowed only by the owner; no need to re-send uid in payload
+      allow update: if request.auth != null && resource.data.uid == request.auth.uid;
+      // No deletes by default
+      allow delete: if false;
+    }
+
+    // Add other collections with rules here
+  }
+}

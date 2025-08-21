@@ -1,0 +1,83 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>news-detail</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="news-detail-content">
+  <div class="container">
+    <!-- Header Image -->
+    <div class="news-header-image" [style.background-image]="'url(' + newsData?.thumbnail + ')'">
+      <div class="header-overlay">
+        <button class="back-button" (click)="goBack()">
+          <ion-icon name="arrow-back"></ion-icon>
+        </button>
+        <div class="news-category-badge" [ngClass]="'category-' + newsData?.category">
+          {{ newsData?.categoryLabel }}
+        </div>
+      </div>
+    </div>
+    
+    <!-- Article Content -->
+    <div class="article-content">
+      <div class="article-header">
+        <h1 class="article-title">{{ newsData?.title }}</h1>
+        <div class="article-meta">
+          <span class="article-date">{{ newsData?.date }}</span>
+          <span class="meta-dot">•</span>
+          <span class="article-read-time">{{ newsData?.readTime }} min baca</span>
+        </div>
+        <!-- Admin actions: Edit / Delete -->
+        <div *ngIf="isAdmin" class="article-actions" style="margin-top:10px; display:flex; gap:8px;">
+          <ion-button size="small" color="primary" (click)="editNews()">
+            <ion-icon slot="start" name="create-outline"></ion-icon>
+            Edit
+          </ion-button>
+          <ion-button size="small" color="danger" (click)="deleteNews()">
+            <ion-icon slot="start" name="trash-outline"></ion-icon>
+            Hapus
+          </ion-button>
+        </div>
+      </div>
+      
+      <div class="article-body">
+        <p>{{ newsData?.content }}</p>
+        
+        <!-- Extended content based on category -->
+        <div *ngIf="newsData?.category === 'technology'">
+          <h3>Keunggulan Teknologi UV-C PURIVA</h3>
+          <p>Teknologi UV-C yang dikembangkan PURIVA menggunakan panjang gelombang 254 nanometer yang terbukti paling efektif dalam mengeliminasi mikroorganisme berbahaya. Sistem ini dilengkapi dengan sensor otomatis yang dapat menyesuaikan intensitas dan durasi sterilisasi berdasarkan jenis makanan.</p>
+          
+          <h3>Dampak untuk Program Makan Gratis</h3>
+          <p>Dengan teknologi ini, program makan gratis Indonesia dapat memastikan keamanan pangan untuk jutaan penerima manfaat. Setiap makanan yang didistribusikan telah melalui proses sterilisasi yang memenuhi standar internasional.</p>
+        </div>
+        
+        <div *ngIf="newsData?.category === 'program'">
+          <h3>Target Ekspansi 2024</h3>
+          <p>Program ekspansi ini menargetkan 50 kota besar di Indonesia dengan prioritas pada daerah dengan kepadatan penduduk tinggi dan kebutuhan program makan gratis yang besar.</p>
+          
+          <h3>Kolaborasi Strategis</h3>
+          <p>PURIVA bekerja sama dengan Kementerian Sosial, pemerintah daerah, dan organisasi non-profit untuk memastikan distribusi yang merata dan efektif.</p>
+        </div>
+        
+        <div *ngIf="newsData?.category === 'update'">
+          <h3>Fitur Baru v1.2</h3>
+          <ul>
+            <li>Monitoring real-time dengan dashboard yang lebih interaktif</li>
+            <li>Analitik prediktif untuk optimasi operasional</li>
+            <li>Notifikasi pintar untuk maintenance preventif</li>
+            <li>Interface yang lebih responsif dan user-friendly</li>
+          </ul>
+        </div>
+      </div>
+      
+      <!-- Back Button -->
+      <div class="article-footer">
+        <button class="btn-back" (click)="goBack()">
+          <ion-icon name="arrow-back"></ion-icon>
+          Kembali ke Berita
+        </button>
+      </div>
+    </div>
+  </div>
+</ion-content>

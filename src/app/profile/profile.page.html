@@ -1,0 +1,66 @@
+<ion-content class="profile-content" [fullscreen]="true">
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1 class="header-title">Profil</h1>
+      <div class="profile-avatar">{{ profile.initials }}</div>
+      <div class="profile-info">
+        <div class="profile-name">{{ profile.name }}</div>
+        <div class="profile-email">{{ maskedEmail }}</div>
+        <div class="profile-role">{{ profile.role }}</div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-container">
+      <div class="stat-card" *ngFor="let stat of profile.stats">
+        <div class="stat-number">{{ stat.number }}</div>
+        <div class="stat-label">{{ stat.label }}</div>
+      </div>
+    </div>
+
+    <!-- Menu Items -->
+    <div class="menu-section">
+      <div class="menu-item" (click)="onMenuClick(menuItems[0])">
+        <a class="menu-link">
+          <div class="menu-icon icon-settings">⚙</div>
+          <div class="menu-content">
+            <div class="menu-title">Pengaturan Akun</div>
+            <div class="menu-subtitle">Ubah data sandi & informasi pribadi</div>
+          </div>
+          <div class="menu-arrow">›</div>
+        </a>
+      </div>
+
+      <div class="menu-item" (click)="onMenuClick(menuItems[1])">
+        <a class="menu-link">
+          <div class="menu-icon icon-activity">📊</div>
+          <div class="menu-content">
+            <div class="menu-title">Riwayat Aktivitas</div>
+            <div class="menu-subtitle">Lihat riwayat sterilisasi & interaksi</div>
+          </div>
+          <div class="menu-arrow">›</div>
+        </a>
+      </div>
+
+      <div class="menu-item" (click)="onMenuClick(menuItems[2])">
+        <a class="menu-link">
+          <div class="menu-icon icon-help">❓</div>
+          <div class="menu-content">
+            <div class="menu-title">Pusat Bantuan</div>
+            <div class="menu-subtitle">FAQ, hubungi CS & panduan</div>
+          </div>
+          <div class="menu-arrow">›</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Logout Button -->
+    <div class="logout-section">
+      <button class="logout-btn" (click)="logout()">
+        🚪 Keluar dari Akun
+      </button>
+    </div>
+  </div>
+</ion-content>
+<app-bottom-nav [activeTab]="'profile'"></app-bottom-nav>

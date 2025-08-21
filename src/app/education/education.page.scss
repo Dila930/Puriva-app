@@ -1,0 +1,424 @@
+// Ensure content is not obscured by bottom nav
+:host ion-content {
+  --padding-bottom: 88px; // space for bottom nav
+}
+
+// News page styling - based on provided template
+.news-content {
+  --background: linear-gradient(135deg, #e3f2fd 0%, #f8fbff 100%);
+  
+  .container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+}
+
+// Position FAB above bottom navigation (avoid overlap)
+ion-fab.fab-above-bottom-nav {
+  position: fixed;
+  right: 16px;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 88px) !important;
+  z-index: 11;
+}
+
+ion-fab.fab-above-bottom-nav ion-fab-button {
+  box-shadow: 0 10px 24px rgba(65, 105, 225, 0.35);
+}
+
+// Animation keyframes
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInCard {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+// Animation classes
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.slide-in-card {
+  animation: slideInCard 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+// Header styling
+.header {
+  background: rgb(65,105,225);
+  background: linear-gradient(159deg, rgba(65,105,225,1) 0%, rgba(137,207,240,1) 100%);
+  padding: 25px;
+  border-radius: 25px;
+  margin-bottom: 25px;
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -30%;
+    width: 200px;
+    height: 200px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+  }
+  
+  .page-title {
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  
+  .header-subtitle {
+    text-align: center;
+    color: rgba(255,255,255,0.9);
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+  
+  .news-categories {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+  }
+  
+  .category-btn {
+    padding: 6px 15px;
+    border: 2px solid rgba(255,255,255,0.7);
+    background: rgba(255,255,255,0.1);
+    color: white;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    
+    &.active {
+      background: white;
+      color: #4169E1;
+      box-shadow: 0 2px 8px rgba(255,255,255,0.3);
+    }
+    
+    &:hover {
+      transform: translateY(-1px);
+    }
+  }
+  
+  .search-bar {
+    background: rgba(255,255,255,0.1);
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 15px;
+    padding: 8px 15px;
+    color: white;
+    font-size: 13px;
+    width: 100%;
+    
+    &::placeholder {
+      color: rgba(255,255,255,0.7);
+    }
+    
+    &:focus {
+      outline: none;
+      border-color: rgba(255,255,255,0.8);
+      background: rgba(255,255,255,0.2);
+    }
+  }
+}
+
+// News list styling
+.news-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+// Main content styling
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+// Featured news styling
+.featured-news {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 6px 25px rgba(0,0,0,0.1);
+  position: relative;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+  }
+  
+  .featured-image {
+    width: 100%;
+    height: 180px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    color: white;
+  }
+  
+  .featured-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: rgba(255,255,255,0.9);
+    color: #4169E1;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
+  .featured-content {
+    padding: 20px;
+  }
+  
+  .featured-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  
+  .featured-excerpt {
+    font-size: 13px;
+    color: #7f8c8d;
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
+  
+  .featured-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: #95a5a6;
+  }
+  
+  .read-more {
+    background: linear-gradient(135deg, #4169E1, #667eea);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(65, 105, 225, 0.4);
+    }
+  }
+}
+
+// News item styling
+.news-item {
+  background: white;
+  border-radius: 16px;
+  padding: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  display: flex;
+  gap: 12px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+  }
+  
+  .news-thumbnail {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: white;
+    flex-shrink: 0;
+    position: relative;
+    
+    &.teknologi {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    &.program {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+    
+    &.update {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+    
+    &.sertifikasi {
+      background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    }
+    
+    &.tips {
+      background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    }
+    
+    .category-label {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: rgba(255,255,255,0.9);
+      color: #4169E1;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 8px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+  }
+  
+  .news-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    
+    .news-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+    
+    .news-excerpt {
+      font-size: 12px;
+      color: #7f8c8d;
+      line-height: 1.4;
+      margin-bottom: 8px;
+      flex: 1;
+    }
+    
+    .news-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      color: #95a5a6;
+      
+      .news-date {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      
+      .read-time {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+    }
+  }
+}
+
+// Load more button
+.load-more {
+  background: white;
+  border: 2px solid #e8f4ff;
+  color: #4169E1;
+  padding: 15px;
+  border-radius: 16px;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+  
+  &:hover {
+    background: #f8fbff;
+    border-color: #4169E1;
+    transform: translateY(-2px);
+  }
+}
+// Responsive design for mobile
+@media (max-width: 430px) {
+  .container {
+    padding: 15px;
+  }
+  
+  .header {
+    padding: 20px;
+    
+    .page-title {
+      font-size: 20px;
+    }
+    
+    .header-subtitle {
+      font-size: 13px;
+    }
+    
+    .category-btn {
+      padding: 4px 10px;
+      font-size: 10px;
+    }
+  }
+  
+  .news-item {
+    padding: 12px;
+    
+    .news-thumbnail {
+      width: 50px;
+      height: 50px;
+      font-size: 20px;
+    }
+  }
+  
+  .featured-news {
+    .featured-image {
+      height: 160px;
+      font-size: 40px;
+    }
+    
+    .featured-content {
+      padding: 16px;
+    }
+  }
+}

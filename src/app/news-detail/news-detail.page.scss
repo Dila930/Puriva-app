@@ -1,0 +1,225 @@
+// News detail page styling - consistent with PURIVA theme
+.news-detail-content {
+    --background: #ffffff;
+    
+    .container {
+      max-width: 430px;
+      margin: 0 auto;
+    }
+  }
+  
+  // Header image styling
+  .news-header-image {
+    height: 250px;
+    background-size: cover;
+    background-position: center;
+    background-color: #e8f4ff;
+    position: relative;
+    background-image: linear-gradient(135deg, #4169E1, #667eea);
+    
+    .header-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 50%);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 20px;
+      
+      .back-button {
+        background: rgba(255,255,255,0.9);
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        
+        &:hover {
+          background: rgba(255,255,255,1);
+          transform: scale(1.05);
+        }
+        
+        ion-icon {
+          color: #2c3e50;
+          font-size: 20px;
+        }
+      }
+      
+      .news-category-badge {
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        color: white;
+        backdrop-filter: blur(10px);
+        
+        &.category-technology {
+          background: rgba(65, 105, 225, 0.9);
+        }
+        
+        &.category-program {
+          background: rgba(126, 211, 33, 0.9);
+        }
+        
+        &.category-update {
+          background: rgba(245, 166, 35, 0.9);
+        }
+        
+        &.category-certification {
+          background: rgba(80, 227, 194, 0.9);
+        }
+        
+        &.category-tips {
+          background: rgba(144, 19, 254, 0.9);
+        }
+      }
+    }
+  }
+  
+  // Article content styling
+  .article-content {
+    padding: 24px 20px;
+    
+    .article-header {
+      margin-bottom: 24px;
+      
+      .article-title {
+        font-size: 24px;
+        font-weight: bold;
+        color: #2c3e50;
+        line-height: 1.3;
+        margin-bottom: 12px;
+      }
+      
+      .article-meta {
+        display: flex;
+        align-items: center;
+        font-size: 13px;
+        color: #7f8c8d;
+        
+        .article-date {
+          font-weight: 500;
+        }
+        
+        .meta-dot {
+          margin: 0 8px;
+        }
+        
+        .article-read-time {
+          opacity: 0.8;
+        }
+      }
+    }
+    
+    .article-body {
+      line-height: 1.7;
+      color: #2c3e50;
+      
+      p {
+        font-size: 15px;
+        margin-bottom: 16px;
+        text-align: justify;
+      }
+      
+      h3 {
+        font-size: 18px;
+        font-weight: 600;
+        color: #2c3e50;
+        margin: 24px 0 12px 0;
+      }
+      
+      ul {
+        margin: 16px 0;
+        padding-left: 20px;
+        
+        li {
+          font-size: 15px;
+          margin-bottom: 8px;
+          color: #2c3e50;
+        }
+      }
+    }
+    
+    .article-footer {
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid #e8f4ff;
+      
+      .btn-back {
+        background: linear-gradient(135deg, #4169E1, #667eea);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 12px 24px;
+        font-size: 14px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(65, 105, 225, 0.3);
+        
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(65, 105, 225, 0.4);
+        }
+        
+        ion-icon {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+  
+  // Responsive design for iPhone 16 Pro
+  @media (max-width: 430px) {
+    .news-header-image {
+      height: 220px;
+      
+      .header-overlay {
+        padding: 16px;
+        
+        .back-button {
+          width: 36px;
+          height: 36px;
+          
+          ion-icon {
+            font-size: 18px;
+          }
+        }
+      }
+    }
+    
+    .article-content {
+      padding: 20px 16px;
+      
+      .article-header {
+        .article-title {
+          font-size: 22px;
+        }
+      }
+      
+      .article-body {
+        p {
+          font-size: 14px;
+        }
+        
+        h3 {
+          font-size: 17px;
+        }
+        
+        ul li {
+          font-size: 14px;
+        }
+      }
+    }
+  }

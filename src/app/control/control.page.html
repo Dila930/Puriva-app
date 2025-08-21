@@ -1,0 +1,136 @@
+<ion-content [fullscreen]="true">
+  <div class="container">
+    <div class="header">
+      <div class="header-top">
+        <div class="page-info">
+          <div class="page-title">Control Panel</div>
+          <div class="page-subtitle">Kendali Smart UV Chamber</div>
+        </div>
+        <div class="status-indicator">
+          <div class="status-dot" [ngClass]="{'ready': !isRunning, 'running': isRunning}"></div>
+          <span>{{ isRunning ? 'Berjalan' : 'Siap' }}</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="main-content">
+      <div class="control-section">
+        <div class="section-title">⚙️ Kontrol Manual</div>
+        
+        <div class="control-item">
+          <div class="control-label">
+            <span>Intensitas UV-C</span>
+            <span class="control-value">{{ intensityValue }}%</span>
+          </div>
+          <ion-range min="0" max="100" [ngModel]="intensityValue" (ionChange)="updateIntensity($event)">
+            <ion-icon slot="start" name="sunny-outline"></ion-icon>
+            <ion-icon slot="end" name="sunny"></ion-icon>
+          </ion-range>
+        </div>
+        
+        <div class="control-item">
+          <div class="control-label">
+            <span>Frekuensi</span>
+            <span class="control-value">{{ frequencyValue | number:'1.1-1' }} Hz</span>
+          </div>
+          <ion-range min="50" max="60" step="0.1" [ngModel]="frequencyValue" (ionChange)="updateFrequency($event)">
+            <ion-icon slot="start" name="musical-notes-outline"></ion-icon>
+            <ion-icon slot="end" name="musical-notes"></ion-icon>
+          </ion-range>
+        </div>
+        
+        <div class="control-item">
+          <div class="control-label">
+            <span>Durasi</span>
+            <span class="control-value">{{ durationValue }} menit</span>
+          </div>
+          <ion-range min="1" max="30" [ngModel]="durationValue" (ionChange)="updateDuration($event)">
+            <ion-icon slot="start" name="time-outline"></ion-icon>
+            <ion-icon slot="end" name="time"></ion-icon>
+          </ion-range>
+        </div>
+        
+        <div class="control-buttons">
+          <ion-button class="btn-primary" (click)="startSterilization()" expand="block" [disabled]="isRunning">
+            <ion-icon slot="start" name="play-outline"></ion-icon>
+            Mulai
+          </ion-button>
+          <ion-button class="btn-danger" (click)="stopSterilization()" expand="block">
+            <ion-icon slot="start" name="square-outline"></ion-icon>
+            Stop
+          </ion-button>
+        </div>
+      </div>
+      
+      <div class="food-library">
+        <div class="section-title">🍽️ Library Makanan</div>
+        
+        <div class="food-grid">
+          <div class="food-item" [class.selected]="selectedFood === 'nasi'" (click)="selectFood('nasi', 60, 50, 3)">
+            <div class="food-icon">🍚</div>
+            <div class="food-name">Nasi</div>
+            <div class="food-setting">60% • 3min</div>
+          </div>
+          <div class="food-item" [class.selected]="selectedFood === 'sayur'" (click)="selectFood('sayur', 70, 50, 4)">
+            <div class="food-icon">🥬</div>
+            <div class="food-name">Sayuran</div>
+            <div class="food-setting">70% • 4min</div>
+          </div>
+          <div class="food-item" [class.selected]="selectedFood === 'ayam'" (click)="selectFood('ayam', 85, 50, 6)">
+            <div class="food-icon">🍗</div>
+            <div class="food-name">Ayam</div>
+            <div class="food-setting">85% • 6min</div>
+          </div>
+          <div class="food-item" [class.selected]="selectedFood === 'ikan'" (click)="selectFood('ikan', 80, 50, 5)">
+            <div class="food-icon">🐟</div>
+            <div class="food-name">Ikan</div>
+            <div class="food-setting">80% • 5min</div>
+          </div>
+          <div class="food-item" [class.selected]="selectedFood === 'daging'" (click)="selectFood('daging', 90, 50, 7)">
+            <div class="food-icon">🥩</div>
+            <div class="food-name">Daging</div>
+            <div class="food-setting">90% • 7min</div>
+          </div>
+          <div class="food-item" [class.selected]="selectedFood === 'buah'" (click)="selectFood('buah', 50, 50, 2)">
+            <div class="food-icon">🍎</div>
+            <div class="food-name">Buah</div>
+            <div class="food-setting">50% • 2min</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="session-info">
+        <div class="section-title">📊 Status Sesi</div>
+        
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-value">{{ currentIntensity }}%</div>
+            <div class="info-label">Intensitas Saat Ini</div>
+          </div>
+          <div class="info-item">
+            <div class="info-value">{{ temperature }}°C</div>
+            <div class="info-label">Suhu Chamber</div>
+          </div>
+          <div class="info-item">
+            <div class="info-value">{{ totalSessions }}</div>
+            <div class="info-label">Sesi Hari Ini</div>
+          </div>
+          <div class="info-item">
+            <div class="info-value">{{ energyUsed | number:'1.1-1' }}</div>
+            <div class="info-label">Energi (kWh)</div>
+          </div>
+        </div>
+        
+        <div class="progress-card" *ngIf="isRunning">
+          <div class="progress-title">Sterilisasi Sedang Berjalan</div>
+          <div class="progress-time">{{ remainingMinutes | number:'2.0' }}:{{ remainingSeconds | number:'2.0' }}</div>
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="progressPercentage"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<app-bottom-nav [activeTab]="'control'"></app-bottom-nav>

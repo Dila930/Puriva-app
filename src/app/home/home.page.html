@@ -1,20 +1,108 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="ion-padding content">
+  <!-- Enhanced Header -->
+  <header class="header">
+    <div class="header-top">
+      <div class="user-info">
+        <div class="greeting">{{ greeting }}, <span class="user-name">{{ userName }}</span></div>
+      </div>
+      <button class="notification-btn" (click)="goToNotifications()" aria-label="Buka notifikasi">
+        <ion-icon name="notifications-outline" class="fa"></ion-icon>
+        <div class="notification-badge" *ngIf="notificationCount > 0">{{ notificationCount }}</div>
+      </button>
+    </div>
+    <div class="logo-section">
+      <div class="logo">PURIVA</div>
+      <div class="tagline">Smart UV Chamber untuk<br>Program Makan Gratis Indonesia</div>
+    </div>
+  </header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <!-- Enhanced Content -->
+  <main class="main-content">
+    <!-- Activities Section -->
+    <section class="activities-card">
+      <div class="section-title">
+        <div class="section-icon">
+          <ion-icon name="trending-up"></ion-icon>
+        </div>
+        Aktivitas Hari Ini
+      </div>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+      <div class="main-activity-card" (click)="goToStats()">
+        <div class="activity-header">
+          <div class="activity-title">Total Sterilisasi</div>
+          <div class="activity-subtitle">Makanan yang telah diproses</div>
+        </div>
+        <div class="activity-stats">
+          <div class="activity-number">{{ totalToday | number:'1.0-0' }}</div>
+          <div class="activity-emoji">🍽️</div>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card" (click)="goToStats()">
+          <div class="stat-number">{{ activeSessions }}</div>
+          <div class="stat-label">Sesi Aktif</div>
+        </div>
+        <div class="stat-card" (click)="showEfficiencyDetail()">
+          <div class="stat-number">{{ efficiency }}</div>
+          <div class="stat-label">Efektivitas</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Active Session (Synced with Control) -->
+    <section *ngIf="currentSession && currentSession.status === 'processing'" class="active-session-card">
+      <div class="active-session-header">
+        <div class="left">
+          <ion-icon name="flash-outline" class="active-icon"></ion-icon>
+          <div>
+            <div class="title">Sterilisasi Berjalan</div>
+            <div class="subtitle">{{ getFoodMeta(currentSession.food).title }} • {{ getRemainingLabel() }}</div>
+          </div>
+        </div>
+        <div class="right">{{ getCurrentProgressPct() | number:'1.0-0' }}%</div>
+      </div>
+      <div class="active-progress">
+        <div class="active-progress-bar" [style.width.%]="getCurrentProgressPct()"></div>
+      </div>
+    </section>
+
+    <!-- Quick Actions -->
+    <section class="quick-actions">
+      <div class="action-card control" (click)="goToControl()">
+        <ion-icon name="options-outline" class="action-icon"></ion-icon>
+        <div class="action-title">Control Panel</div>
+        <div class="action-subtitle">Kontrol UV Chamber</div>
+      </div>
+      <div class="action-card stats" (click)="goToStats()">
+        <ion-icon name="stats-chart-outline" class="action-icon"></ion-icon>
+        <div class="action-title">Statistik</div>
+        <div class="action-subtitle">Lihat data lengkap</div>
+      </div>
+    </section>
+
+    <!-- Recent Activity -->
+    <section class="recent-activity">
+      <div class="section-title">
+        <div class="section-icon">
+          <ion-icon name="time-outline"></ion-icon>
+        </div>
+        Aktivitas Terbaru
+      </div>
+      <ul class="activity-list">
+        <li class="activity-item" *ngFor="let activity of recentActivities">
+          <div class="activity-icon" [ngClass]="activity.iconClass"></div>
+          <div class="activity-info">
+            <div class="activity-item-title">{{ activity.title }}</div>
+            <div class="activity-item-time">{{ activity.timeAgo }}</div>
+          </div>
+          <div class="status-badge" [ngClass]="activity.status === 'completed' ? 'status-completed' : (activity.status === 'stopped' ? 'status-stopped' : 'status-processing')">
+            {{ activity.status === 'completed' ? 'Selesai' : (activity.status === 'stopped' ? 'Dihentikan' : 'Proses') }}
+          </div>
+        </li>
+      </ul>
+    </section>
+  </main>
 </ion-content>
+
+<app-bottom-nav [activeTab]="'home'"></app-bottom-nav>

@@ -34,4 +34,75 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import "@ionic/angular/css/palettes/dark.system.css";
+/* Disabled: we want a consistent light theme */
+/* @import "@ionic/angular/css/palettes/dark.system.css"; */
+
+/* Global default background color */
+html, body, ion-app, ion-content {
+  background: #EDF2FB !important;
+}
+
+ion-content {
+  --background: #EDF2FB !important;
+}
+
+/* Even if device prefers dark, keep light background */
+@media (prefers-color-scheme: dark) {
+  html, body, ion-app, ion-content {
+    background: #EDF2FB !important;
+    color-scheme: light;
+  }
+  ion-content {
+    --background: #EDF2FB !important;
+  }
+}
+
+/* Global Bottom Navbar Styles */
+ion-footer {
+  --background: white;
+  box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
+  max-width: 420px;
+  margin: 0 auto;
+  border-radius: 25px 25px 0 0;
+  padding-top: 12px; /* slightly tighter */
+  padding-bottom: 20px; /* slightly tighter */
+  border-top: 1px solid rgba(0,0,0,0.05);
+
+  ion-toolbar {
+    --background: transparent;
+    --min-height: auto;
+  }
+}
+
+.bottom-nav {
+  display: flex;
+  justify-content: space-around;
+  padding: 0 20px;
+}
+
+.bottom-nav .nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 8px 12px;
+  border-radius: 12px;
+  color: #6b7280; /* slightly darker for readability */
+  background: rgba(102, 126, 234, 0.06); /* reduce transparency vs none */
+}
+
+.bottom-nav .nav-item.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.bottom-nav .nav-icon {
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+
+.bottom-nav .nav-label {
+  font-size: 10px;
+  font-weight: 600;
+}

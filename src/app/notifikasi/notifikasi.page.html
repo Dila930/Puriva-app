@@ -1,0 +1,42 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar class="header">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Notifikasi</ion-title>
+  </ion-toolbar>
+  
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="container">
+    <ion-card class="notif-section">
+      <ion-card-header>
+        <ion-card-title class="section-title">
+          <ion-icon name="notifications-outline"></ion-icon>
+          Notifikasi Terbaru
+        </ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content class="ion-no-padding">
+        <ion-list lines="none">
+          <ion-item class="notif-item" *ngFor="let n of notifications">
+            <div class="notif-item-icon" [ngClass]="{
+                'success': n.status === 'success',
+                'warning': n.status === 'warning'
+              }">
+              <ion-icon [name]="n.icon"></ion-icon>
+            </div>
+            <ion-label>
+              <div class="notif-item-title">{{ n.title }}</div>
+              <div class="notif-item-time">{{ n.time }}</div>
+            </ion-label>
+            <ion-badge [color]="n.status === 'success' ? 'success' : 'warning'" class="notif-badge">
+              {{ n.status === 'success' ? 'Selesai' : 'Proses' }}
+            </ion-badge>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

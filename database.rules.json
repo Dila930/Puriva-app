@@ -1,0 +1,46 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+
+    "sterilisasi": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid"
+      }
+    },
+
+    "news": {
+      "items": {
+        ".read": true,
+        "$id": {
+          ".write": "auth != null && (auth.uid === '2ktb9nWf5uTYCicuIvk4oCXO1tg2' || auth.uid === 'pLRR7n7yhfPsYABrS2xueswuA8a2' || auth.uid === 'mRnGcFfG7RTKfL4qFD9g7UKJx8s2' || auth.token.email === 'fadhilahnormaghfiroh@gmail.com' || auth.token.email === 'mayjesty@gmail.com' || auth.token.email === 'calyakaisha804@gmail.com')"
+        }
+      }
+    },
+
+    "forum": {
+      "discussions": {
+        ".read": true,
+        ".indexOn": ["createdAt"],
+        "$id": {
+          ".read": true,
+          ".write": "auth != null && ( (!data.exists() && newData.child('authorUid').val() === auth.uid) || (data.exists() && (data.child('authorUid').val() === auth.uid || auth.uid === '2ktb9nWf5uTYCicuIvk4oCXO1tg2' || auth.uid === 'pLRR7n7yhfPsYABrS2xueswuA8a2' || auth.uid === 'mRnGcFfG7RTKfL4qFD9g7UKJx8s2' || auth.token.email === 'fadhilahnormaghfiroh@gmail.com' || auth.token.email === 'mayjesty@gmail.com' || auth.token.email === 'calyakaisha804@gmail.com')))",
+          "comments": {
+            "$commentId": {
+              ".read": true,
+              ".write": "auth != null"
+            }
+          }
+        }
+      }
+    }
+  }
+}

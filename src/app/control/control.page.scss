@@ -1,0 +1,338 @@
+// Ensure content is not obscured by bottom nav
+:host ion-content {
+  --padding-bottom: 88px;
+}
+
+.control-content,
+.container,
+.page-container {
+  padding-bottom: 88px;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:host {
+    ion-content {
+        --background: #caf0f8;
+        color: #2c3e50;
+    }
+}
+
+.container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.header {
+    background: linear-gradient(159deg, rgba(65, 105, 225, 1) 0%, rgba(137, 207, 240, 1) 100%);
+    padding: 25px;
+    border-radius: 25px;
+    margin-bottom: 25px;
+    position: relative;
+    overflow: hidden;
+}
+
+.header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -30%;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.page-info {
+    flex: 1;
+}
+
+.page-title {
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.page-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+}
+
+.status-indicator {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+
+    &.ready {
+        background: #2ecc71;
+    }
+
+    &.running {
+        background: #f39c12;
+    }
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.control-section {
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.control-item {
+    margin-bottom: 25px;
+}
+
+.control-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.control-value {
+    font-size: 16px;
+    font-weight: bold;
+    color: #4169E1;
+}
+
+ion-range {
+    padding-left: 0;
+    padding-right: 0;
+    --knob-background: linear-gradient(135deg, #4169E1, #667eea);
+    --knob-box-shadow: 0 4px 12px rgba(65, 105, 225, 0.3);
+    --knob-border: 3px solid white;
+    --track-background: #e8f4ff;
+    --bar-background: linear-gradient(135deg, #4169E1, #667eea);
+    --height: 8px;
+    --bar-height: 8px;
+}
+
+.control-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 25px;
+
+    ion-button {
+        --padding-start: 20px;
+        --padding-end: 20px;
+        --padding-top: 14px;
+        --padding-bottom: 14px;
+        --border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        --box-shadow: none;
+
+        &.btn-primary {
+            --background: linear-gradient(135deg, #4169E1, #667eea);
+            --box-shadow: 0 4px 15px rgba(65, 105, 225, 0.3);
+        }
+
+        &.btn-danger {
+            --background: linear-gradient(135deg, #ff4757, #ff3742);
+            --box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+        }
+
+        &:hover {
+            transform: translateY(-2px);
+            --box-shadow: 0 6px 20px var(--ion-color-primary, #4169E1);
+        }
+    }
+}
+
+.food-library {
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.food-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.food-item {
+    background: #f8fbff;
+    border: 2px solid #e8f4ff;
+    border-radius: 16px;
+    padding: 15px 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+
+    &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    &.selected {
+        border-color: #4169E1;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        box-shadow: 0 8px 25px rgba(65, 105, 225, 0.3);
+    }
+}
+
+.food-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.food-name {
+    color: #2c3e50;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.food-setting {
+    color: #667eea;
+    font-size: 10px;
+    opacity: 0.7;
+}
+
+.session-info {
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.info-item {
+    background: #f8fbff;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    border-left: 4px solid #4169E1;
+}
+
+.info-value {
+    font-size: 20px;
+    font-weight: bold;
+    color: #2980b9;
+    margin-bottom: 5px;
+}
+
+.info-label {
+    font-size: 12px;
+    color: #7f8c8d;
+}
+
+.progress-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px;
+    border-radius: 16px;
+    color: white;
+    margin-top: 15px;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 100px;
+        height: 100px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+    }
+}
+
+.progress-title {
+    font-size: 14px;
+    margin-bottom: 8px;
+    opacity: 0.9;
+}
+
+.progress-time {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: white;
+    border-radius: 3px;
+    transition: width 1s ease;
+}

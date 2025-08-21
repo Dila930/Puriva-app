@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { HomePage } from './home.page';
+import { BottomNavComponent } from '../components/bottom-nav/bottom-nav.component';
 
 import { HomePageRoutingModule } from './home-routing.module';
 
@@ -12,7 +13,8 @@ import { HomePageRoutingModule } from './home-routing.module';
     CommonModule,
     FormsModule,
     IonicModule,
-    HomePageRoutingModule
+    HomePageRoutingModule,
+    BottomNavComponent
   ],
   declarations: [HomePage]
 })

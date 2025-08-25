@@ -51,12 +51,15 @@
               name="password"
               required
               minlength="6"
+              (ionFocus)="onPasswordFocus()"
+              (ionBlur)="onPasswordBlur()"
             ></ion-input>
             <ion-icon name="lock-closed-outline" slot="start" class="puriva-input-icon"></ion-icon>
-            <ion-button fill="clear" slot="end" (click)="togglePassword()">
+            <ion-button *ngIf="!typingPassword && password" fill="clear" slot="end" (click)="togglePassword()">
               <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
             </ion-button>
           </ion-item>
+          <p class="puriva-field-help">Password ini hanya untuk aplikasi Puriva, bukan password email Anda.</p>
 
           <!-- Konfirmasi Password dihapus sesuai permintaan -->
 
@@ -95,24 +98,18 @@
         <ng-template>
           <ion-header translucent>
             <ion-toolbar>
-              <ion-title>Kebijakan Privasi</ion-title>
+              <ion-title>Kebijakan Privasi (Ringkas)</ion-title>
               <ion-buttons slot="end">
                 <ion-button (click)="declinePolicy()">Tutup</ion-button>
               </ion-buttons>
             </ion-toolbar>
           </ion-header>
           <ion-content class="ion-padding">
-            <h2>Ringkasan Kebijakan</h2>
-            <p>
-              Kami mengumpulkan data yang Anda berikan saat pendaftaran (username, email) untuk keperluan autentikasi dan peningkatan layanan aplikasi. Data disimpan aman dan tidak dibagikan ke pihak ketiga tanpa persetujuan Anda, kecuali diwajibkan oleh hukum.
+            <p class="ion-text-wrap" style="font-size: 14px; line-height: 1.6; color: #334155;">
+              Kami menyimpan username dan email Anda untuk autentikasi serta dukungan layanan Puriva. Data dikelola secara aman dan tidak dibagikan ke pihak ketiga kecuali diwajibkan oleh hukum. Dengan melanjutkan, Anda menyetujui ketentuan ini.
             </p>
-            <ul>
-              <li>Penggunaan data untuk verifikasi akun dan notifikasi.</li>
-              <li>Anda dapat meminta penghapusan akun dan data terkait.</li>
-              <li>Detail lengkap tersedia pada dokumen kebijakan resmi aplikasi.</li>
-            </ul>
 
-            <div class="ion-text-center" style="margin-top: 24px;">
+            <div class="ion-text-center" style="margin-top: 16px;">
               <ion-button color="primary" (click)="acceptPolicy()">Setuju</ion-button>
               <ion-button fill="outline" color="medium" (click)="declinePolicy()">Tidak Setuju</ion-button>
             </div>

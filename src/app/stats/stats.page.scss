@@ -39,7 +39,18 @@ ion-header ion-toolbar {
   --border-color: transparent;
 }
 ion-header ion-title { font-weight: 800; color: #ffffff; }
-ion-header ion-back-button { --color: #ffffff; }
+ion-header ion-back-button {
+  --color: #ffffff;
+  --background: transparent;
+  --padding-start: 0;
+  --padding-end: 0;
+}
+// Ensure native element has no square background if globally styled
+ion-header ion-back-button::part(native) {
+  background: transparent !important;
+  border-radius: 50%;
+  padding: 8px;
+}
 ion-header ion-buttons ion-button { --color: #ffffff; }
 
 .statistics-dashboard {
@@ -61,8 +72,8 @@ ion-header ion-buttons ion-button { --color: #ffffff; }
     margin: 0 0 1rem;
     background: linear-gradient(135deg, #5ba8ff 0%, #7a6cf5 50%, #9a75f5 100%);
     border-radius: 0 0 18px 18px; // remove top-left/top-right rounding to align with header
-    padding: 1.4rem 1.2rem;
-    min-height: 120px; // prevent "gepeng" (too flat)
+    padding: 1.8rem 1.2rem;
+    min-height: 160px; // taller hero as requested
     color: #fff;
     box-shadow: 0 10px 25px rgba(91, 168, 255, 0.3);
     position: relative;
@@ -83,7 +94,7 @@ ion-header ion-buttons ion-button { --color: #ffffff; }
     .hero-back {
       --color: #ffffff;
       position: absolute;
-      top: 8px;
+      top: 12px;
       left: 8px;
       z-index: 2;
       padding: 4px;
@@ -567,8 +578,8 @@ ion-header ion-buttons ion-button { --color: #ffffff; }
     }
 
     .hero {
-      padding: 1rem;
-      border-radius: 14px;
+      padding: 1.4rem;
+      border-radius: 0 0 14px 14px; // keep top corners square on small screens too
 
       .hero-title {
         font-size: 1.3rem;

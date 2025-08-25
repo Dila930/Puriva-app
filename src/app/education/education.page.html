@@ -52,6 +52,7 @@
                style="width:100%; height:100%; object-fit:cover; display:block;"/>
           <div *ngIf="!featuredNews?.thumbnail" style="font-size:48px; line-height:1; display:flex; align-items:center; justify-content:center; width:100%; height:100%;">🔬</div>
           <div class="featured-badge">{{ featuredNews.categoryLabel }}</div>
+          <div *ngIf="featuredNews?.isNew" class="new-badge">NEW</div>
         </div>
         <div class="featured-content">
           <div class="featured-title">{{ featuredNews.title }}</div>
@@ -89,6 +90,7 @@
               {{ news.icon }}
             </div>
             <div class="category-label">{{ news.categoryLabel }}</div>
+            <div *ngIf="news?.isNew" class="new-badge">NEW</div>
           </div>
           <div class="news-content">
             <div class="news-title">{{ news.title }}</div>
@@ -122,7 +124,7 @@
 
 <!-- FAB: Create News (admin only) -->
 <ion-fab class="fab-above-bottom-nav" vertical="bottom" horizontal="end" *ngIf="isAdmin">
-  <ion-fab-button color="primary" (click)="goToCreateNews()" aria-label="Tambah Berita">
+  <ion-fab-button color="primary" closeIcon="add" (click)="goToCreateNews()" aria-label="Tambah Berita">
     <ion-icon name="add"></ion-icon>
   </ion-fab-button>
   <ion-fab-list side="top"></ion-fab-list>

@@ -6,27 +6,59 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="profile-detail" [fullscreen]="true">
+<ion-content class="activity-history" [fullscreen]="true">
   <div class="header">
     <h1>Riwayat Aktivitas</h1>
     <p>Lihat aktivitas Anda di PURIVA.</p>
   </div>
-  <div class="content">
-    <ng-container *ngIf="items.length; else noData">
-      <ion-list lines="full">
-        <ion-item *ngFor="let it of items">
-          <ion-label>
-            <h2>{{ it.title }}</h2>
-            <p>{{ getTime(it.at) }}</p>
-          </ion-label>
-          <ion-badge [color]="it.status === 'completed' ? 'success' : it.status === 'stopped' ? 'danger' : 'warning'">
-            {{ it.status === 'completed' ? 'Selesai' : it.status === 'stopped' ? 'Gagal' : 'Berjalan' }}
-          </ion-badge>
-        </ion-item>
-      </ion-list>
+  <div class="content" [class.fade-in]="isPageReady">
+    <!-- Loading skeletons -->
+    <ion-list lines="none" *ngIf="isLoading">
+      <ion-item class="loading">
+        <ion-label>
+          <h2>&nbsp;</h2>
+          <p>&nbsp;</p>
+        </ion-label>
+        <ion-badge>&nbsp;</ion-badge>
+      </ion-item>
+      <ion-item class="loading">
+        <ion-label>
+          <h2>&nbsp;</h2>
+          <p>&nbsp;</p>
+        </ion-label>
+        <ion-badge>&nbsp;</ion-badge>
+      </ion-item>
+      <ion-item class="loading">
+        <ion-label>
+          <h2>&nbsp;</h2>
+          <p>&nbsp;</p>
+        </ion-label>
+        <ion-badge>&nbsp;</ion-badge>
+      </ion-item>
+    </ion-list>
+
+    <!-- Loaded list -->
+    <ng-container *ngIf="!isLoading">
+      <ng-container *ngIf="items.length; else noData">
+        <ion-list lines="none">
+          <ion-item *ngFor="let it of items">
+            <ion-label>
+              <h2>{{ it.title }}</h2>
+              <p>{{ getTime(it.at) }}</p>
+            </ion-label>
+            <ion-badge [color]="it.status === 'completed' ? 'success' : it.status === 'stopped' ? 'danger' : 'warning'">
+              {{ it.status === 'completed' ? 'Selesai' : it.status === 'stopped' ? 'Gagal' : 'Berjalan' }}
+            </ion-badge>
+          </ion-item>
+        </ion-list>
+      </ng-container>
+      <ng-template #noData>
+        <div class="empty">
+          <div class="empty-icon">📋</div>
+          <div class="empty-text">Belum ada aktivitas</div>
+          <div class="empty-subtitle">Aktivitas terbaru Anda akan tampil di sini</div>
+        </div>
+      </ng-template>
     </ng-container>
-    <ng-template #noData>
-      <div class="empty">Belum ada aktivitas.</div>
-    </ng-template>
   </div>
 </ion-content>

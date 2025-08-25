@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, ToastController } from '@ionic/angular';
-import { Auth, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, sendPasswordResetEmail, signOut } from '@angular/fire/auth';
 // Use AngularFire's zone-aware Firestore functions to stay within injection context
 import { Firestore, doc, updateDoc, serverTimestamp, collection, addDoc, getDoc, setDoc } from '@angular/fire/firestore';
+import { Database, ref, update as rtdbUpdate } from '@angular/fire/database';
 
 @Component({
   selector: 'app-login',
@@ -12,26 +13,55 @@ import { Firestore, doc, updateDoc, serverTimestamp, collection, addDoc, getDoc,
 })
 export class LoginPage implements OnInit {
   // UI state
-  currentMethod: 'email' | 'phone' = 'email';
-  otpSent = false;
+  // Only email method is supported
   showPassword = false;
   isLoading = false;
 
   // Form data
   email = '';
   password = '';
-  phoneNumber = '';
-  otpCode = '';
 
   constructor(
     private navCtrl: NavController,
     private toastCtrl: ToastController,
     private auth: Auth,
     private firestore: Firestore,
+    private db: Database,
   ) {}
 
   ngOnInit() {
-    // Tempat inisialisasi Auth/Service jika diperlukan
+    // Inisialisasi jika diperlukan
+  }
+
+  private maskEmail(email?: string | null): string | null {
+    if (!email || !email.includes('@')) return null;
+    const [local, domain] = email.split('@');
+    const first = local.charAt(0) || '';
+    return `${first}***@${domain}`;
+  }
+
+  // Request admin-assisted password reset (creates a request doc in Firestore)
+  async requestAdminReset() {
+    const mail = (this.email || '').trim();
+    if (!mail) {
+      this.presentToast('Masukkan email terlebih dahulu.', 'danger');
+      return;
+    }
+    try {
+      const reqs = collection(this.firestore, 'passwordResetRequests');
+      await this.withTimeout(addDoc(reqs, {
+        email: mail,
+        at: serverTimestamp(),
+        status: 'pending',
+        source: 'login_page',
+        userAgent: (typeof navigator !== 'undefined' && navigator) ? (navigator as any).userAgent : undefined,
+        platform: (typeof navigator !== 'undefined' && navigator) ? (navigator as any).platform : undefined,
+      }), 6000, 'Mengirim permintaan');
+      this.presentToast('Permintaan reset terkirim. Admin akan menghubungi Anda.', 'success');
+    } catch (err: any) {
+      const msg = this.translateFirebaseError(err?.code, err?.message || 'Gagal mengirim permintaan.');
+      this.presentToast(msg, 'danger');
+    }
   }
 
   private withTimeout<T>(p: Promise<T>, ms = 8000, label = 'Operasi'): Promise<T> {
@@ -96,6 +126,14 @@ export class LoginPage implements OnInit {
 
       // 2) FIRESTORE WORK IN BACKGROUND (best-effort)
       const uid = cred.user?.uid as string;
+      // Sync UID + email into RTDB users/{uid} (non-destructive)
+      try {
+        const userRtdbRef = ref(this.db, `users/${uid}`);
+        await this.withTimeout(rtdbUpdate(userRtdbRef, {
+          uid,
+          email: this.email
+        }), 6000, 'Sinkronisasi data realtime');
+      } catch {}
       const userRef = doc(this.firestore, 'users', uid);
       this.withTimeout(getDoc(userRef), 6000, 'Memeriksa profil')
         .then(snap => {
@@ -112,16 +150,56 @@ export class LoginPage implements OnInit {
         })
         .catch(() => { /* ignore permission/network issues */ });
 
-      this.withTimeout(updateDoc(userRef, { lastLogin: serverTimestamp() }), 6000, 'Update profil')
+      this.withTimeout(updateDoc(userRef, { lastLogin: serverTimestamp(), lastLoginAt: serverTimestamp(), lastActive: serverTimestamp() }), 6000, 'Update profil')
         .catch(() => { /* ignore */ });
 
       const logsCol = collection(this.firestore, 'loginLogs');
       this.withTimeout(addDoc(logsCol, {
+        action: 'login',
         uid,
         email: this.email,
+        byEmailMasked: this.maskEmail(this.email),
         method: 'password',
         at: serverTimestamp(),
       }), 6000, 'Mencatat log').catch(() => { /* ignore */ });
+
+      // New collection 'login' as requested (without storing password)
+      try {
+        const loginCol = collection(this.firestore, 'login');
+        await this.withTimeout(addDoc(loginCol, {
+          uid,
+          email: this.email,
+          byEmailMasked: this.maskEmail(this.email),
+          username: cred.user?.displayName || (this.email.split('@')[0] || 'Pengguna'),
+          time: serverTimestamp(),
+          method: 'password'
+        } as any), 6000, 'Mencatat login');
+      } catch {}
+
+      // Additional audit logs similar to sterilisasi pattern
+      try {
+        const authLogs = collection(this.firestore, 'authLogs');
+        await this.withTimeout(addDoc(authLogs, {
+          action: 'login',
+          uid,
+          email: this.email,
+          byEmailMasked: this.maskEmail(this.email),
+          at: serverTimestamp(),
+          source: 'login_page'
+        } as any), 6000, 'Audit login');
+      } catch {}
+
+      try {
+        const perUser = collection(this.firestore, `authLogsByUser/${uid}/events`);
+        await this.withTimeout(addDoc(perUser, {
+          action: 'login',
+          uid,
+          email: this.email,
+          byEmailMasked: this.maskEmail(this.email),
+          at: serverTimestamp(),
+          source: 'login_page'
+        } as any), 6000, 'Audit login (user)');
+      } catch {}
     } catch (err: any) {
       const code = err?.code as string | undefined;
       const msg = this.translateFirebaseError(code, err?.message);
@@ -131,44 +209,7 @@ export class LoginPage implements OnInit {
     }
   }
 
-  // Phone: kirim OTP (belum diintegrasikan)
-  async sendOTP() {
-    if (!this.phoneNumber || this.phoneNumber.length < 8) {
-      this.presentToast('Nomor telepon tidak valid', 'danger');
-      return;
-    }
-
-    this.isLoading = true;
-    try {
-      // Integrasi OTP via Firebase Phone Auth dapat ditambahkan nanti
-      await this.presentToast('OTP berhasil dikirim! (simulasi)', 'success');
-      this.otpSent = true;
-    } finally {
-      this.isLoading = false;
-    }
-  }
-
-  // Phone: verifikasi OTP (belum diintegrasikan)
-  async verifyOTP() {
-    if (!this.otpCode || this.otpCode.length !== 6) {
-      this.presentToast('Kode OTP tidak valid', 'danger');
-      return;
-    }
-
-    this.isLoading = true;
-    try {
-      // Integrasi verifikasi OTP via Firebase Phone Auth nanti
-      await this.presentToast('Verifikasi berhasil! (simulasi)', 'success');
-      this.navCtrl.navigateRoot('/home');
-    } finally {
-      this.isLoading = false;
-    }
-  }
-
-  backToPhoneForm() {
-    this.otpSent = false;
-    this.otpCode = '';
-  }
+  // Phone login removed
 
   async presentToast(message: string, color: 'success' | 'danger') {
     // Map to SCSS classes defined in login.page.scss (puriva-ionic-toast variants)
@@ -185,5 +226,27 @@ export class LoginPage implements OnInit {
 
   goToRegister() {
     this.navCtrl.navigateForward('/register');
+  }
+
+  // Forgot password (send reset link to email)
+  async forgotPassword() {
+    const mail = (this.email || '').trim();
+    if (!mail) {
+      this.presentToast('Masukkan email terlebih dahulu.', 'danger');
+      return;
+    }
+    try {
+      // Use action code settings so the Gmail-delivered email opens back to our app/site
+      const actionCodeSettings = {
+        url: (typeof window !== 'undefined' ? window.location.origin : 'https://puriva.app') + '/login',
+        handleCodeInApp: false,
+      } as any;
+      await this.withTimeout(sendPasswordResetEmail(this.auth, mail, actionCodeSettings), 8000, 'Kirim reset password');
+      this.presentToast('Tautan reset password telah dikirim ke email Anda. Periksa inbox/spam.', 'success');
+    } catch (err: any) {
+      const code = err?.code as string | undefined;
+      const msg = this.translateFirebaseError(code, err?.message || 'Gagal mengirim email reset.');
+      this.presentToast(msg, 'danger');
+    }
   }
 }

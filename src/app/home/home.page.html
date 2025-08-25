@@ -7,7 +7,7 @@
       </div>
       <button class="notification-btn" (click)="goToNotifications()" aria-label="Buka notifikasi">
         <ion-icon name="notifications-outline" class="fa"></ion-icon>
-        <div class="notification-badge" *ngIf="notificationCount > 0">{{ notificationCount }}</div>
+        <div class="notification-dot" *ngIf="hasUnread"></div>
       </button>
     </div>
     <div class="logo-section">

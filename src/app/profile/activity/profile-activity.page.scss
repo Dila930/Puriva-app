@@ -1,377 +1,516 @@
-// Activity History Page - Clean & Modern
-.profile-detail {
-    --background: #f5f7fa;
-    
-    .header {
-      background: linear-gradient(135deg, var(--ion-color-primary) 0%, var(--ion-color-primary-shade) 100%);
-      color: white;
-      padding: 1.5rem 1.5rem 2.5rem;
-      margin-top: -56px;
-      padding-top: calc(56px + 1.5rem);
-      position: relative;
-      
-      &::after {
-        content: '';
-        position: absolute;
-        bottom: -15px;
-        left: 0;
-        right: 0;
-        height: 30px;
-        background: linear-gradient(135deg, var(--ion-color-primary) 0%, var(--ion-color-primary-shade) 100%);
-        border-radius: 0 0 50% 50%;
-      }
-      
-      h1 {
-        font-size: 1.6rem;
-        font-weight: 600;
-        margin: 0 0 0.5rem 0;
-        letter-spacing: -0.3px;
-      }
-      
-      p {
-        font-size: 0.95rem;
-        margin: 0;
-        opacity: 0.9;
-        font-weight: 400;
-      }
-    }
-    
-    .content {
-      padding: 1.5rem 1rem;
-      position: relative;
-      z-index: 2;
-      
-      ion-list {
-        background: transparent;
-        padding: 0;
-        margin: 0;
-        
-        ion-item {
-          --background: white;
-          --border-radius: 12px;
-          --padding-start: 1.25rem;
-          --padding-end: 1.25rem;
-          --min-height: 72px;
-          --inner-padding-end: 0;
-          --inner-padding-start: 0;
-          margin-bottom: 0.75rem;
-          border-radius: 12px;
-          
-          // Clean shadow
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-          border: 1px solid rgba(0, 0, 0, 0.04);
-          
-          // Smooth transitions
-          transition: all 0.2s ease;
-          
-          &:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-          }
-          
-          &:last-child {
-            margin-bottom: 0;
-          }
-          
-          ion-label {
-            margin: 0;
-            
-            h2 {
-              font-size: 1rem;
-              font-weight: 600;
-              color: var(--ion-color-dark);
-              margin: 0 0 0.25rem 0;
-              line-height: 1.3;
-            }
-            
-            p {
-              font-size: 0.85rem;
-              color: var(--ion-color-medium);
-              margin: 0;
-              font-weight: 400;
-              opacity: 0.8;
-            }
-          }
-          
-          ion-badge {
-            --border-radius: 16px;
-            --padding-start: 0.75rem;
-            --padding-end: 0.75rem;
-            font-size: 0.75rem;
-            font-weight: 500;
-            height: 28px;
-            
-            &[color="success"] {
-              --background: #10b981;
-              --color: white;
-            }
-            
-            &[color="danger"] {
-              --background: #ef4444;
-              --color: white;
-            }
-            
-            &[color="warning"] {
-              --background: #f59e0b;
-              --color: white;
-            }
-          }
-        }
-      }
-      
-      .empty {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 200px;
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        border: 1px solid rgba(0, 0, 0, 0.04);
-        color: var(--ion-color-medium);
-        font-size: 1rem;
-        font-weight: 500;
-        position: relative;
-        
-        &::before {
-          content: '📋';
-          font-size: 2rem;
-          margin-bottom: 0.5rem;
-          opacity: 0.6;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -80%);
-        }
-        
-        &::after {
-          content: '';
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, 20%);
-          width: 100%;
-          text-align: center;
-        }
-      }
-    }
-  }
-  
-  // Toolbar styling
-  ion-header {
-    ion-toolbar {
-      --background: transparent; /* transparent header */
-      --color: white;
-      --border-width: 0;
+/* Activity History Page - Clean & Modern Design */
 
-      ion-back-button {
-        --color: white;
-        --icon-font-size: 1.4rem;
-        /* remove any box styling */
-      }
-    }
-  }
+/* ===== ROOT VARIABLES ===== */
+.activity-history {
+  --bg-primary: #ffffff;
+  --bg-card: #ffffff;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  --shadow-light: 0 2px 8px rgba(15, 23, 42, 0.08);
+  --shadow-hover: 0 4px 16px rgba(15, 23, 42, 0.12);
+  --border-color: rgba(226, 232, 240, 0.6);
+  --border-radius: 18px;
+  --border-radius-large: 32px;
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 0.75rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+  --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   
-  // Loading states
-  ion-item.loading {
-    opacity: 0.6;
-    pointer-events: none;
-    
-    ion-label {
-      h2, p {
-        background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
-        background-size: 200% 100%;
-        animation: shimmer 2s infinite;
-        border-radius: 4px;
-        color: transparent !important;
-      }
-      
-      h2 {
-        height: 18px;
-        width: 70%;
-        margin-bottom: 0.5rem;
-      }
-      
-      p {
-        height: 14px;
-        width: 50%;
-      }
-    }
-    
-    ion-badge {
-      background: #e2e8f0 !important;
-      color: transparent !important;
-      width: 60px;
-      height: 28px;
-    }
-  }
-  
-  @keyframes shimmer {
-    0% {
-      background-position: -200% 0;
-    }
-    100% {
-      background-position: 200% 0;
-    }
-  }
-  
-  // Status indicator animations
-  ion-badge {
-    position: relative;
-    overflow: hidden;
-    
-    &[color="warning"] {
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-        animation: pulse-warning 2s infinite;
-      }
-    }
-  }
-  
-  @keyframes pulse-warning {
-    0%, 100% {
-      left: -100%;
-    }
-    50% {
-      left: 100%;
-    }
-  }
-  
-  // Responsive adjustments
-  @media (min-width: 768px) {
-    .profile-detail {
-      .header {
-        padding: 2rem 2rem 3rem;
-        
-        h1 {
-          font-size: 2rem;
-        }
-        
-        p {
-          font-size: 1rem;
-        }
-      }
-      
-      .content {
-        padding: 2rem;
-        max-width: 700px;
-        margin: 0 auto;
-        
-        ion-list {
-          ion-item {
-            --min-height: 80px;
-            --padding-start: 1.5rem;
-            --padding-end: 1.5rem;
-            margin-bottom: 1rem;
-            
-            ion-label {
-              h2 {
-                font-size: 1.1rem;
-              }
-              
-              p {
-                font-size: 0.9rem;
-              }
-            }
-            
-            ion-badge {
-              font-size: 0.8rem;
-              height: 32px;
-              --padding-start: 1rem;
-              --padding-end: 1rem;
-            }
-          }
-        }
-        
-        .empty {
-          min-height: 250px;
-          font-size: 1.1rem;
-          
-          &::before {
-            font-size: 2.5rem;
-            transform: translate(-50%, -90%);
-          }
-        }
-      }
-    }
-  }
-  
-  // Dark mode adjustments
-  @media (prefers-color-scheme: dark) {
-    .profile-detail {
-      --background: #1a1a1a;
-      
-      .content {
-        ion-list {
-          ion-item {
-            --background: #2d3748;
-            border-color: rgba(255, 255, 255, 0.1);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-            
-            &:hover {
-              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-            }
-            
-            ion-label {
-              h2 {
-                color: #e2e8f0;
-              }
-              
-              p {
-                color: #a0aec0;
-              }
-            }
-          }
-        }
-        
-        .empty {
-          --background: #2d3748;
-          border-color: rgba(255, 255, 255, 0.1);
-          color: #a0aec0;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-        }
-      }
-    }
-    
-    // Dark mode shimmer
-    ion-item.loading {
-      ion-label {
-        h2, p {
-          background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
-          background-size: 200% 100%;
-        }
-      }
-      
-      ion-badge {
-        background: #374151 !important;
-      }
-    }
-  }
-  
-  // Pull to refresh styling
-  ion-refresher {
-    ion-refresher-content {
-      --background: transparent;
-      
-      .refresher-pulling-text,
-      .refresher-refreshing-text {
-        color: var(--ion-color-primary);
-        font-weight: 500;
-      }
-    }
-  }
-  
-  // Infinite scroll styling
-  ion-infinite-scroll-content {
-    .infinite-loading-text {
-      color: var(--ion-color-medium);
-      font-size: 0.9rem;
-    }
-  }
+  /* Status Colors */
+  --success-bg: #10b981;
+  --danger-bg: #ef4444;
+  --warning-bg: #f59e0b;
+  --info-bg: #3b82f6;
+}
 
+/* ===== MAIN CONTAINER ===== */
+.activity-history {
+  background: var(--bg-primary);
+  min-height: 100vh;
+}
+
+/* ===== HEADER SECTION ===== */
+.activity-history .header {
+  background: linear-gradient(
+    135deg, 
+    var(--ion-color-primary) 0%, 
+    var(--ion-color-primary-shade) 100%
+  );
+  color: white;
+  padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-2xl);
+  margin-top: -56px;
+  padding-top: calc(56px + var(--spacing-lg));
+  position: relative;
+  border-radius: 0 0 var(--border-radius-large) var(--border-radius-large);
+  overflow: hidden;
+}
+
+/* Header decorative elements */
+.activity-history .header::before {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 0;
+  right: 0;
+  height: 24px;
+  background: linear-gradient(
+    135deg, 
+    var(--ion-color-primary) 0%, 
+    var(--ion-color-primary-shade) 100%
+  );
+  border-radius: 0 0 var(--border-radius-large) var(--border-radius-large);
+  opacity: 0.8;
+  z-index: -1;
+}
+
+.activity-history .header::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  right: 0;
+  height: 32px;
+  background: linear-gradient(
+    135deg, 
+    var(--ion-color-primary-tint) 20%, 
+    transparent 80%
+  );
+  border-radius: 0 0 var(--border-radius-large) var(--border-radius-large);
+  opacity: 0.2;
+  z-index: -2;
+}
+
+/* Header typography */
+.activity-history .header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 var(--spacing-xs) 0;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.activity-history .header p {
+  font-size: 1rem;
+  margin: 0;
+  opacity: 0.9;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+/* ===== CONTENT SECTION ===== */
+.activity-history .content {
+  padding: var(--spacing-xl) var(--spacing-md) var(--spacing-lg);
+  position: relative;
+  z-index: 2;
+  margin-top: 8px;
+}
+
+/* List container */
+.activity-history .content ion-list {
+  background: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+/* ===== ACTIVITY ITEMS ===== */
+.activity-history ion-item {
+  --background: var(--bg-card);
+  --border-radius: var(--border-radius);
+  --padding-start: var(--spacing-lg);
+  --padding-end: var(--spacing-lg);
+  --min-height: 76px;
+  --color: var(--text-primary);
+  --inner-border-width: 0;
+  --border-width: 0;
+  --highlight-height: 0;
+  
+  background: var(--bg-card);
+  border-radius: var(--border-radius);
+  margin-bottom: var(--spacing-sm);
+  box-shadow: var(--shadow-light);
+  border: 1px solid var(--border-color);
+  transition: var(--transition);
+  overflow: hidden;
+}
+
+/* Ensure all inner elements follow the roundness */
+.activity-history ion-item .item-native {
+  border-radius: var(--border-radius) !important;
+  overflow: hidden;
+}
+
+.activity-history ion-item::part(native) {
+  border-radius: var(--border-radius) !important;
+  overflow: hidden;
+  background: transparent;
+}
+
+.activity-history ion-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+  border-color: rgba(var(--ion-color-primary-rgb), 0.1);
+}
+
+.activity-history ion-item:last-child {
+  margin-bottom: 0;
+}
+
+/* ===== ACTIVITY LABELS ===== */
+.activity-history ion-item ion-label {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.activity-history ion-item ion-label h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.activity-history ion-item ion-label p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+  font-weight: 400;
+  opacity: 0.8;
+  line-height: 1.4;
+}
+
+/* ===== STATUS BADGES ===== */
+.activity-history ion-item ion-badge {
+  --border-radius: 16px;
+  --padding-start: var(--spacing-md);
+  --padding-end: var(--spacing-md);
+  font-size: 0.75rem;
+  font-weight: 600;
+  height: 30px;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+}
+
+.activity-history ion-item ion-badge[color="success"] {
+  --background: var(--success-bg);
+  --color: white;
+}
+
+.activity-history ion-item ion-badge[color="danger"] {
+  --background: var(--danger-bg);
+  --color: white;
+}
+
+.activity-history ion-item ion-badge[color="warning"] {
+  --background: var(--warning-bg);
+  --color: white;
+}
+
+.activity-history ion-item ion-badge[color="primary"] {
+  --background: var(--info-bg);
+  --color: white;
+}
+
+/* Badge pulse animation for warnings */
+.activity-history ion-item ion-badge[color="warning"]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: pulse-warning 2s infinite;
+}
+
+@keyframes pulse-warning {
+  0%, 100% {
+    left: -100%;
+  }
+  50% {
+    left: 100%;
+  }
+}
+
+/* ===== EMPTY STATE ===== */
+.activity-history .empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 240px;
+  background: var(--bg-card);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-light);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  padding: var(--spacing-xl);
+}
+
+.activity-history .empty-icon {
+  font-size: 3rem;
+  margin-bottom: var(--spacing-md);
+  opacity: 0.6;
+}
+
+.activity-history .empty-text {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-xs);
+  color: var(--text-primary);
+}
+
+.activity-history .empty-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  opacity: 0.8;
+}
+
+/* ===== LOADING STATES ===== */
+.activity-history ion-item.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.activity-history ion-item.loading ion-label h2,
+.activity-history ion-item.loading ion-label p {
+  background: linear-gradient(90deg, #f1f5f9 25%, #ffffff 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+  border-radius: 6px;
+  color: transparent !important;
+}
+
+.activity-history ion-item.loading ion-label h2 {
+  height: 20px;
+  width: 70%;
+  margin-bottom: var(--spacing-xs);
+}
+
+.activity-history ion-item.loading ion-label p {
+  height: 16px;
+  width: 50%;
+}
+
+.activity-history ion-item.loading ion-badge {
+  background: #f1f5f9 !important;
+  color: transparent !important;
+  width: 60px;
+  height: 30px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* ===== TOOLBAR STYLING ===== */
+ion-header ion-toolbar {
+  --background: transparent;
+  --color: white;
+  --border-width: 0;
+}
+
+ion-header ion-toolbar ion-title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: white;
+}
+
+ion-header ion-toolbar ion-back-button {
+  --color: white;
+  --icon-font-size: 1.5rem;
+}
+
+/* ===== CONTENT BACKGROUND ===== */
+ion-content.activity-history {
+  --background: var(--bg-primary);
+  background: var(--bg-primary);
+}
+
+/* ===== PULL TO REFRESH ===== */
+.activity-history ion-refresher ion-refresher-content {
+  --background: transparent;
+}
+
+.activity-history .refresher-pulling-text,
+.activity-history .refresher-refreshing-text {
+  color: var(--ion-color-primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* ===== INFINITE SCROLL ===== */
+.activity-history ion-infinite-scroll-content .infinite-loading-text {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (min-width: 768px) {
+  .activity-history .header {
+    padding: var(--spacing-xl) var(--spacing-xl) 4rem;
+    border-radius: 0 0 32px 32px;
+  }
+  
+  .activity-history .header::before {
+    bottom: -16px;
+    height: 32px;
+    border-radius: 0 0 32px 32px;
+  }
+  
+  .activity-history .header::after {
+    bottom: -28px;
+    height: 44px;
+    border-radius: 0 0 40px 40px;
+  }
+  
+  .activity-history .header h1 {
+    font-size: 2.25rem;
+  }
+  
+  .activity-history .header p {
+    font-size: 1.125rem;
+  }
+  
+  .activity-history .content {
+    padding: var(--spacing-2xl) var(--spacing-xl) var(--spacing-xl);
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  
+  .activity-history ion-item {
+    --min-height: 84px;
+    --padding-start: var(--spacing-xl);
+    --padding-end: var(--spacing-xl);
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .activity-history ion-item ion-label h2 {
+    font-size: 1.125rem;
+  }
+  
+  .activity-history ion-item ion-label p {
+    font-size: 0.9rem;
+  }
+  
+  .activity-history ion-item ion-badge {
+    font-size: 0.8rem;
+    height: 34px;
+    --padding-start: var(--spacing-lg);
+    --padding-end: var(--spacing-lg);
+  }
+  
+  .activity-history .empty {
+    min-height: 280px;
+    padding: var(--spacing-2xl);
+  }
+  
+  .activity-history .empty-icon {
+    font-size: 3.5rem;
+  }
+  
+  .activity-history .empty-text {
+    font-size: 1.125rem;
+  }
+  
+  .activity-history .empty-subtitle {
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .activity-history .content {
+    max-width: 720px;
+  }
+}
+
+/* ===== DARK MODE SUPPORT ===== */
+@media (prefers-color-scheme: dark) {
+  .activity-history {
+    --bg-primary: #ffffff;
+    --bg-card: #ffffff;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --text-muted: #94a3b8;
+    --border-color: rgba(226, 232, 240, 0.6);
+    --shadow-light: 0 2px 8px rgba(15, 23, 42, 0.08);
+    --shadow-hover: 0 4px 16px rgba(15, 23, 42, 0.12);
+  }
+  
+  .activity-history ion-item {
+    border-color: var(--border-color);
+  }
+  
+  .activity-history .empty {
+    border-color: var(--border-color);
+  }
+  
+  /* Light mode shimmer for consistency */
+  .activity-history ion-item.loading ion-label h2,
+  .activity-history ion-item.loading ion-label p {
+    background: linear-gradient(90deg, #f1f5f9 25%, #ffffff 50%, #f1f5f9 75%);
+    background-size: 200% 100%;
+  }
+  
+  .activity-history ion-item.loading ion-badge {
+    background: #f1f5f9 !important;
+  }
+}
+
+/* ===== ACCESSIBILITY & FOCUS STATES ===== */
+.activity-history ion-item:focus-within {
+  outline: 2px solid var(--ion-color-primary);
+  outline-offset: 2px;
+}
+
+/* ===== ANIMATION UTILITIES ===== */
+.activity-history .fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== IONIC OVERRIDE FIXES ===== */
+.activity-history ion-item {
+  --inner-border-width: 0;
+  --border-width: 0;
+  --highlight-height: 0;
+}
+
+.activity-history ion-item .item-inner {
+  border-radius: var(--border-radius);
+}
+
+.activity-history ion-item::part(native) {
+  border: none;
+}
+
+.activity-history ion-list ion-item:not(:last-child) {
+  --border-width: 0;
+  border-bottom: none;
+}

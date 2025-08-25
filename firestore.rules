@@ -41,6 +41,29 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    // Authentication audit logs: global authLogs
+    match /authLogs/{logId} {
+      // create allowed if the log is for the authenticated user
+      allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
+      // read allowed only for own logs
+      allow read: if request.auth != null && resource.data.uid == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    // Authentication audit logs per user: authLogsByUser/{userId}/events/{eventId}
+    match /authLogsByUser/{userId}/events/{eventId} {
+      allow create: if request.auth != null && request.auth.uid == userId && request.resource.data.uid == request.auth.uid;
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow update, delete: if false;
+    }
+
+    // New login collection for per-login events
+    match /login/{logId} {
+      allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
+      allow read: if request.auth != null && resource.data.uid == request.auth.uid;
+      allow update, delete: if false;
+    }
+
     // Add other collections with rules here
   }
 }

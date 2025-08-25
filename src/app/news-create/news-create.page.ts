@@ -30,6 +30,11 @@ export class NewsCreatePage implements OnInit {
   readonly maxUploadSize = 1 * 1024 * 1024; // 1MB
   readonly allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
 
+  // Form interaction state for styling (success/error) in SCSS
+  touchedTitle = false;
+  touchedCategory = false;
+  touchedContent = false;
+
   categories = ['Umum', 'Teknologi', 'Kesehatan', 'Panduan'];
 
   constructor(
@@ -43,6 +48,12 @@ export class NewsCreatePage implements OnInit {
   ) {}
 
   get isEdit(): boolean { return !!this.editId; }
+
+  // Field validity getters used by template classes
+  get titleValid(): boolean { return this.title.trim().length > 0; }
+  get categoryValid(): boolean { return !!this.category && this.category.trim().length > 0; }
+  get contentValid(): boolean { return this.content.trim().length > 0; }
+  get formValid(): boolean { return this.titleValid && this.categoryValid && this.contentValid; }
 
   async ngOnInit(): Promise<void> {
     this.editId = this.route.snapshot.paramMap.get('id') || undefined;
@@ -115,6 +126,22 @@ export class NewsCreatePage implements OnInit {
     } finally {
       this.isSaving = false;
     }
+  }
+
+  onSubmit(): void {
+    // Mark as touched to trigger SCSS success/error classes
+    this.touchedTitle = true;
+    this.touchedCategory = true;
+    this.touchedContent = true;
+
+    if (this.isUploading) {
+      // Prevent saving while upload in progress
+      return;
+    }
+    if (!this.formValid) {
+      return;
+    }
+    void this.save();
   }
 
   async onFileSelected(evt: Event): Promise<void> {

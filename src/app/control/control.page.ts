@@ -5,6 +5,7 @@ import { SterilizationService } from '../services/sterilization.service';
 import { Auth } from '@angular/fire/auth';
 import { Database, ref, get, set, update, child, push } from '@angular/fire/database';
 import { Subscription } from 'rxjs';
+import { isAdmin, isAdminByUidOrEmail } from '../utils/admin-ids';
 
 @Component({
   selector: 'app-control',
@@ -43,6 +44,9 @@ export class ControlPage implements OnInit, OnDestroy {
   // Temperature simulation
   private tempInterval: any;
 
+  // Admin state
+  public isAdminFlag = false;
+
   constructor(
     private alertController: AlertController,
     private toastController: ToastController,
@@ -69,6 +73,17 @@ export class ControlPage implements OnInit, OnDestroy {
         this.clearLocalTimersOnly();
       }
     });
+
+    // Ensure admin flag reflects current auth state
+    try {
+      const u = this.auth.currentUser;
+      this.isAdminFlag = !!u && isAdminByUidOrEmail(u.uid, u.email || null);
+      // Also re-evaluate shortly after init to catch async auth hydration
+      setTimeout(() => {
+        const u2 = this.auth.currentUser;
+        this.isAdminFlag = !!u2 && isAdminByUidOrEmail(u2.uid, u2.email || null);
+      }, 500);
+    } catch {}
   }
 
   ngOnDestroy() {
@@ -104,6 +119,12 @@ export class ControlPage implements OnInit, OnDestroy {
 
   goToNotifications() {
     this.router.navigate(['/notifikasi']);
+  }
+
+  // Admin helpers
+  get admin(): boolean { return this.isAdminFlag; }
+  goToAdmin() {
+    this.router.navigate(['/admin-management']);
   }
 
   updateIntensity(event: any) {

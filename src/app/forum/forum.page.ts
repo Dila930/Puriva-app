@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { Router, RouterModule } from '@angular/router';
 import { BottomNavComponent } from '../components/bottom-nav/bottom-nav.component';
-import { Database, onValue, orderByChild, query, ref, push, set, update, remove, onDisconnect } from '@angular/fire/database';
+import { Database, onValue, orderByChild, query, ref, push, set, update, remove, onDisconnect, get, child } from '@angular/fire/database';
 import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
 import { isAdminByUidOrEmail } from '../utils/admin-ids';
 
@@ -17,6 +17,25 @@ import { isAdminByUidOrEmail } from '../utils/admin-ids';
 })
 export class ForumPage implements OnInit, OnDestroy {
   constructor(private router: Router, private db: Database, private auth: Auth) {}
+
+// Fetch and cache username for a given UID (for likers display)
+private async getUsernameByUid(uid: string): Promise<string> {
+  if (!uid) return 'Pengguna';
+  const cached = this.usernameCache[uid];
+  if (cached) return cached;
+  try {
+    const snap = await get(child(ref(this.db), `users/${uid}`));
+    const data = snap.val() || {};
+    const name = (data.username || data.displayName || '').toString().trim();
+    const finalName = name || 'Pengguna';
+    this.usernameCache[uid] = finalName;
+    return finalName;
+  } catch {
+    const fallback = 'Pengguna';
+    this.usernameCache[uid] = fallback;
+    return fallback;
+  }
+}
 
   // Models
   interfaceComment = {} as never; // placeholder for TS section separation
@@ -44,6 +63,7 @@ export class ForumPage implements OnInit, OnDestroy {
     title: string;
     content: string;
     author: string;
+    authorUid?: string | null;
     role: 'operator' | 'teknisi' | 'admin' | 'user';
     comments: Array<{ author: string; authorUid?: string | null; role: string; content: string; timestamp: number; id?: string }>;
     likes: number;
@@ -56,6 +76,12 @@ export class ForumPage implements OnInit, OnDestroy {
   }> = [];
 
   filteredThreads: typeof this.threads = [];
+
+  // Cache for uid -> username/displayName
+  private usernameCache: Record<string, string> = {};
+
+  // Cache for uid -> { url, visibility }
+  private avatarCache: Record<string, { url: string | null; visibility: 'public' | 'private' }> = {};
 
   // Detail view
   showThreadDetail = false;
@@ -159,25 +185,42 @@ export class ForumPage implements OnInit, OnDestroy {
     try {
       if (this.commentVoteUnsub) { try { this.commentVoteUnsub(); } catch {} this.commentVoteUnsub = undefined; }
       const root = ref(this.db, 'forum/commentVotes');
-      this.commentVoteUnsub = onValue(root, (snap) => {
+      this.commentVoteUnsub = onValue(root, async (snap) => {
         const all = (snap.val() || {}) as Record<string, Record<string, Record<string, any>>>; // threadId -> commentId -> uid -> vote
         const counts: Record<string, Record<string, number>> = {};
         const mine: Record<string, Record<string, boolean>> = {};
         const likers: Record<string, Record<string, string[]>> = {};
         const myUid = this.auth.currentUser?.uid || null;
-        for (const [threadId, comments] of Object.entries(all)) {
+        // Collect UIDs to ensure username cache
+        const needFetch = new Set<string>();
+        for (const threadId of Object.keys(all)) {
+          const comments = all[threadId] || {};
+          for (const commentId of Object.keys(comments)) {
+            const obj = comments[commentId] || {};
+            for (const uid of Object.keys(obj)) {
+              if (uid && uid !== myUid && !this.usernameCache[uid]) needFetch.add(uid);
+            }
+          }
+        }
+        if (needFetch.size > 0) {
+          await Promise.all(Array.from(needFetch).map(uid => this.getUsernameByUid(uid).catch(() => undefined)));
+        }
+        // Build counts and likers with usernames
+        for (const threadId of Object.keys(all)) {
           counts[threadId] = counts[threadId] || {};
           mine[threadId] = mine[threadId] || {};
           likers[threadId] = likers[threadId] || {};
-          for (const [commentId, votes] of Object.entries(comments || {})) {
+          const comments = all[threadId] || {};
+          for (const commentId of Object.keys(comments)) {
             let like = 0;
             const names: string[] = [];
-            for (const [uid, v] of Object.entries(votes || {})) {
-              const kind = typeof v === 'string' ? v : (v?.kind || null);
+            // Use the current thread's comments object; index by commentId directly
+            for (const [uid, v] of Object.entries(comments[commentId] || {})) {
+              const kind = (v && typeof v === 'object' && 'kind' in v) ? (v.kind as string) : (v as any);
               if (kind === 'like') {
                 like++;
-                const mask = typeof v === 'object' && v && 'byEmailMasked' in v ? (v.byEmailMasked as string) : (uid.slice(0,4) + '***');
-                names.push(myUid && uid === myUid ? 'Anda' : mask);
+                const nm = myUid && uid === myUid ? 'Anda' : (this.usernameCache[uid] || (uid.slice(0,4) + '***'));
+                names.push(nm);
               }
               if (myUid && uid === myUid) mine[threadId][commentId] = kind === 'like';
             }
@@ -202,8 +245,12 @@ export class ForumPage implements OnInit, OnDestroy {
   private likedThreadIds = new Set<string>();
   // reactions state
   private threadCounts: Record<string, { likes: number; dislikes: number }> = {};
-  private myThreadVotes: Record<string, 'like' | 'dislike' | null> = {};
+  private myThreadVotes: Record<string, 'like'|'dislike'|null> = {};
   threadLikers: Record<string, string[]> = {};
+
+  // Posting guards
+  isPostingComment = false;
+  isPostingThread = false;
 
   // UI modal state for likers
   showLikersModal = false;
@@ -226,14 +273,16 @@ export class ForumPage implements OnInit, OnDestroy {
           id: d.id || cryptoRandomId(),
           title: d.topic || d.title || '(Tanpa Judul)',
           content: d.content || '',
-          author: d.authorMaskedEmail || d.username || d.author || 'Anonim',
+          // Display username first; avoid showing email (even masked) per requirement
+          author: d.username || d.authorDisplayName || d.author || 'Pengguna',
           authorUid: d.authorUid || null,
           role: (d.role || 'user') as any,
           comments: ((): Array<{ author: string; authorUid?: string | null; role: string; content: string; timestamp: number; id?: string }> => {
             if (Array.isArray(d.comments)) {
-              return d.comments.map((c: any) => ({
-                id: c.id || undefined,
-                author: c.authorMaskedEmail || c.author || 'Anonim',
+              // Legacy data may store comments as an array without IDs; use index as a stable fallback ID
+              return d.comments.map((c: any, i: number) => ({
+                id: c.id || String(i),
+                author: c.username || c.authorDisplayName || c.author || 'Pengguna',
                 authorUid: c.authorUid || null,
                 role: c.role || 'user',
                 content: c.content || '',
@@ -243,7 +292,7 @@ export class ForumPage implements OnInit, OnDestroy {
             if (d.comments && typeof d.comments === 'object') {
               return Object.entries(d.comments).map(([cid, c]: [string, any]) => ({
                 id: cid,
-                author: c.authorMaskedEmail || c.author || 'Anonim',
+                author: c.username || c.authorDisplayName || c.author || 'Pengguna',
                 authorUid: c.authorUid || null,
                 role: c.role || 'user',
                 content: c.content || '',
@@ -261,6 +310,11 @@ export class ForumPage implements OnInit, OnDestroy {
           category: d.category || 'diskusi',
         }));
       this.threads = mapped;
+      // Rebind selectedThread to the latest object from snapshot to avoid stale references
+      if (this.selectedThread) {
+        const updated = this.threads.find(x => x.id === this.selectedThread!.id);
+        if (updated) this.selectedThread = updated;
+      }
       // Seed initial counts from discussion snapshot to avoid flicker before votes listener loads
       const seeded: Record<string, { likes: number; dislikes: number }> = {};
       for (const t of this.threads) {
@@ -270,6 +324,10 @@ export class ForumPage implements OnInit, OnDestroy {
       this.applyFilters();
       this.computeStats();
       this.computeCategories();
+      // Hydrate usernames for legacy data that doesn't store username at node
+      void this.hydrateUsernames();
+      // Hydrate avatars and privacy for authors and commenters
+      void this.hydrateAvatars();
       this.attachVotesListener();
       this.attachCommentVotesListener();
     });
@@ -587,32 +645,28 @@ export class ForumPage implements OnInit, OnDestroy {
   newComment = '';
   async submitReply(): Promise<void> {
     if (!this.selectedThread || !this.newComment.trim()) return;
+    if (this.isPostingComment) return; // guard against double-click
     const user = this.auth.currentUser;
     if (!user) { this.showLoginPrompt(); return; }
     try {
+      this.isPostingComment = true;
+      const username = await this.resolveUsername(user);
       const commentRef = push(ref(this.db, `forum/discussions/${this.selectedThread.id}/comments`));
       const payload = {
         content: this.newComment.trim(),
         timestamp: Date.now(),
         authorUid: user.uid,
-        authorEmail: user.email || null,
-        authorMaskedEmail: user.email ? this.maskEmail(user.email) : null,
+        username,
         role: 'user'
       };
       await set(commentRef, payload);
-      // Optimistic local update; listener will also refresh
-      this.selectedThread.comments.push({
-        id: commentRef.key || undefined,
-        author: payload.authorMaskedEmail || 'Anonim',
-        authorUid: payload.authorUid,
-        role: payload.role,
-        content: payload.content,
-        timestamp: payload.timestamp,
-      });
+      // Clear input; rely on realtime listener + selectedThread rebind to render
       this.newComment = '';
-      this.computeStats();
     } catch (e) {
       console.warn('submitReply failed', e);
+    }
+    finally {
+      this.isPostingComment = false;
     }
   }
 
@@ -661,9 +715,12 @@ export class ForumPage implements OnInit, OnDestroy {
   }
   async createNewThread(): Promise<void> {
     if (!this.newThreadForm.title || !this.newThreadForm.content || !this.newThreadForm.category) return;
+    if (this.isPostingThread) return; // guard against double-click
     const user = this.auth.currentUser;
     if (!user) { this.showLoginPrompt(); return; }
     try {
+      this.isPostingThread = true;
+      const username = await this.resolveUsername(user);
       const node = ref(this.db, 'forum/discussions');
       const keyRef = push(node);
       const payload = {
@@ -675,33 +732,17 @@ export class ForumPage implements OnInit, OnDestroy {
         status: 'open',
         role: 'user',
         authorUid: user.uid,
-        authorEmail: user.email || null,
-        authorMaskedEmail: user.email ? this.maskEmail(user.email) : null
+        username,
       } as const;
       await set(keyRef, payload);
-      // Optimistic prepend; realtime listener will also refresh
-      const t = {
-        id: (keyRef.key || cryptoRandomId()),
-        title: payload.topic,
-        content: payload.content,
-        author: payload.authorMaskedEmail || 'Anonim',
-        role: payload.role as 'operator' | 'teknisi' | 'admin' | 'user',
-        comments: [],
-        likes: payload.likes,
-        timestamp: payload.createdAt,
-        isPinned: false,
-        isTrending: false,
-        status: 'open' as const,
-        category: payload.category,
-      };
-      this.threads = [t, ...this.threads];
-      this.applyFilters();
-      this.computeStats();
-      this.computeCategories();
+      // Rely on realtime listener to insert the new thread and update lists
       this.newThreadForm = { title: '', category: '', content: '' };
       this.showCreateThreadModal = false;
     } catch (e) {
       console.warn('createNewThread failed', e);
+    }
+    finally {
+      this.isPostingThread = false;
     }
   }
 
@@ -713,26 +754,168 @@ export class ForumPage implements OnInit, OnDestroy {
     return `${first}***@${domain}`;
   }
 
+  // Prefer RTDB username/displayName; avoid exposing email for author display
+  private async resolveUsername(user: User): Promise<string> {
+    try {
+      const snap = await get(child(ref(this.db), `users/${user.uid}`));
+      const data = snap.val() || {};
+      const name = data.username || data.displayName || user.displayName || '';
+      const normalized = (name || '').toString().trim();
+      return normalized || 'Pengguna';
+    } catch {
+      const dn = (user.displayName || '').trim();
+      return dn || 'Pengguna';
+    }
+  }
+
+  // Hydrate missing usernames for legacy records using authorUid
+  private async hydrateUsernames(): Promise<void> {
+    try {
+      const uids = new Set<string>();
+      for (const t of this.threads) {
+        if ((t as any).authorUid && (!t.author || t.author === 'Pengguna')) uids.add((t as any).authorUid as string);
+        for (const c of t.comments || []) {
+          if (c.authorUid && (!c.author || c.author === 'Pengguna')) uids.add(c.authorUid);
+        }
+      }
+      const tasks: Array<Promise<void>> = [];
+      for (const uid of uids) {
+        if (this.usernameCache[uid]) continue;
+        tasks.push(
+          (async () => {
+            try {
+              const snap = await get(child(ref(this.db), `users/${uid}`));
+              const data = snap.val() || {};
+              const name = (data.username || data.displayName || '').toString().trim();
+              this.usernameCache[uid] = name || 'Pengguna';
+            } catch {
+              this.usernameCache[uid] = 'Pengguna';
+            }
+          })()
+        );
+      }
+      await Promise.all(tasks);
+      let changed = false;
+      for (const t of this.threads) {
+        const tuid = (t as any).authorUid as string | undefined;
+        if (tuid && (t.author === 'Pengguna' || !t.author)) {
+          const nm = this.usernameCache[tuid];
+          if (nm && nm !== t.author) { t.author = nm; changed = true; }
+        }
+        for (const c of t.comments || []) {
+          if (c.authorUid && (c.author === 'Pengguna' || !c.author)) {
+            const nm = this.usernameCache[c.authorUid];
+            if (nm && nm !== c.author) { c.author = nm; changed = true; }
+          }
+        }
+      }
+      if (changed) {
+        // Trigger change detection for lists and detail
+        this.filteredThreads = [...this.filteredThreads];
+        if (this.selectedThread) {
+          const id = this.selectedThread.id;
+          this.selectedThread = this.threads.find(x => x.id === id) || this.selectedThread;
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  // Hydrate avatars and privacy from RTDB users/{uid}
+  private async hydrateAvatars(): Promise<void> {
+    try {
+      const uids = new Set<string>();
+      for (const t of this.threads) {
+        const tuid = (t as any).authorUid as string | undefined;
+        if (tuid) uids.add(tuid);
+        for (const c of t.comments || []) {
+          if (c.authorUid) uids.add(c.authorUid);
+        }
+      }
+      const tasks: Array<Promise<void>> = [];
+      for (const uid of uids) {
+        if (this.avatarCache[uid]) continue;
+        tasks.push(
+          (async () => {
+            try {
+              const snap = await get(child(ref(this.db), `users/${uid}`));
+              const data = snap.val() || {};
+              const url = (data.photoURL || data.avatarUrl || null) as string | null;
+              const vis = (data.privacy && data.privacy.profileVisibility === 'private') ? 'private' : 'public';
+              this.avatarCache[uid] = { url: url || null, visibility: vis };
+            } catch {
+              this.avatarCache[uid] = { url: null, visibility: 'public' };
+            }
+          })()
+        );
+      }
+      await Promise.all(tasks);
+      // Trigger change detection for lists and detail views
+      this.filteredThreads = [...this.filteredThreads];
+      if (this.selectedThread) {
+        const id = this.selectedThread.id;
+        this.selectedThread = this.threads.find(x => x.id === id) || this.selectedThread;
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  // Avatar helpers
+  getInitials(name?: string): string {
+    const n = (name || '').trim();
+    if (!n) return 'U';
+    const parts = n.split(/\s+/).filter(Boolean);
+    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+    return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
+  }
+  shouldShowAvatar(uid?: string | null): boolean {
+    if (!uid) return false;
+    const meta = this.avatarCache[uid];
+    return !!meta && meta.visibility !== 'private' && !!meta.url;
+  }
+  getAvatarUrl(uid?: string | null): string | null {
+    if (!uid) return null;
+    return this.avatarCache[uid]?.url || null;
+  }
+
   // Votes listener to keep counts and my vote in sync
   private attachVotesListener(): void {
     try {
       if (this.voteUnsub) { try { this.voteUnsub(); } catch {} this.voteUnsub = undefined; }
       const votesRoot = ref(this.db, 'forum/votes');
-      this.voteUnsub = onValue(votesRoot, (snap) => {
+      this.voteUnsub = onValue(votesRoot, async (snap) => {
         const all = (snap.val() || {}) as Record<string, Record<string, any>>; // threadId -> { uid: vote }
         const counts: Record<string, { likes: number; dislikes: number }> = {};
         const myVotes: Record<string, 'like'|'dislike'|null> = {};
         const likers: Record<string, string[]> = {};
         const myUid = this.auth.currentUser?.uid || null;
-        for (const [threadId, votesByUser] of Object.entries(all)) {
+        // Collect UIDs to ensure username cache
+        const needFetch = new Set<string>();
+        for (const threadId of Object.keys(all)) {
+          const obj = all[threadId] || {};
+          for (const uid of Object.keys(obj)) {
+            if (uid && uid !== myUid && !this.usernameCache[uid]) needFetch.add(uid);
+          }
+        }
+        // Fetch missing usernames in parallel
+        if (needFetch.size > 0) {
+          await Promise.all(Array.from(needFetch).map(uid => this.getUsernameByUid(uid).catch(() => undefined)));
+        }
+        // Build counts and likers with usernames
+        for (const threadId of Object.keys(all)) {
+          const obj = all[threadId] || {};
           let like = 0, dislike = 0;
           const names: string[] = [];
-          for (const [uid, v] of Object.entries(votesByUser || {})) {
-            const kind = typeof v === 'string' ? (v as any) : (v?.kind || null);
+          for (const [uid, v] of Object.entries(obj)) {
+            const kind = (v && typeof v === 'object' && 'kind' in v) ? (v.kind as string) : (v as any);
             if (kind === 'like') like++;
             else if (kind === 'dislike') dislike++;
-            const mask = typeof v === 'object' && v && 'byEmailMasked' in v ? (v.byEmailMasked as string) : (uid.slice(0,4) + '***');
-            if (kind === 'like') names.push(myUid && uid === myUid ? 'Anda' : mask);
+            if (kind === 'like') {
+              const nm = myUid && uid === myUid ? 'Anda' : (this.usernameCache[uid] || (uid.slice(0,4) + '***'));
+              names.push(nm);
+            }
             if (myUid && uid === myUid) myVotes[threadId] = kind as any;
           }
           counts[threadId] = { likes: like, dislikes: dislike };

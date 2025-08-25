@@ -15,21 +15,34 @@ export class ProfileActivityPage implements OnInit, OnDestroy {
   items: Array<{ id: string; title: string; status: 'processing'|'completed'|'stopped'; at: number } > = [];
   private authUnsub?: Unsubscribe;
   private rtdbUnsub?: Unsubscribe;
+  // For SCSS utilities
+  isPageReady = false;
+  isLoading = true;
 
   constructor(private auth: Auth, private db: Database) {}
 
   ngOnInit(): void {
     this.authUnsub = onAuthStateChanged(this.auth as any, (user: User | null) => {
       this.detach();
-      if (!user) { this.items = []; return; }
+      if (!user) {
+        this.items = [];
+        this.isLoading = false;
+        this.markPageReady();
+        return;
+      }
+      this.isLoading = true;
       const recentRef = ref(this.db, `users/${user.uid}/recentActivities`);
       this.rtdbUnsub = onValue(recentRef, (snap) => {
         const obj = snap.val() || {};
         const list = Object.values(obj as any);
         list.sort((a: any, b: any) => (b.at || 0) - (a.at || 0));
         this.items = list.map((it: any) => ({ id: it.id, title: it.food || 'Sterilisasi', status: it.status, at: it.at || it.startedAt || 0 }));
+        this.isLoading = false;
+        this.markPageReady();
       });
     });
+    // Fallback ensure page ready animation even if no changes come through
+    setTimeout(() => this.markPageReady(), 0);
   }
 
   ngOnDestroy(): void { this.detach(); }
@@ -45,5 +58,10 @@ export class ProfileActivityPage implements OnInit, OnDestroy {
     if (!ts) return '';
     const d = new Date(ts);
     return d.toLocaleString();
+  }
+
+  private markPageReady(): void {
+    if (this.isPageReady) return;
+    requestAnimationFrame(() => this.isPageReady = true);
   }
 }

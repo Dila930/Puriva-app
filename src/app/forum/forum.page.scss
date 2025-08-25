@@ -3,6 +3,50 @@
   --padding-bottom: 88px;
 }
 
+/* =====================================
+   Forum Create (New Thread) Theme Vars
+   ===================================== */
+// Variables
+$primary-color: #667eea;
+$secondary-color: #764ba2;
+$accent-color: #5a67d8;
+$purple-accent: #b794f6;
+$text-primary: #333;
+$text-secondary: #4a5568;
+$text-muted: #a0aec0;
+$warning-color: #f56565;
+$background-light: #f8f9fa;
+$white: #ffffff;
+
+// Gradients
+$primary-gradient: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+$header-gradient: linear-gradient(135deg, $accent-color 0%, $primary-color 50%, $purple-accent 100%);
+$button-gradient: linear-gradient(135deg, $accent-color 0%, $primary-color 100%);
+
+// Mixins
+@mixin transition($property: all, $duration: 0.3s, $timing: ease) {
+  transition: $property $duration $timing;
+}
+
+@mixin box-shadow($x: 0, $y: 2px, $blur: 10px, $color: rgba(0,0,0,0.05)) {
+  box-shadow: $x $y $blur $color;
+}
+
+@mixin hover-lift($y: -2px) {
+  transform: translateY($y);
+}
+
+@mixin border-radius($radius: 15px) {
+  border-radius: $radius;
+}
+
+@mixin input-focus($border-color: $primary-color, $shadow-color: rgba(102, 126, 234, 0.2)) {
+  outline: none;
+  border-color: $border-color;
+  box-shadow: 0 4px 20px $shadow-color;
+  transform: translateY(-2px);
+}
+
 /* New stat pill style used in header for active users, threads, comments */
 .stat-pill {
   display: inline-flex;
@@ -906,7 +950,8 @@ ion-fab.fab-above-bottom-nav ion-fab-button {
 
 // Create Thread Modal Styles
 .create-thread-content {
-  --background: linear-gradient(135deg, #e3f2fd 0%, #f8fbff 100%);
+  // Modal background matches container background
+  --background: #{$background-light};
 }
 
 .create-thread-form {
@@ -922,56 +967,93 @@ ion-fab.fab-above-bottom-nav ion-fab-button {
 
 /* Create Thread Modal - toolbar/header to match hero gradient */
 .create-thread-content ion-header ion-toolbar {
-  --background: linear-gradient(159deg, #4169E1 0%, #89CFF0 100%);
-  --color: #fff;
+  --background: #{$header-gradient};
+  --color: #{$white};
   --border-width: 0;
   box-shadow: none;
 }
 
 /* Create Thread Modal - form controls styling to match forum-create */
 .create-thread-form {
+  // Align with provided form styles
   background: transparent;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
 
+  // Each field block
   ion-item {
-    --background: #ffffff;
-    --border-radius: 15px;
+    --background: #{$white};
     --inner-border-width: 0 0 0 0;
     --padding-start: 12px;
     --padding-end: 12px;
-    border: 2px solid #e8f4ff;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
-    margin-bottom: 14px;
+    border: 2px solid rgba(102, 126, 234, 0.1);
+    @include border-radius(15px);
+    @include box-shadow(0, 2px, 10px, rgba(0, 0, 0, 0.04));
   }
 
   ion-label {
-    font-size: 13px;
+    font-size: 16px; // match .form-label
     font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 6px;
+    color: $text-secondary;
+    margin-bottom: 10px;
   }
 
+  // Inputs
   ion-input,
   ion-textarea,
   ion-select {
-    --color: #2c3e50;
-    --placeholder-color: #95a5a6;
-    --padding-start: 12px;
-    --padding-end: 12px;
+    --color: #{$text-secondary};
+    --placeholder-color: #{$text-muted};
+    --padding-start: 15px;
+    --padding-end: 15px;
+    font-size: 16px;
+    background: #{$white};
+  }
+
+  // Select arrow
+  ion-select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    background-size: 16px;
   }
 
   ion-textarea {
-    --background: #ffffff;
-    --border-radius: 12px;
+    --background: #{$white};
+    --border-radius: 15px;
+    min-height: 120px;
+    font-family: inherit;
   }
 
-  /* Primary submit button */
+  // Focus interactions
+  ion-input:focus-within,
+  ion-textarea:focus-within,
+  ion-select:focus-within,
+  ion-item.item-has-focus {
+    border-color: $primary-color;
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.2);
+    transform: translateY(-2px);
+  }
+
+  // Submit Button
   ion-button {
-    --background: linear-gradient(135deg, #4169E1, #667eea);
-    --color: #fff;
+    --background: #{$button-gradient};
+    --color: #{$white};
     --border-radius: 15px;
     height: 48px;
     font-weight: 600;
-    box-shadow: 0 6px 20px rgba(65, 105, 225, 0.25);
+    @include box-shadow(0, 4px, 20px, rgba(90, 103, 216, 0.3));
+
+    &:hover {
+      @include hover-lift(-3px);
+      box-shadow: 0 8px 30px rgba(90, 103, 216, 0.4);
+    }
+
+    &:active {
+      @include hover-lift(-1px);
+    }
   }
 }
 

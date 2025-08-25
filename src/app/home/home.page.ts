@@ -29,6 +29,7 @@ export class HomePage implements OnInit, OnDestroy {
   greeting: string = '';
   userName: string = 'Pengguna';
   notificationCount: number = 0;
+  hasUnread: boolean = false;
   
   // Stats
   totalToday: number = 0;
@@ -65,6 +66,8 @@ export class HomePage implements OnInit, OnDestroy {
 
   private steriSub?: Subscription;
   private steriStateSub?: Subscription;
+  // Track last authenticated UID to detect account switches
+  private lastAuthUid?: string;
 
   constructor(
     private router: Router,
@@ -166,6 +169,7 @@ export class HomePage implements OnInit, OnDestroy {
       'Maintenance dijadwalkan besok'
     ];
     this.notificationCount = this.notifications.length;
+    this.hasUnread = this.notificationCount > 0;
   }
 
   ngOnInit(): void {
@@ -177,6 +181,11 @@ export class HomePage implements OnInit, OnDestroy {
     this.subscribeSterilizationEvents();
     this.subscribeCurrentSessionState();
     this.bindDatabaseListeners();
+    // Initialize userName from current session immediately (mirror Profile logic)
+    try {
+      const cu = this.auth.currentUser as User | null;
+      this.userName = cu ? (cu.displayName || cu.email || 'Pengguna') : 'Pengguna';
+    } catch { this.userName = 'Pengguna'; }
     // Ticker setiap 1s agar progress & sisa waktu ter-update
     this.sessionTimer = setInterval(() => { this.nowTs = Date.now(); }, 1000);
   }
@@ -311,6 +320,9 @@ export class HomePage implements OnInit, OnDestroy {
 
   // Navigation to existing notifications page
   goToNotifications(): void {
+    // Consider all notifications as read when opening the page
+    this.hasUnread = false;
+    this.notificationCount = 0;
     this.router.navigate(['/notifikasi']);
   }
 
@@ -463,13 +475,20 @@ export class HomePage implements OnInit, OnDestroy {
   private bindDatabaseListeners(): void {
     try {
       this.authUnsub = onAuthStateChanged(this.auth as any, (user: User | null) => {
+        // Always detach previous listeners first
         this.detachDatabaseListeners();
+        // If signed out, hard reset UI state
         if (!user) {
-          // Reset to default when signed out
-          this.userName = 'Pengguna';
+          this.resetHomeState();
+          this.lastAuthUid = undefined;
           return;
         }
-        // Update userName from Auth (displayName or fallback to email)
+        // If switching to a different user, clear any stale state before binding
+        if (this.lastAuthUid && this.lastAuthUid !== user.uid) {
+          this.resetHomeState();
+        }
+        this.lastAuthUid = user.uid;
+        // Mirror Profile: prefer displayName, fallback to full email
         this.userName = user.displayName || user.email || 'Pengguna';
         // Active session
         const activeRef = ref(this.db, `users/${user.uid}/activeSession`);
@@ -535,6 +554,8 @@ export class HomePage implements OnInit, OnDestroy {
     } catch { /* ignore if DB not configured */ }
   }
 
+  // (No helper needed; keep logic consistent with Profile page)
+
   private detachDatabaseListeners(): void {
     try {
       this.rtdbUnsubs.forEach(un => { try { un(); } catch {} });
@@ -542,5 +563,19 @@ export class HomePage implements OnInit, OnDestroy {
       if (this.authUnsub) { try { (this.authUnsub as any)(); } catch {} }
       this.authUnsub = undefined;
     } catch { /* no-op */ }
+  }
+
+  // Fully reset UI state so old account data does not leak into new session
+  private resetHomeState(): void {
+    this.userName = 'Pengguna';
+    this.notificationCount = 0;
+    this.hasUnread = false;
+    this.totalToday = 0;
+    this.activeSessions = 0;
+    this.efficiency = '0%';
+    this.statsTotals = { total: 0, berhasil: 0, gagal: 0 };
+    this.recentActivities = [];
+    this.currentSession = undefined;
+    this.statsDetail = [];
   }
 }

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, NavController } from '@ionic/angular';
 import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
 import { Database, ref, onValue, Unsubscribe } from '@angular/fire/database';
 
@@ -58,6 +58,7 @@ export class StatsPage implements OnInit, OnDestroy {
     private db: Database,
     private alertCtrl: AlertController,
     private route: ActivatedRoute,
+    private navCtrl: NavController,
   ) {}
 
   ngOnInit(): void {
@@ -196,6 +197,16 @@ export class StatsPage implements OnInit, OnDestroy {
   // Simple filter toggler
   toggleFilters(): void {
     this.showFilters = !this.showFilters;
+  }
+
+  // Back navigation for header button
+  goBack(): void {
+    try {
+      // Prefer back if possible; fallback to home
+      this.navCtrl.back();
+    } catch {
+      this.navCtrl.navigateRoot('/home');
+    }
   }
 
   ngOnDestroy(): void {

@@ -268,7 +268,8 @@ ion-content.puriva-register-page {
 // 📌 Form
 // ======================================
 .puriva-form-section {
-    padding: 0 $space-l $space-xl;
+    /* Tambah top padding agar field pertama (username) tidak terlalu dekat header */
+    padding: $space-l $space-l $space-xl;
     background: $color-white;
     animation: slideInUp 0.8s ease-out 0.2s both;
     flex: 1;
@@ -342,6 +343,15 @@ ion-content.puriva-register-page {
     }
 }
 
+/* Help text di bawah password – dibuat agak pudar karena hanya peringatan */
+.puriva-field-help {
+    margin: -6px 0 $space-s $space-m; /* sedikit naik mendekati field, tetap rapi */
+    font-size: 13px;
+    line-height: 1.5;
+    color: $color-text-gray;
+    opacity: 0.72; /* terlihat pudar */
+}
+
 .puriva-input-icon {
     color: $color-icon;
     font-size: 22px;
@@ -371,7 +381,8 @@ ion-content.puriva-register-page {
 .puriva-checkbox-group {
     display: flex;
     align-items: center;
-    margin: $space-l 0;
+    /* Rapatkan dengan tombol register */
+    margin: $space-s 0;
     cursor: pointer;
     user-select: none;
     transition: $transition-main;
@@ -433,7 +444,8 @@ ion-content.puriva-register-page {
     border-radius: $radius-l;
     cursor: pointer;
     transition: $transition-main;
-    margin: $space-l 0 $space-m;
+    /* Perkecil jarak atas agar dekat dengan checkbox */
+    margin: $space-s 0 $space-m;
     position: relative;
     overflow: hidden;
     box-shadow: $shadow-btn-primary;
@@ -491,7 +503,8 @@ ion-content.puriva-register-page {
 // ======================================
 .puriva-register-section {
     text-align: center;
-    margin-top: auto;
+    /* Bawa lebih dekat ke tombol daftar */
+    margin-top: $space-m;
     padding-top: $space-l;
     font-size: $space-s;
     color: $color-text-gray;
@@ -592,7 +605,8 @@ ion-content.puriva-register-page {
     }
 
     .puriva-form-section {
-        padding: 0 $space-m $space-l;
+        /* Tetap beri sedikit ruang dari header pada layar kecil */
+        padding: $space-m $space-m $space-l;
     }
 
     .puriva-logo {

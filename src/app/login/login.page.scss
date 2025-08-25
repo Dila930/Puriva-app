@@ -269,6 +269,7 @@ ion-content.puriva-register-page {
 // ======================================
 .puriva-form-section {
     padding: 0 $space-l $space-xl;
+    margin-top: $space-l; // push form a bit lower from header
     background: $color-white;
     animation: slideInUp 0.8s ease-out 0.2s both;
     flex: 1;
@@ -351,19 +352,27 @@ ion-content.puriva-register-page {
 }
 
 .puriva-toggle-password {
-    color: #64748b;
-    cursor: pointer;
-    transition: $transition-bounce;
-    font-size: 20px;
-    padding: 4px;
-    border-radius: $radius-s;
+  color: #64748b;
+  cursor: pointer;
+  transition: $transition-bounce;
+  font-size: 20px;
+  padding: 4px;
+  border-radius: $radius-s;
 
-    &:hover {
-        color: $color-icon;
-        transform: scale(1.1);
-        background: rgba(102, 126, 234, 0.1);
-    }
+  &:hover {
+    color: $color-icon;
+    transform: scale(1.1);
+    background: rgba(102, 126, 234, 0.1);
+  }
 }
+
+// Hide native reveal/clear icons to avoid duplicate eye icon on Windows/Edge
+ion-input .native-input::-ms-reveal,
+ion-input .native-input::-ms-clear { display: none; }
+input::-ms-reveal, input::-ms-clear { display: none; }
+// Safari/iOS variants (defensive)
+input[type='password']::-webkit-textfield-decoration-container { display: none; }
+input[type='text']::-webkit-clear-button { display: none; }
 
 // ======================================
 // 📌 Checkbox
@@ -499,6 +508,28 @@ ion-content.puriva-register-page {
     line-height: 1.6;
 }
 
+// Forgot password section
+.puriva-forgot-section {
+    text-align: right;
+    margin-top: -$space-s; // tuck closer to the button
+    margin-bottom: $space-m;
+}
+
+.puriva-forgot-link {
+    color: $color-blue-link;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    transition: $transition-main;
+    position: relative;
+    padding: 2px 0;
+
+    &:hover {
+        color: $color-blue-dark;
+        transform: translateY(-1px);
+    }
+}
+
 .puriva-register-link {
     color: $color-blue-link;
     font-weight: 700;
@@ -593,6 +624,7 @@ ion-content.puriva-register-page {
 
     .puriva-form-section {
         padding: 0 $space-m $space-l;
+        margin-top: $space-m;
     }
 
     .puriva-logo {

@@ -1,339 +1,901 @@
-// Main content padding and layout
-ion-content {
-    --background: #f8fafc;
-    
-    .ion-padding {
-      padding: 16px;
+/* =========================================================
+   PURIVA - News Page Enhanced SCSS
+   Modern & Responsive Design
+   ========================================================= */
+
+// ==========================================
+// DESIGN TOKENS & VARIABLES
+// ==========================================
+
+// Brand Colors
+$puriva-primary: #4169e1;
+$puriva-secondary: #667eea;
+$puriva-accent: #764ba2;
+$puriva-light: #89cff0;
+
+// Category Colors
+$tech-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+$program-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+$update-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+$cert-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+$tips-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+
+// Semantic Colors
+$success: #43e97b;
+$warning: #fee140;
+$danger: #ff3b30;
+$info: #4facfe;
+
+// Neutral Colors
+$white: #ffffff;
+$gray-50: #f8fafc;
+$gray-100: #f1f5f9;
+$gray-200: #e2e8f0;
+$gray-300: #cbd5e1;
+$gray-400: #94a3b8;
+$gray-500: #64748b;
+$gray-600: #475569;
+$gray-700: #334155;
+$gray-800: #1e293b;
+$gray-900: #0f172a;
+
+// Light variants
+$light-blue: #e3f2fd;
+$light-blue-accent: #f8fbff;
+
+// Shadows & Effects
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+$shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+$shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+$shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+// Special shadows
+$shadow-news: 0 6px 25px rgba(0, 0, 0, 0.1);
+$shadow-news-hover: 0 8px 30px rgba(0, 0, 0, 0.15);
+$shadow-fab: 0 10px 24px rgba(65, 105, 225, 0.35);
+
+// Border Radius
+$radius-xs: 6px;
+$radius-sm: 8px;
+$radius-base: 12px;
+$radius-md: 16px;
+$radius-lg: 20px;
+$radius-xl: 25px;
+$radius-full: 50%;
+
+// Spacing
+$space-1: 4px;
+$space-2: 8px;
+$space-3: 12px;
+$space-4: 15px;
+$space-5: 16px;
+$space-6: 20px;
+$space-8: 25px;
+
+// Typography
+$font-xs: 8px;
+$font-sm: 10px;
+$font-base: 11px;
+$font-md: 12px;
+$font-lg: 13px;
+$font-xl: 14px;
+$font-2xl: 16px;
+$font-3xl: 20px;
+$font-4xl: 22px;
+
+// Transitions
+$transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+$transition-base: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+$transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+// ==========================================
+// MIXINS
+// ==========================================
+
+@mixin glass-morphism($opacity: 0.1) {
+  background: rgba(255, 255, 255, $opacity);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+@mixin card-hover {
+  transition: all $transition-base;
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-news-hover;
+  }
+}
+
+@mixin button-hover {
+  transition: all $transition-base;
+  &:hover {
+    transform: translateY(-1px);
+  }
+}
+
+@mixin text-truncate($lines: 3) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  line-clamp: $lines;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@mixin focus-ring {
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba($puriva-primary, 0.3);
+  }
+}
+
+// ==========================================
+// BASE STYLES
+// ==========================================
+
+// Bottom navigation spacing
+:host ion-content {
+  --padding-bottom: 88px;
+}
+
+// News page background
+.news-content {
+  --background: linear-gradient(135deg, $light-blue 0%, $light-blue-accent 100%);
+  
+  .container {
+    max-width: 420px;
+    margin: 0 auto;
+    padding: $space-6;
+  }
+}
+
+// ==========================================
+// FAB POSITIONING
+// ==========================================
+
+ion-fab.fab-above-bottom-nav {
+  position: fixed;
+  right: $space-5;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 88px) !important;
+  z-index: 11;
+
+  ion-fab-button {
+    box-shadow: $shadow-fab;
+    transition: all $transition-base;
+
+    &:hover {
+      transform: scale(1.1);
+      box-shadow: 0 15px 35px rgba(65, 105, 225, 0.4);
     }
   }
+}
+
+// ==========================================
+// ANIMATIONS
+// ==========================================
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInCard {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+// Animation classes
+.fade-in-up {
+  animation: fadeInUp $transition-slow ease-out forwards;
+  opacity: 0;
+}
+
+.slide-in-card {
+  animation: slideInCard $transition-slow ease-out forwards;
+  opacity: 0;
+}
+
+// ==========================================
+// HEADER SECTION
+// ==========================================
+
+.header {
+  background: linear-gradient(159deg, $puriva-primary 0%, $puriva-light 100%);
+  padding: $space-8;
+  border-radius: $radius-xl;
+  margin-bottom: $space-8;
+  position: relative;
+  overflow: hidden;
+  box-shadow: $shadow-lg;
   
-  // Header styling
-  ion-header {
-    ion-toolbar {
-      --background: var(--ion-color-primary);
-      --color: white;
-      
-      ion-title {
-        font-weight: 600;
-        font-size: 1.1rem;
-      }
-    }
+  // Animated background orb
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -30%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
+    border-radius: $radius-full;
+    animation: pulse 4s ease-in-out infinite;
   }
   
-  // Form items styling
-  ion-item {
-    --background: white;
-    --border-color: #e2e8f0;
-    --border-radius: 12px;
-    --padding-start: 16px;
-    --padding-end: 16px;
-    --min-height: 56px;
-    margin-bottom: 16px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  
-    ion-label {
-      font-weight: 600;
-      font-size: 0.875rem;
-      color: #374151;
-      margin-bottom: 8px;
-    }
-  
-    ion-input, ion-select, ion-textarea {
-      --padding-start: 0;
-      --padding-end: 0;
-      font-size: 0.95rem;
-      
-      &::placeholder {
-        color: #9ca3af;
-        font-style: italic;
-      }
-    }
-  
-    ion-textarea {
-      --padding-top: 12px;
-      --padding-bottom: 12px;
-      min-height: 120px;
-      resize: vertical;
-    }
-  
-    &.item-has-focus {
-      --border-color: var(--ion-color-primary);
-      box-shadow: 0 0 0 2px rgba(var(--ion-color-primary-rgb), 0.2);
-    }
+  // Title section
+  .page-title {
+    color: $white;
+    font-size: $font-4xl;
+    font-weight: 800;
+    margin-bottom: $space-4;
+    text-align: center;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 2;
   }
   
-  // Image preview styling
-  .image-preview-container {
-    margin: 12px 0;
+  .header-subtitle {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: $font-xl;
+    margin-bottom: $space-4;
+    font-weight: 500;
+    position: relative;
+    z-index: 2;
+  }
+  
+  // Category buttons
+  .news-categories {
     display: flex;
+    gap: $space-2;
     justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: $space-4;
+    position: relative;
+    z-index: 2;
+  }
   
-    img {
-      max-width: 100%;
-      max-height: 220px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      transition: transform 0.2s ease;
-  
-      &:hover {
-        transform: scale(1.02);
-      }
+  .category-btn {
+    padding: $space-2 $space-4;
+    @include glass-morphism(0.1);
+    color: $white;
+    border-radius: $radius-base;
+    cursor: pointer;
+    font-size: $font-base;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    @include button-hover;
+    @include focus-ring;
+    border: none;
+    
+    &.active {
+      background: $white;
+      color: $puriva-primary;
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.4);
+      transform: translateY(-2px);
+    }
+    
+    &:not(.active):hover {
+      @include glass-morphism(0.2);
+      transform: translateY(-2px);
     }
   }
   
-  // Divider styling
-  .divider-container {
+  // Search bar
+  .search-bar {
+    @include glass-morphism(0.1);
+    border-radius: $radius-base;
+    padding: $space-3 $space-4;
+    color: $white;
+    font-size: $font-lg;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+    
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    &:focus {
+      outline: none;
+      border-color: rgba(255, 255, 255, 0.8);
+      @include glass-morphism(0.2);
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+    }
+  }
+}
+
+// ==========================================
+// MAIN CONTENT
+// ==========================================
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+// ==========================================
+// SELECTION MODE BAR
+// ==========================================
+
+.selection-mode-bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  padding: $space-3;
+  border-radius: $radius-sm;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $space-2;
+  box-shadow: $shadow-sm;
+  border: 1px solid $gray-200;
+
+  .selection-count {
+    font-weight: 600;
+    color: $gray-700;
+  }
+
+  .selection-actions {
+    display: flex;
+    gap: $space-2;
+    align-items: center;
+  }
+}
+
+// ==========================================
+// FEATURED NEWS
+// ==========================================
+
+.featured-news {
+  background: $white;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  box-shadow: $shadow-news;
+  position: relative;
+  cursor: pointer;
+  @include card-hover;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  
+  .featured-image {
+    width: 100%;
+    height: 180px;
+    background: $tech-gradient;
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin: 16px 0 12px;
-  
-    .divider-line {
-      flex: 1;
-      height: 1px;
-      background: #e2e8f0;
+    justify-content: center;
+    font-size: 48px;
+    color: $white;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform $transition-base;
     }
-  
-    .divider-text {
-      font-size: 12px;
-      color: #64748b;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-  }
-  
-  // File upload button styling
-  .upload-button {
-    --background: transparent;
-    --background-hover: rgba(var(--ion-color-primary-rgb), 0.04);
-    --background-focused: rgba(var(--ion-color-primary-rgb), 0.12);
-    --border-color: var(--ion-color-primary);
-    --border-style: dashed;
-    --border-width: 2px;
-    --border-radius: 12px;
-    --color: var(--ion-color-primary);
-    margin: 8px 0;
-    height: 48px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-  
-    &:not(.ion-activated):hover {
-      --background: rgba(var(--ion-color-primary-rgb), 0.08);
-      transform: translateY(-1px);
-    }
-  
-    &.button-disabled {
-      --opacity: 0.5;
-      --color: #9ca3af;
-      --border-color: #d1d5db;
-    }
-  
-    ion-icon {
-      font-size: 1.2rem;
+
+    &:hover img {
+      transform: scale(1.05);
     }
   }
   
-  // Upload info text
-  .upload-info {
-    text-align: center;
-    font-size: 12px;
-    color: #64748b;
-    margin-top: 6px;
+  // NEW badge
+  .new-badge {
+    position: absolute;
+    top: $space-4;
+    right: $space-4;
+    background: $danger;
+    color: $white;
+    padding: $space-2 $space-3;
+    border-radius: $radius-base;
+    font-size: $font-sm;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    box-shadow: 0 4px 12px rgba($danger, 0.4);
+    animation: pulse 2s infinite;
+  }
+  
+  // Featured badge
+  .featured-badge {
+    position: absolute;
+    top: $space-4;
+    left: $space-4;
+    background: rgba(255, 255, 255, 0.95);
+    color: $puriva-primary;
+    padding: $space-2 $space-3;
+    border-radius: $radius-base;
+    font-size: $font-sm;
+    font-weight: 700;
+    text-transform: uppercase;
+    backdrop-filter: blur(10px);
+    box-shadow: $shadow-sm;
+  }
+  
+  // Content area
+  .featured-content {
+    padding: $space-6;
+  }
+  
+  .featured-title {
+    font-size: $font-2xl;
+    font-weight: 700;
+    color: $gray-800;
+    margin-bottom: $space-2;
+    line-height: 1.3;
+  }
+  
+  .featured-excerpt {
+    font-size: $font-lg;
+    color: $gray-600;
     line-height: 1.4;
+    margin-bottom: $space-3;
+    @include text-truncate(3);
   }
   
-  // Progress bar container
-  .upload-progress-container {
-    margin-top: 12px;
-    padding: 0 4px;
-  
-    ion-progress-bar {
-      --background: #e2e8f0;
-      --progress-background: var(--ion-color-primary);
-      height: 6px;
-      border-radius: 3px;
-    }
-  
-    .progress-text {
-      text-align: center;
-      font-size: 12px;
-      color: #475569;
-      margin-top: 6px;
-      font-weight: 600;
-    }
+  .featured-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: $font-base;
+    color: $gray-500;
   }
   
-  // Action buttons styling
-  .action-buttons {
-    margin-top: 24px;
-    gap: 12px;
-  
-    ion-col {
-      padding: 0 6px;
+  .read-more {
+    background: linear-gradient(135deg, $puriva-primary, $puriva-secondary);
+    color: $white;
+    padding: $space-2 $space-5;
+    border-radius: $radius-base;
+    text-decoration: none;
+    font-size: $font-base;
+    font-weight: 600;
+    transition: all $transition-base;
+    box-shadow: $shadow-sm;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba($puriva-primary, 0.4);
     }
+  }
+}
+
+// ==========================================
+// NEWS LIST
+// ==========================================
+
+.news-list {
+  display: flex;
+  flex-direction: column;
+  gap: $space-5;
+}
+
+.news-item {
+  background: $white;
+  border-radius: $radius-md;
+  padding: $space-4;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  display: flex;
+  gap: $space-3;
+  @include card-hover;
+  cursor: pointer;
+  position: relative;
+  border: 1px solid $gray-100;
   
-    ion-button {
-      --border-radius: 12px;
-      height: 48px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      text-transform: none;
-      letter-spacing: 0.3px;
-  
-      &.cancel-button {
-        --background: #f1f5f9;
-        --background-hover: #e2e8f0;
-        --color: #475569;
-        --border-color: #d1d5db;
+  // Selection overlay
+  .selection-overlay {
+    position: absolute;
+    top: $space-2;
+    left: $space-2;
+    z-index: 5;
+    cursor: pointer;
+
+    ion-icon {
+      font-size: 22px;
+      color: $puriva-primary;
+      transition: all $transition-fast;
+
+      &:hover {
+        transform: scale(1.1);
       }
+    }
+  }
+
+  // Admin actions
+  .admin-actions {
+    position: absolute;
+    top: $space-2;
+    right: $space-2;
+    z-index: 5;
+  }
   
-      &.save-button {
-        --background: var(--ion-color-primary);
-        --background-hover: var(--ion-color-primary-shade);
-        --color: white;
-        box-shadow: 0 2px 4px rgba(var(--ion-color-primary-rgb), 0.3);
+  // Thumbnail
+  .news-thumbnail {
+    width: 60px;
+    height: 60px;
+    border-radius: $radius-base;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: $white;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+    box-shadow: $shadow-sm;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    // Category specific gradients
+    &.teknologi { background: $tech-gradient; }
+    &.program { background: $program-gradient; }
+    &.update { background: $update-gradient; }
+    &.sertifikasi { background: $cert-gradient; }
+    &.tips { background: $tips-gradient; }
+    &.umum { background: $tech-gradient; }
+    &.kesehatan { background: $cert-gradient; }
+    &.panduan { background: $tips-gradient; }
+    
+    // Category label
+    .category-label {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: rgba(255, 255, 255, 0.95);
+      color: $puriva-primary;
+      padding: 2px $space-2;
+      border-radius: $radius-xs;
+      font-size: $font-xs;
+      font-weight: 700;
+      text-transform: uppercase;
+      box-shadow: $shadow-sm;
+    }
+    
+    // NEW badge on thumbnail
+    .new-badge {
+      position: absolute;
+      bottom: -6px;
+      right: -6px;
+      background: $danger;
+      color: $white;
+      padding: 2px $space-2;
+      border-radius: $radius-xs;
+      font-size: $font-xs;
+      font-weight: 800;
+      text-transform: uppercase;
+      box-shadow: 0 2px 8px rgba($danger, 0.3);
+      animation: bounce 2s infinite;
+    }
+  }
   
-        &:not(.ion-activated):hover {
+  // Content area
+  .news-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    
+    .news-title {
+      font-size: $font-xl;
+      font-weight: 600;
+      color: $gray-800;
+      margin-bottom: $space-2;
+      line-height: 1.3;
+    }
+    
+    .news-excerpt {
+      font-size: $font-md;
+      color: $gray-600;
+      line-height: 1.4;
+      margin-bottom: $space-2;
+      flex: 1;
+      @include text-truncate(3);
+    }
+    
+    .news-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: $font-sm;
+      color: $gray-500;
+      margin-bottom: $space-2;
+      
+      .news-date,
+      .read-time {
+        display: flex;
+        align-items: center;
+        gap: $space-1;
+      }
+    }
+
+    // News reactions
+    .news-reactions {
+      display: flex;
+      gap: $space-3;
+      margin-top: $space-2;
+
+      ion-button {
+        font-size: $font-sm;
+        --padding-start: 8px;
+        --padding-end: 8px;
+        --padding-top: 4px;
+        --padding-bottom: 4px;
+
+        ion-icon {
+          font-size: 16px;
+        }
+
+        &:hover {
           transform: translateY(-1px);
-          box-shadow: 0 4px 8px rgba(var(--ion-color-primary-rgb), 0.4);
         }
       }
+    }
+  }
+}
+
+// ==========================================
+// LOAD MORE BUTTON
+// ==========================================
+
+.load-more {
+  background: $white;
+  border: 2px solid $light-blue;
+  color: $puriva-primary;
+  padding: $space-4;
+  border-radius: $radius-md;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all $transition-base;
+  margin-top: $space-3;
+  box-shadow: $shadow-sm;
   
-      &.button-disabled {
-        --opacity: 0.6;
-        transform: none !important;
-        box-shadow: none !important;
+  &:hover {
+    background: $light-blue-accent;
+    border-color: $puriva-primary;
+    transform: translateY(-2px);
+    box-shadow: $shadow-base;
+  }
+
+  &:focus {
+    @include focus-ring;
+  }
+}
+
+// ==========================================
+// RESPONSIVE DESIGN
+// ==========================================
+
+// Large mobile devices
+@media (max-width: 430px) {
+  .container {
+    padding: $space-4;
+  }
+  
+  .header {
+    padding: $space-6;
+    
+    .page-title {
+      font-size: $font-3xl;
+    }
+    
+    .header-subtitle {
+      font-size: $font-lg;
+    }
+    
+    .category-btn {
+      padding: $space-1 $space-3;
+      font-size: $font-sm;
+    }
+  }
+  
+  .news-item {
+    padding: $space-3;
+    
+    .news-thumbnail {
+      width: 50px;
+      height: 50px;
+      font-size: 20px;
+    }
+
+    .news-content {
+      .news-title {
+        font-size: $font-lg;
+      }
+
+      .news-excerpt {
+        font-size: $font-base;
       }
     }
   }
   
-  // Responsive adjustments
-  @media (max-width: 576px) {
-    ion-content .ion-padding {
-      padding: 12px;
+  .featured-news {
+    .featured-image {
+      height: 160px;
+      font-size: 40px;
     }
-  
-    ion-item {
-      margin-bottom: 12px;
-      --min-height: 52px;
-      --padding-start: 12px;
-      --padding-end: 12px;
+    
+    .featured-content {
+      padding: $space-5;
     }
-  
-    .image-preview-container img {
-      max-height: 180px;
+
+    .featured-title {
+      font-size: $font-xl;
     }
-  
-    .action-buttons {
-      margin-top: 20px;
-  
-      ion-button {
-        height: 44px;
-        font-size: 0.9rem;
-      }
+
+    .featured-excerpt {
+      font-size: $font-md;
+    }
+  }
+
+  ion-fab.fab-above-bottom-nav {
+    right: $space-3;
+  }
+}
+
+// Small mobile devices
+@media (max-width: 360px) {
+  .header {
+    padding: $space-5;
+    
+    .page-title {
+      font-size: $font-xl;
+    }
+    
+    .news-categories {
+      gap: $space-1;
+    }
+    
+    .category-btn {
+      padding: $space-1 $space-2;
+      font-size: 9px;
     }
   }
   
-  // Loading state styles
-  .loading-overlay {
-    position: fixed;
+  .news-item {
+    gap: $space-2;
+    
+    .news-thumbnail {
+      width: 45px;
+      height: 45px;
+      font-size: 18px;
+    }
+  }
+
+  .featured-news {
+    .featured-image {
+      height: 140px;
+      font-size: 32px;
+    }
+  }
+}
+
+// ==========================================
+// ACCESSIBILITY & PERFORMANCE
+// ==========================================
+
+// Reduce motion for users who prefer it
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  .pulse,
+  .bounce {
+    animation: none;
+  }
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+  .header {
+    background: $gray-900;
+  }
+  
+  .category-btn {
+    border: 2px solid $white;
+    
+    &.active {
+      background: $white;
+      color: $gray-900;
+    }
+  }
+  
+  .news-item,
+  .featured-news {
+    border: 2px solid $gray-300;
+  }
+}
+
+// Focus management for keyboard navigation
+.news-item:focus,
+.featured-news:focus,
+.category-btn:focus,
+.load-more:focus {
+  @include focus-ring;
+}
+
+// Loading states
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+  
+  &::after {
+    content: '';
+    position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-  
-    .loading-content {
-      background: white;
-      padding: 24px;
-      border-radius: 12px;
-      text-align: center;
-      min-width: 200px;
-  
-      ion-spinner {
-        margin-bottom: 16px;
-      }
-  
-      .loading-text {
-        color: #374151;
-        font-weight: 500;
-      }
-    }
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: shimmer 1.5s infinite;
   }
-  
-  // Animation classes
-  .fade-in {
-    animation: fadeIn 0.3s ease-in-out;
-  }
-  
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  .bounce-in {
-    animation: bounceIn 0.5s ease-out;
-  }
-  
-  @keyframes bounceIn {
-    0% {
-      opacity: 0;
-      transform: scale(0.3);
-    }
-    50% {
-      opacity: 1;
-      transform: scale(1.05);
-    }
-    70% {
-      transform: scale(0.9);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-  
-  // Focus and validation states
-  .form-field-error {
-    ion-item {
-      --border-color: var(--ion-color-danger);
-      animation: shake 0.5s ease-in-out;
-    }
-  }
-  
-  @keyframes shake {
-    0%, 20%, 40%, 60%, 80% {
-      transform: translateX(0);
-    }
-    10%, 30%, 50%, 70%, 90% {
-      transform: translateX(-5px);
-    }
-  }
-  
-  // Success state
-  .form-field-success {
-    ion-item {
-      --border-color: var(--ion-color-success);
-      
-      &::after {
-        content: '✓';
-        position: absolute;
-        right: 16px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--ion-color-success);
-        font-weight: bold;
-      }
-    }
-  }
+}
+
+// Utility classes
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

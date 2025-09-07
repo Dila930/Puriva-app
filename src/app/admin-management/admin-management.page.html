@@ -159,11 +159,12 @@
               <th>Sterilisasi</th>
               <th>Thread</th>
               <th>Komentar</th>
+              <th>Password</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngIf="(filteredUserAggRows?.length || 0) === 0">
-              <td colspan="5" class="empty">Belum ada data aktivitas pengguna.</td>
+              <td colspan="6" class="empty">Belum ada data aktivitas pengguna.</td>
             </tr>
             <tr *ngFor="let r of filteredUserAggRows">
               <td><span class="uid">{{ r.uid }}</span></td>
@@ -174,6 +175,16 @@
               <td><span class="badge green">{{ r.steril | number }}</span></td>
               <td><span class="badge blue">{{ r.threads | number }}</span></td>
               <td><span class="badge amber">{{ r.comments | number }}</span></td>
+              <td class="password-cell">
+                <div class="password-display">
+                  <span class="password-text">
+                    {{ r.showPassword ? (r.password || 'Loading...') : getMaskedPassword(r.password) }}
+                  </span>
+                  <ion-button fill="clear" size="small" (click)="$event.stopPropagation(); togglePasswordVisibility(r)">
+                    <ion-icon [name]="r.showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+                  </ion-button>
+                </div>
+              </td>
             </tr>
           </tbody>
         </table>

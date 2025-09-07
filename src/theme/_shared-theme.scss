@@ -1,0 +1,43 @@
+// ====================================
+// Shared Theme Variables
+// ====================================
+
+// Color Palette
+$primary-color: #4f46e5;      // Indigo-600
+$primary-light: #818cf8;     // Indigo-400
+$primary-dark: #4338ca;      // Indigo-700
+$secondary-color: #7c3aed;   // Violet-600
+$accent-color: #8b5cf6;      // Violet-500
+$success-color: #10b981;     // Emerald-500
+$warning-color: #f59e0b;     // Amber-500
+$danger-color: #ef4444;      // Red-500
+$info-color: #3b82f6;        // Blue-500
+
+// Text Colors
+$text-primary: #1f2937;      // Gray-800
+$text-secondary: #4b5563;    // Gray-600
+$text-muted: #6b7280;        // Gray-500
+$text-light: #f9fafb;        // Gray-50
+
+// Background Colors
+$bg-primary: #ffffff;
+$bg-secondary: #f9fafb;      // Gray-50
+$bg-tertiary: #f3f4f6;       // Gray-100
+$bg-dark: #111827;           // Gray-900
+
+// Border Colors
+$border-color: #e5e7eb;      // Gray-200
+$border-radius: 0.5rem;      // 8px
+$border-radius-lg: 0.75rem;  // 12px
+
+// Spacing
+$spacing-1: 0.25rem;   // 4px
+$spacing-2: 0.5rem;    // 8px
+$spacing-3: 0.75rem;   // 12px
+$spacing-4: 1rem;      // 16px
+
+// Typography
+$font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+$font-size-sm: 0.875rem;   // 14px
+$font-size-base: 1rem;     // 16px
+$font-size-lg: 1.125rem;   // 18px

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, ToastController } from '@ionic/angular';
 import { Auth, createUserWithEmailAndPassword, updateProfile } from '@angular/fire/auth';
-import { Firestore, doc, setDoc, serverTimestamp, collection, addDoc } from '@angular/fire/firestore';
+import { Firestore, doc, setDoc, serverTimestamp, collection, addDoc, getDoc } from '@angular/fire/firestore';
 import { Database, ref, set as rtdbSet, serverTimestamp as rtdbServerTimestamp } from '@angular/fire/database';
 
 @Component({
@@ -132,9 +132,26 @@ export class RegisterPage implements OnInit {
       // 3) Save user profile to Firestore (best-effort, NON-BLOCKING)
       const uid = cred.user?.uid as string;
       const userRef = doc(this.firestore, 'users', uid);
+      
       try {
+        // Get the next sequential user ID
+        const counterRef = doc(this.firestore, 'counters', 'users');
+        const counterSnap = await getDoc(counterRef);
+        let nextId = 1000; // Starting ID
+        
+        if (counterSnap.exists()) {
+          nextId = (counterSnap.data()['count'] || 1000) + 1;
+        }
+        
+        // Update the counter for next time
+        await setDoc(counterRef, { count: nextId }, { merge: true });
+        
+        // Format the sequential ID with leading zeros (e.g., UID1000, UID1001, etc.)
+        const sequentialId = `UID${nextId.toString().padStart(4, '0')}`;
+        
         await this.withTimeout(setDoc(userRef, {
           uid,
+          sequentialId,
           username: this.username,
           email: this.email,
           kodeAkses: this.password, // app-internal access code

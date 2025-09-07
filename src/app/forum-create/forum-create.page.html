@@ -1,33 +1,90 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>Tambah Diskusi</ion-title>
+<ion-header translucent="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/forum"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Tambah Diskusi Baru</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="save()" [disabled]="isSaving">
+        <ion-icon slot="icon-only" name="checkmark-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <ion-item>
-    <ion-label position="stacked">Topik</ion-label>
-    <ion-input [(ngModel)]="topic" placeholder="Judul/topik diskusi"></ion-input>
-  </ion-item>
+<ion-content [fullscreen]="true" class="form-content">
+  <div class="form-container">
+    <div class="form-section">
+      <h2 class="section-title">Informasi Diskusi</h2>
+      
+      <div class="form-group">
+        <label class="form-label">Topik Diskusi</label>
+        <ion-input 
+          [(ngModel)]="topic" 
+          placeholder="Masukkan judul diskusi"
+          class="custom-input"
+          [class.focused]="isTopicFocused"
+          (ionFocus)="isTopicFocused = true"
+          (ionBlur)="isTopicFocused = false">
+        </ion-input>
+      </div>
 
-  <ion-item>
-    <ion-label position="stacked">Kategori</ion-label>
-    <ion-select [(ngModel)]="category">
-      <ion-select-option *ngFor="let c of categories" [value]="c">{{ c }}</ion-select-option>
-    </ion-select>
-  </ion-item>
+      <div class="form-group">
+        <label class="form-label">Kategori</label>
+        <div class="select-wrapper">
+          <ion-select 
+            [(ngModel)]="category" 
+            interface="action-sheet"
+            class="custom-select">
+            <ion-select-option *ngFor="let c of categories" [value]="c">
+              {{ c }}
+            </ion-select-option>
+          </ion-select>
+          <ion-icon name="chevron-down-outline" class="select-arrow"></ion-icon>
+        </div>
+      </div>
 
-  <ion-item lines="full">
-    <ion-label position="stacked">Konten</ion-label>
-    <ion-textarea [(ngModel)]="content" auto-grow="true" rows="8" placeholder="Tulis isi diskusi..."></ion-textarea>
-  </ion-item>
+      <div class="form-group">
+        <label class="form-label">Isi Diskusi</label>
+        <div class="textarea-wrapper" [class.focused]="isContentFocused">
+          <ion-textarea 
+            [(ngModel)]="content" 
+            placeholder="Tulis isi diskusi Anda di sini..."
+            rows="8"
+            autoGrow="true"
+            (ionFocus)="isContentFocused = true"
+            (ionBlur)="isContentFocused = false">
+          </ion-textarea>
+        </div>
+      </div>
+    </div>
 
-  <ion-row class="ion-padding-top">
-    <ion-col size="6">
-      <ion-button expand="block" color="medium" (click)="cancel()" [disabled]="isSaving">Batal</ion-button>
-    </ion-col>
-    <ion-col size="6">
-      <ion-button expand="block" color="primary" (click)="save()" [disabled]="isSaving">Simpan</ion-button>
-    </ion-col>
-  </ion-row>
+    <div class="quick-actions">
+      <h3 class="section-subtitle">Tindakan Cepat</h3>
+      <div class="action-buttons">
+        <ion-button expand="block" fill="outline" size="small" routerLink="/news/create" class="action-button">
+          <ion-icon slot="start" name="newspaper-outline"></ion-icon>
+          Buat Berita
+        </ion-button>
+        <ion-button expand="block" fill="outline" size="small" routerLink="/forum" class="action-button">
+          <ion-icon slot="start" name="chatbubbles-outline"></ion-icon>
+          Lihat Forum
+        </ion-button>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <ion-button expand="block" fill="clear" (click)="cancel()" [disabled]="isSaving" class="cancel-btn">
+        Batal
+      </ion-button>
+      <ion-button 
+        expand="block" 
+        (click)="save()" 
+        [disabled]="isSaving || !topic.trim() || !content.trim()"
+        class="submit-btn">
+        <ion-spinner name="crescent" *ngIf="isSaving"></ion-spinner>
+        <span *ngIf="!isSaving">Simpan Diskusi</span>
+      </ion-button>
+    </div>
+  </div>
 </ion-content>

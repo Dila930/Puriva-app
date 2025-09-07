@@ -64,15 +64,34 @@ $colors: (
   gradient-violet: #C4B5FD,
 );
 
+// Import sass:map for the new map.get() function
+@use 'sass:map';
+
 // Gradient System
 $gradients: (
-  primary: linear-gradient(135deg, #{map-get($colors, gradient-purple)}, #{map-get($colors, gradient-blue)}),
-  secondary: linear-gradient(135deg, #{map-get($colors, gradient-pink)}, #{map-get($colors, gradient-purple)}),
-  tertiary: linear-gradient(135deg, #{map-get($colors, gradient-blue)}, #{map-get($colors, gradient-cyan)}),
-  rainbow: linear-gradient(135deg, #{map-get($colors, gradient-purple)}, #{map-get($colors, gradient-pink)}, #{map-get($colors, gradient-blue)}),
-  sunset: linear-gradient(135deg, #{map-get($colors, gradient-pink)}, #{map-get($colors, gradient-purple)}, #{map-get($colors, gradient-indigo)}),
-  ocean: linear-gradient(135deg, #{map-get($colors, gradient-blue)}, #{map-get($colors, gradient-cyan)}, #{map-get($colors, gradient-indigo)}),
-  aurora: linear-gradient(135deg, #{map-get($colors, gradient-violet)}, #{map-get($colors, gradient-pink)}, #{map-get($colors, gradient-cyan)}),
+  primary: linear-gradient(135deg, #{map.get($colors, 'gradient-purple')}, #{map.get($colors, 'gradient-blue')}),
+  secondary: linear-gradient(135deg, #{map.get($colors, 'gradient-pink')}, #{map.get($colors, 'gradient-purple')}),
+  tertiary: linear-gradient(135deg, #{map.get($colors, 'gradient-blue')}, #{map.get($colors, 'gradient-cyan')}),
+  rainbow: linear-gradient(135deg, 
+    #{map.get($colors, 'gradient-purple')}, 
+    #{map.get($colors, 'gradient-pink')}, 
+    #{map.get($colors, 'gradient-blue')}
+  ),
+  sunset: linear-gradient(135deg, 
+    #{map.get($colors, 'gradient-pink')}, 
+    #{map.get($colors, 'gradient-purple')}, 
+    #{map.get($colors, 'gradient-indigo')}
+  ),
+  ocean: linear-gradient(135deg, 
+    #{map.get($colors, 'gradient-blue')}, 
+    #{map.get($colors, 'gradient-cyan')}, 
+    #{map.get($colors, 'gradient-indigo')}
+  ),
+  aurora: linear-gradient(135deg, 
+    #{map.get($colors, 'gradient-violet')}, 
+    #{map.get($colors, 'gradient-pink')}, 
+    #{map.get($colors, 'gradient-cyan')}
+  ),
 );
 
 // Shadow System
@@ -913,7 +932,7 @@ ion-button {
 .section {
   @include card-base(true, true);
   
-  margin-top: map-get($spacing, 6);
+  margin: map-get($spacing, 6) map-get($spacing, 4) map-get($spacing, 4);
   overflow: hidden;
   animation: bounce-in 0.8s ease-out;
   

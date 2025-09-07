@@ -42,6 +42,16 @@ export class HomePage implements OnInit, OnDestroy {
   
   // Activity feed
   recentActivities: Activity[] = [];
+  visibleActivities: number = 5; // Show 5 activities by default
+  showAllActivities: boolean = false;
+
+  /**
+   * Toggle between showing all activities or just the first few
+   */
+  toggleShowAll() {
+    this.showAllActivities = !this.showAllActivities;
+    this.visibleActivities = this.showAllActivities ? this.recentActivities.length : 5;
+  }
   // Notifications (for badge demo; replace with real data source as needed)
   notifications: string[] = [];
   
@@ -488,8 +498,7 @@ export class HomePage implements OnInit, OnDestroy {
           this.resetHomeState();
         }
         this.lastAuthUid = user.uid;
-        // Mirror Profile: prefer displayName, fallback to full email
-        this.userName = user.displayName || user.email || 'Pengguna';
+        this.updateUserProfile(user);
         // Active session
         const activeRef = ref(this.db, `users/${user.uid}/activeSession`);
         const un1 = onValue(activeRef, (snap) => {
@@ -554,7 +563,16 @@ export class HomePage implements OnInit, OnDestroy {
     } catch { /* ignore if DB not configured */ }
   }
 
-  // (No helper needed; keep logic consistent with Profile page)
+  private updateUserProfile(user: User | null): void {
+    if (!user) {
+      this.resetHomeState();
+      return;
+    }
+
+    // Get full name and extract first name only
+    const fullName = user.displayName || user.email?.split('@')[0] || 'Pengguna';
+    this.userName = fullName.split(' ')[0];
+  }
 
   private detachDatabaseListeners(): void {
     try {

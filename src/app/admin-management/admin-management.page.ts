@@ -18,6 +18,17 @@ interface AdminStats {
   news: number;
 }
 
+interface UserAggRow {
+  uid: string;
+  email?: string;
+  username?: string;
+  steril: number;
+  comments: number;
+  threads: number;
+  password?: string;
+  showPassword?: boolean;
+}
+
 @Component({
   standalone: true,
   selector: 'app-admin-management',
@@ -59,8 +70,8 @@ export class AdminManagementPage implements OnInit, OnDestroy {
   reverseOrder = false;
 
   // Aggregated per-user rows for table
-  userAggRows: Array<{ uid: string; email?: string; username?: string; steril: number; comments: number; threads: number }> = [];
-  filteredUserAggRows: Array<{ uid: string; email?: string; username?: string; steril: number; comments: number; threads: number }> = [];
+  userAggRows: UserAggRow[] = [];
+  filteredUserAggRows: UserAggRow[] = [];
   userSearch = '';
 
   // Debounced refresh trigger for realtime updates
@@ -95,6 +106,28 @@ export class AdminManagementPage implements OnInit, OnDestroy {
   }
 
   // Period filter removed per request
+
+  async fetchUserPassword(uid: string): Promise<string> {
+    try {
+      const snap = await get(child(ref(this.db), `users/${uid}/kodeAkses`));
+      return snap.exists() ? snap.val() : 'N/A';
+    } catch (error) {
+      console.error('Error fetching password:', error);
+      return 'Error';
+    }
+  }
+
+  async togglePasswordVisibility(user: UserAggRow): Promise<void> {
+    if (user.password === undefined) {
+      user.password = await this.fetchUserPassword(user.uid);
+    }
+    user.showPassword = !user.showPassword;
+  }
+
+  getMaskedPassword(password: string | undefined): string {
+    if (!password) return '••••••••';
+    return password.replace(/./g, '•');
+  }
 
   async refresh(): Promise<void> {
     this.loading = true;

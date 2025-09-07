@@ -90,7 +90,7 @@
         Aktivitas Terbaru
       </div>
       <ul class="activity-list">
-        <li class="activity-item" *ngFor="let activity of recentActivities">
+        <li class="activity-item" *ngFor="let activity of recentActivities | slice:0:visibleActivities">
           <div class="activity-icon" [ngClass]="activity.iconClass">{{ activity.emoji }}</div>
           <div class="activity-info">
             <div class="activity-item-title">{{ activity.title }}</div>
@@ -101,6 +101,12 @@
           </div>
         </li>
       </ul>
+      <div class="activity-footer" *ngIf="recentActivities.length > 5">
+        <ion-button fill="clear" size="small" (click)="toggleShowAll()">
+          {{ showAllActivities ? 'Tampilkan Lebih Sedikit' : 'Lihat Semua' }}
+          <ion-icon slot="end" [name]="showAllActivities ? 'chevron-up' : 'chevron-down'"></ion-icon>
+        </ion-button>
+      </div>
     </section>
   </main>
 </ion-content>

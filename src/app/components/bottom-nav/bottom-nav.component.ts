@@ -21,7 +21,6 @@ export class BottomNavComponent implements OnInit {
   constructor(private router: Router, private auth: Auth) { }
 
   ngOnInit() {
-    // Reactive admin detection to avoid stale state on first paint
     onAuthStateChanged(this.auth as any, () => {
       this.isAdminUser = isAdmin(this.auth);
     });
@@ -29,6 +28,11 @@ export class BottomNavComponent implements OnInit {
 
   goToHome(): void {
     this.router.navigate(['/home']);
+  }
+  
+  // Tambahkan fungsi ini
+  goToChat(): void {
+    this.router.navigate(['/chat']);
   }
 
   goToNews(): void {
@@ -52,10 +56,8 @@ export class BottomNavComponent implements OnInit {
   }
 
   goToAdmin(): void {
-    // Route is guarded; this ensures nav only if admin
     if (this.isAdminUser) {
       this.router.navigate(['/admin/management']);
     }
   }
-
 }

@@ -1,0 +1,221 @@
+@use "sass:map";
+
+ion-content {
+  #chat-messages {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 2rem;
+    padding-top: 1rem;
+    height: 100%;
+    overflow-y: auto;
+  }
+}
+
+// Styling for user and bot messages
+.flex {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.flex-row-reverse {
+  flex-direction: row-reverse;
+}
+
+.space-x-3 > * + * {
+  margin-left: 12px;
+}
+
+.space-x-3 {
+  justify-content: flex-start;
+}
+
+.flex-row-reverse .space-x-3 {
+  justify-content: flex-end;
+}
+
+.w-10 {
+  width: 40px;
+}
+
+.h-10 {
+  height: 40px;
+}
+
+.rounded-full {
+  border-radius: 9999px;
+}
+
+.flex-shrink-0 {
+  flex-shrink: 0;
+}
+
+// Bot avatar and message bubble styles
+.bg-gradient-to-r {
+  background-image: linear-gradient(to right, var(--ion-color-indigo-400), var(--ion-color-purple-500));
+}
+
+.bg-white {
+  background-color: white;
+}
+
+.rounded-2xl {
+  border-radius: 1rem;
+}
+
+.rounded-tl-none {
+  border-top-left-radius: 0;
+}
+
+.rounded-br-none {
+  border-bottom-right-radius: 0;
+}
+
+.p-4 {
+  padding: 1rem;
+}
+
+.shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.max-w-xs {
+  max-width: 20rem;
+}
+
+// User message bubble styles
+.bg-indigo-500 {
+  background-color: var(--ion-color-indigo-500);
+}
+
+.text-white {
+  color: white;
+}
+
+.text-gray-800 {
+  color: #1f2937;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.text-xs {
+  font-size: 0.75rem;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
+.text-indigo-200 {
+  color: #a5b4fc;
+}
+
+.text-gray-400 {
+  color: #9ca3af;
+}
+
+// Footer input area styling
+ion-footer {
+  .p-4 {
+    padding: 1rem;
+  }
+  .bg-white {
+    background-color: white;
+  }
+  .border-t {
+    border-top-width: 1px;
+    border-color: #e5e7eb;
+  }
+  .fixed {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+  .focus\\:outline-none {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+  }
+  .focus\\:ring-2 {
+    --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+    --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+    box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+  }
+  .focus\\:ring-indigo-500 {
+    --tw-ring-color: var(--ion-color-indigo-500);
+  }
+  .w-full {
+    width: 100%;
+  }
+  .p-4 {
+    padding: 1rem;
+  }
+  .pr-12 {
+    padding-right: 3rem;
+  }
+  .border {
+    border-width: 1px;
+  }
+  .border-gray-200 {
+    border-color: #e5e7eb;
+  }
+  .rounded-2xl {
+    border-radius: 1rem;
+  }
+}
+
+// Dot flashing animation for loading indicator
+.dot-flashing {
+  position: relative;
+  width: 5px;
+  height: 5px;
+  border-radius: 5px;
+  background-color: #9880ff;
+  color: #9880ff;
+  animation: dotFlashing 1s infinite linear alternate;
+  animation-delay: 0.5s;
+  display: inline-block;
+  margin-left: 5px;
+}
+.dot-flashing::before,
+.dot-flashing::after {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  top: 0;
+}
+.dot-flashing::before {
+  left: -10px;
+  width: 5px;
+  height: 5px;
+  border-radius: 5px;
+  background-color: #9880ff;
+  color: #9880ff;
+  animation: dotFlashing 1s infinite alternate;
+  animation-delay: 0s;
+}
+.dot-flashing::after {
+  left: 10px;
+  width: 5px;
+  height: 5px;
+  border-radius: 5px;
+  background-color: #9880ff;
+  color: #9880ff;
+  animation: dotFlashing 1s infinite alternate;
+  animation-delay: 1s;
+}
+
+@keyframes dotFlashing {
+  0% {
+    background-color: #9880ff;
+  }
+  50%, 100% {
+    background-color: #ebe6ff;
+  }
+}

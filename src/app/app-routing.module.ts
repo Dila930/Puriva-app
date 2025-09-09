@@ -68,6 +68,10 @@ const routes: Routes = [
     path: 'admin/management',
     canActivate: [AuthGuard, AdminGuard],
     loadChildren: () => import('./admin-management/admin-management.module').then(m => m.AdminManagementPageModule)
+  },
+  {
+    path: 'chat',
+    loadChildren: () => import('./chat/chat.module').then(m => m.ChatPageModule)
   }
 ];
 

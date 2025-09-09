@@ -5,6 +5,8 @@ import { SterilizationService, SterilizationEvent } from '../services/sterilizat
 import { AlertController } from '@ionic/angular';
 import { Auth, onAuthStateChanged, User } from '@angular/fire/auth';
 import { Database, ref, onValue, Unsubscribe } from '@angular/fire/database';
+// Import modul Firestore
+import { Firestore, doc, getDoc } from '@angular/fire/firestore';
 
 interface Activity {
   id?: string;
@@ -87,6 +89,8 @@ export class HomePage implements OnInit, OnDestroy {
     private alertCtrl: AlertController,
     private auth: Auth,
     private db: Database,
+    // Tambahkan Firestore di sini
+    private firestore: Firestore
   ) {
     // Update active tab based on route
     this.router.events.pipe(
@@ -577,17 +581,34 @@ export class HomePage implements OnInit, OnDestroy {
     } catch { /* ignore if DB not configured */ }
   }
 
-  private updateUserProfile(user: User | null): void {
+  private async updateUserProfile(user: User | null): Promise<void> {
     if (!user) {
       this.resetHomeState();
       return;
     }
 
-    // Get full name and extract first name only
-    const fullName = user.displayName || user.email?.split('@')[0] || 'Pengguna';
-    this.userName = fullName.split(' ')[0];
+    try {
+      // Ambil data profil dari Firestore
+      const userDocRef = doc(this.firestore, `users/${user.uid}`);
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (userDocSnap.exists()) {
+        const userData = userDocSnap.data();
+        this.userName = userData['name'] || user.displayName || user.email?.split('@')[0] || 'Pengguna';
+        this.userPhotoUrl = userData['photoURL'] || user.photoURL || null;
+      } else {
+        // Fallback ke data dari Firebase Auth jika data di Firestore belum ada
+        this.userName = user.displayName || user.email?.split('@')[0] || 'Pengguna';
+        this.userPhotoUrl = user.photoURL || null;
+      }
+    } catch (error) {
+      console.error("Gagal mengambil data profil dari Firestore:", error);
+      // Fallback jika terjadi error pada Firestore
+      this.userName = user.displayName || user.email?.split('@')[0] || 'Pengguna';
+      this.userPhotoUrl = user.photoURL || null;
+    }
+
     this.userEmail = user.email || null;
-    this.userPhotoUrl = user.photoURL || null;
   }
 
   private detachDatabaseListeners(): void {

@@ -1,12 +1,10 @@
 <ion-footer>
-  <!-- Enhanced Bottom Navigation -->
   <nav class="bottom-nav">
     <div class="nav-items">
       <div class="nav-item" [class.active]="activeTab === 'home'" (click)="goToHome()">
         <ion-icon name="home-outline" class="nav-icon"></ion-icon>
         <div class="nav-label">Beranda</div>
       </div>
-      <!-- Second tab differs by role: Control for users, Admin for admins -->
       <div class="nav-item" *ngIf="!isAdminUser" [class.active]="activeTab === 'control'" (click)="goToControl()">
         <ion-icon name="options-outline" class="nav-icon"></ion-icon>
         <div class="nav-label">Control</div>
@@ -14,6 +12,11 @@
       <div class="nav-item" *ngIf="isAdminUser" [class.active]="activeTab === 'admin'" (click)="goToAdmin()">
         <ion-icon name="shield-checkmark-outline" class="nav-icon"></ion-icon>
         <div class="nav-label">Admin</div>
+      </div>
+      
+      <div class="nav-item" [class.active]="activeTab === 'chat'" (click)="goToChat()">
+        <ion-icon name="chatbubbles-outline" class="nav-icon"></ion-icon>
+        <div class="nav-label">Chat AI</div>
       </div>
 
       <div class="nav-item" [class.active]="activeTab === 'news'" (click)="goToNews()">

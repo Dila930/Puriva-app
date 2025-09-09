@@ -181,7 +181,9 @@ export class LoginPage implements OnInit {
     this.isLoading = true;
     try {
       const provider = new GoogleAuthProvider();
-      const cred = await this.withTimeout(signInWithPopup(this.auth, provider), 8000, 'Login dengan Google');
+      provider.setCustomParameters({ prompt: 'select_account' });
+      // Perbaikan: Ubah batas waktu dari 8000 menjadi 15000 milidetik
+      const cred = await this.withTimeout(signInWithPopup(this.auth, provider), 15000, 'Login dengan Google');
       await this.presentToast('Login berhasil!', 'success');
       this.navCtrl.navigateRoot('/home');
       this.postLoginData(cred.user?.uid as string, cred.user?.email as string, cred.user?.displayName as string, 'google');

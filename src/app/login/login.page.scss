@@ -1,267 +1,563 @@
-// ======================================
-// 📌 Variables & Mixins
-// ======================================
+//================================================
+// Puriva Login Page - Improved SCSS
+//================================================
+
+//------------------------------------------------
+// 1. Variables
+//------------------------------------------------
 
 // Color Palette
-$color-bg: #ffffff;
+$color-primary: #667eea;
 $color-primary-start: #667eea;
 $color-primary-end: #764ba2;
-$color-secondary-start: #f093fb;
-$color-secondary-end: #f5576c;
-$color-text-dark: #1e293b;
-$color-text-gray: #475569;
-$color-placeholder: #94a3b8;
-$color-icon: #667eea;
+$color-secondary: #764ba2;
+$color-tertiary: #f093fb;
+$color-accent: #f5576c;
 $color-white: #ffffff;
-$color-border: rgba(255, 255, 255, 0.25);
-$color-glass-light: rgba(255, 255, 255, 0.30);
-$color-glass-dark: rgba(255, 255, 255, 0.15);
-$color-blue-dark: #3b5cb8;
-$color-blue-link: #4169e1;
+$color-black: #000000;
 
-// Spacing & Sizes
-$space-xs: 8px;
-$space-s: 16px;
-$space-m: 24px;
-$space-l: 32px;
-$space-xl: 48px;
-$radius-s: 12px;
-$radius-m: 18px;
-$radius-l: 24px;
-$radius-xl: 32px;
-$btn-height: 68px;
+// Royal Blue variants
+$color-royal-blue: #4169e1;
+$color-royal-blue-dark: #3b5cb8;
+
+// Gray scale
+$color-gray-50: #f9fafb;
+$color-gray-100: #f3f4f6;
+$color-gray-200: #e5e7eb;
+$color-gray-300: #d1d5db;
+$color-gray-400: #9ca3af;
+$color-gray-500: #6b7280;
+$color-gray-600: #4b5563;
+$color-gray-700: #374151;
+$color-gray-800: #1f2937;
+$color-gray-900: #111827;
+
+// Semantic colors
+$color-success: #10b981;
+$color-error: #ef4444;
+$color-warning: #f59e0b;
+$color-info: #3b82f6;
+
+// Text colors
+$color-text-primary: #1e293b;
+$color-text-secondary: #475569;
+$color-text-muted: #64748b;
+$color-text-placeholder: #94a3b8;
+$color-text-dark: $color-gray-900;
+
+// Background colors
+$color-bg-primary: $color-white;
+$color-bg-secondary: #f8fafc;
+$color-bg-muted: #f1f5f9;
+
+// Gradients
+$gradient-primary: linear-gradient(135deg, $color-primary 0%, $color-secondary 50%, $color-tertiary 100%);
+$gradient-button: linear-gradient(135deg, $color-primary 0%, $color-secondary 25%, $color-tertiary 75%, $color-accent 100%);
+$gradient-logo: linear-gradient(135deg, $color-white 0%, rgba($color-white, 0.85) 100%);
+$gradient-shine: linear-gradient(90deg, transparent, rgba($color-white, 0.35), transparent);
+$gradient-shine-focus: linear-gradient(90deg, transparent, rgba($color-white, 0.6), transparent);
 
 // Typography
-$font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+$font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+$font-size-xs: 12px;
+$font-size-sm: 14px;
+$font-size-base: 16px;
+$font-size-lg: 18px;
+$font-size-xl: 20px;
+$font-size-2xl: 24px;
+$font-size-3xl: 32px;
+$font-size-4xl: 44px;
+$font-size-5xl: 56px;
 
-// Transitions & Shadows
-$transition-main: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+$font-weight-extrabold: 800;
+$font-weight-black: 900;
+
+$line-height-tight: 1.25;
+$line-height-normal: 1.5;
+$line-height-relaxed: 1.6;
+
+// Spacing
+$space-xxs: 2px;
+$space-xs: 4px;
+$space-sm: 8px;
+$space-md: 12px;
+$space-base: 16px;
+$space-lg: 20px;
+$space-xl: 24px;
+$space-2xl: 32px;
+$space-3xl: 48px;
+$space-4xl: 64px;
+$space-5xl: 80px;
+
+// Border radius
+$radius-xs: 4px;
+$radius-sm: 6px;
+$radius-base: 8px;
+$radius-md: 12px;
+$radius-lg: 16px;
+$radius-xl: 20px;
+$radius-2xl: 24px;
+$radius-3xl: 32px;
+$radius-full: 9999px;
+$radius-3xl: 32px;
+$radius-full: 50%;
+
+// Legacy support
+$border-radius-small: $radius-md;
+$border-radius-medium: $radius-lg;
+$border-radius-large: $radius-2xl;
+
+// Shadows
+$shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+$shadow-base: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+$shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+$shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+
+// Component specific shadows
+$shadow-button: 0 4px 12px rgba($color-primary, 0.2);
+$shadow-button-hover: 0 6px 16px rgba($color-primary, 0.3);
+$shadow-primary: 0 8px 32px rgba($color-primary, 0.35);
+$shadow-primary-hover: 0 15px 50px rgba($color-primary, 0.5);
+$shadow-outline: 0 0 0 3px rgba($color-primary, 0.5);
+
+// Legacy shadow variables
+$box-shadow-light: $shadow-sm;
+$box-shadow-medium: $shadow-md;
+$box-shadow-primary: $shadow-primary;
+$box-shadow-primary-hover: $shadow-primary-hover;
+
+// Transitions & Animations
+$transition-fast: all 0.15s ease;
+$transition-base: all 0.2s ease;
+$transition-main: all 0.3s ease-in-out;
+$transition-slow: all 0.4s ease;
+$transition-curve: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 $transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-$shadow-light: 0 10px 40px rgba(31, 38, 135, 0.15);
-$shadow-btn-primary: 0 8px 32px rgba(102, 126, 234, 0.35);
+$transition-smooth: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 
-// Mixins
-@mixin gradient-primary() {
-    background: linear-gradient(135deg, $color-primary-start 0%, $color-primary-end 50%, $color-secondary-start 100%);
+// Z-index scale
+$z-dropdown: 1000;
+$z-sticky: 1020;
+$z-fixed: 1030;
+$z-modal-backdrop: 1040;
+$z-modal: 1050;
+$z-popover: 1060;
+$z-tooltip: 1070;
+
+// Breakpoints
+$breakpoint-xs: 320px;
+$breakpoint-sm: 480px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;
+$breakpoint-2xl: 1536px;
+
+// Legacy support
+$breakpoint-mobile: $breakpoint-sm;
+
+//------------------------------------------------
+// 2. Mixins
+//------------------------------------------------
+
+// Focus ring mixin
+@mixin focus-ring($color: $color-primary, $offset: 2px) {
+  outline: 2px solid transparent;
+  outline-offset: $offset;
+  box-shadow: 0 0 0 2px $color;
 }
 
-@mixin glass-effect($blur: 25px) {
-    background: $color-glass-light;
-    backdrop-filter: blur($blur) saturate(200%);
-    border: 1px solid $color-border;
+// Truncate text
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-@mixin shimmer-border($padding: 2px) {
-    position: absolute;
-    inset: 0;
-    padding: $padding;
-    background: linear-gradient(135deg, $color-primary-start 0%, $color-primary-end 25%, $color-secondary-start 75%, $color-secondary-end 100%);
-    border-radius: $radius-xl;
-    mask: linear-gradient(white 0 0) content-box, linear-gradient(white 0 0);
-    mask-composite: xor;
-    -webkit-mask: linear-gradient(white 0 0) content-box, linear-gradient(white 0 0);
-    -webkit-mask-composite: xor;
-    opacity: 0.8;
-    animation: shimmer 4s ease-in-out infinite;
+// Screen reader only
+@mixin sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-// ======================================
-// 📌 Global Styles
-// ======================================
+// Button reset
+@mixin button-reset {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  text-decoration: none;
+  outline: none;
+}
+
+// Backdrop filter support
+@mixin backdrop-blur($amount: 10px) {
+  backdrop-filter: blur($amount);
+  -webkit-backdrop-filter: blur($amount);
+}
+
+//------------------------------------------------
+// 3. Animations (Keyframes)
+//------------------------------------------------
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-40px) rotate(5deg);
+  }
+}
+
+@keyframes glow {
+  0% {
+    text-shadow: 0 0 40px rgba($color-white, 0.6);
+  }
+  100% {
+    text-shadow:
+      0 0 50px rgba($color-white, 0.9),
+      0 0 70px rgba($color-primary, 0.4),
+      0 0 90px rgba($color-tertiary, 0.3);
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(60px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes checkmark {
+  0% {
+    transform: translate(-50%, -50%) scale(0) rotate(0deg);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.3) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes spin {
+  to { 
+    transform: rotate(360deg); 
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+//------------------------------------------------
+// 4. Base & Reset Styles
+//------------------------------------------------
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
 body {
-    font-family: $font-family;
-    background: $color-white;
-    min-height: 100vh;
-    margin: 0;
-    padding: 0;
+  font-family: $font-family-base;
+  background: $color-bg-primary;
+  color: $color-text-primary;
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: $line-height-normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-// Full-bleed layout: no outer padding/margins, card fills the screen
-ion-content.puriva-login-page {
-    --padding-start: 0;
-    --padding-end: 0;
-    --padding-top: 0;
-    --padding-bottom: 0;
-    --background: #{$color-white};
+// Ionic content reset
+ion-content {
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --background: #{$color-bg-primary};
 }
-/* Antisipasi halaman register memakai kelas .puriva-register-page */
-ion-content.puriva-register-page {
-    --padding-start: 0;
-    --padding-end: 0;
-    --padding-top: 0;
-    --padding-bottom: 0;
-    --background: #{$color-white};
+
+// Hide native password reveal icons
+input {
+  &::-ms-reveal,
+  &::-ms-clear,
+  &[type='password']::-webkit-textfield-decoration-container,
+  &[type='text']::-webkit-clear-button {
+    display: none;
+  }
 }
+
+// Button defaults
+button {
+  @include button-reset;
+}
+
+//------------------------------------------------
+// 5. Layout Components
+//------------------------------------------------
 
 .puriva-login-page {
-    min-height: 100vh;
-    background: $color-white;
-    margin: 0;
-    padding: 0;
-}
-/* Jika ada halaman register */
-.puriva-register-page {
-    min-height: 100vh;
-    background: $color-white;
-    margin: 0;
-    padding: 0;
+  min-height: 100vh;
+  background: $color-bg-primary;
+  display: flex;
+  flex-direction: column;
 }
 
 .puriva-login-container {
-    width: 100%;
-    max-width: 100%;
-    margin: 0;
-    padding: 0;
-    background: $color-white;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  background: $color-bg-primary;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .puriva-login-card {
-    border-radius: 0;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background: $color-white;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: $color-bg-primary;
 }
 
-// ======================================
-// 📌 Header
-// ======================================
+//------------------------------------------------
+// 6. Header Section
+//------------------------------------------------
+
 .puriva-login-header {
-    @include gradient-primary();
-    padding: $space-xl $space-l;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    flex-shrink: 0;
+  background: $gradient-primary;
+  padding: $space-3xl $space-2xl;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
 
-    &::before, &::after {
-        content: '';
-        position: absolute;
-        border-radius: 50%;
-        z-index: 0;
-        background: radial-gradient(circle, rgba(255, 255, 255, 0.12) 0%, transparent 70%);
-    }
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    border-radius: $radius-full;
+    z-index: 0;
+    background: radial-gradient(circle, rgba($color-white, 0.12) 0%, transparent 70%);
+  }
 
-    &::before {
-        top: -80px;
-        right: -80px;
-        width: 180px;
-        height: 180px;
-        animation: float 25s ease-in-out infinite;
-    }
+  &::before {
+    top: -80px;
+    right: -80px;
+    width: 180px;
+    height: 180px;
+    animation: float 25s ease-in-out infinite;
+  }
 
+  &::after {
+    bottom: -60px;
+    left: -60px;
+    width: 140px;
+    height: 140px;
+    background: radial-gradient(circle, rgba($color-white, 0.08) 0%, transparent 70%);
+    animation: float 20s ease-in-out infinite reverse;
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    padding: $space-3xl $space-xl;
+
+    &::before,
     &::after {
-        bottom: -60px;
-        left: -60px;
-        width: 140px;
-        height: 140px;
-        background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
-        animation: float 20s ease-in-out infinite reverse;
+      display: none;
     }
+  }
 }
+
+//------------------------------------------------
+// 7. Logo & Welcome Section
+//------------------------------------------------
 
 .puriva-logo-section {
-    margin-bottom: $space-l;
-    position: relative;
-    z-index: 2;
+  margin-bottom: $space-2xl;
+  position: relative;
+  z-index: 2;
 }
 
 .puriva-logo {
-    font-size: 56px;
-    font-weight: 900;
-    background: linear-gradient(135deg, $color-white 0%, rgba(255, 255, 255, 0.85) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: $space-s;
-    letter-spacing: -3px;
-    text-shadow: 0 0 40px rgba(255, 255, 255, 0.6);
-    animation: glow 3s ease-in-out infinite alternate;
+  font-size: $font-size-5xl;
+  font-weight: $font-weight-black;
+  background: $gradient-logo;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: $space-base;
+  letter-spacing: -3px;
+  text-shadow: 0 0 40px rgba($color-white, 0.6);
+  animation: glow 3s ease-in-out infinite alternate;
+
+  @supports not (-webkit-background-clip: text) {
+    color: $color-white;
+    background: none;
+    -webkit-text-fill-color: unset;
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: $font-size-4xl;
+    letter-spacing: -2px;
+  }
 }
 
 .puriva-logo-subtitle {
-    font-size: $space-s;
-    color: rgba(255, 255, 255, 0.9);
-    font-weight: 500;
-    line-height: 1.6;
-    max-width: 340px;
-    margin: 0 auto;
-    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  font-size: $font-size-base;
+  color: rgba($color-white, 0.9);
+  font-weight: $font-weight-medium;
+  line-height: $line-height-relaxed;
+  max-width: 340px;
+  margin: 0 auto;
+  text-shadow: 0 2px 12px rgba($color-black, 0.15);
 }
 
 .puriva-welcome-text {
-    font-size: 32px;
-    font-weight: 800;
-    color: $color-white;
-    margin-bottom: $space-s;
-    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
-    animation: slideInDown 0.8s ease-out;
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-extrabold;
+  color: $color-white;
+  margin-bottom: $space-base;
+  text-shadow: 0 4px 24px rgba($color-black, 0.25);
+  animation: slideInDown 0.8s ease-out;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: $font-size-2xl + 4px; // 28px
+  }
 }
 
 .puriva-welcome-subtitle {
-    font-size: 18px;
-    color: rgba(255, 255, 255, 0.95);
-    font-weight: 400;
-    animation: fadeIn 1s ease-out 0.3s both;
+  font-size: $font-size-lg;
+  color: rgba($color-white, 0.95);
+  font-weight: $font-weight-normal;
+  animation: fadeIn 1s ease-out 0.3s both;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: $font-size-base;
+  }
 }
 
-// ======================================
-// 📌 Method Selector
-// ======================================
+//------------------------------------------------
+// 8. Method Selector
+//------------------------------------------------
+
 .puriva-method-selector {
-    /* Diperkecil dan lebih center */
-    margin: $space-m auto;
-    width: 280px; /* Fixed width lebih kecil */
-    max-width: calc(100% - #{$space-l * 2});
-    background: $color-glass-dark;
-    backdrop-filter: blur(15px);
-    border-radius: $radius-l;
-    padding: $space-xs;
-    border: 1px solid $color-border;
-    box-shadow: inset 0 2px 12px rgba(0, 0, 0, 0.08);
-    display: flex;
-    gap: $space-xs;
+  margin: $space-xl auto;
+  width: 280px;
+  max-width: calc(100% - 64px);
+  background: rgba($color-white, 0.15);
+  @include backdrop-blur(15px);
+  border-radius: $border-radius-large;
+  padding: $space-sm;
+  border: 1px solid rgba($color-white, 0.25);
+  box-shadow: inset 0 2px 12px rgba($color-black, 0.08);
+  display: flex;
+  gap: $space-sm;
+
+  @media (max-width: $breakpoint-mobile) {
+    width: 260px;
+    max-width: calc(100% - 48px);
+  }
 }
 
 .puriva-method-button {
-    background: transparent;
-    border: none;
-    color: $color-text-gray;
-    font-size: 14px;
-    font-weight: 700;
-    padding: 12px 16px;
-    flex: 1;
-    border-radius: $radius-m;
-    cursor: pointer;
-    transition: $transition-main;
-    backdrop-filter: blur(10px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: $space-xs;
-    min-height: 40px;
+  @include button-reset;
+  color: $color-text-secondary;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+  padding: $space-md $space-base;
+  flex: 1;
+  border-radius: $border-radius-medium;
+  transition: $transition-curve;
+  @include backdrop-blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-sm;
+  min-height: 40px;
 
-    &.active {
-        background: rgba(255, 255, 255, 0.9);
-        color: $color-blue-dark;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1), inset 0 2px 0 rgba(255, 255, 255, 0.6);
-        transform: translateY(-2px) scale(1.02);
-    }
+  &.active {
+    background: rgba($color-white, 0.9);
+    color: $color-royal-blue-dark;
+    box-shadow: 0 4px 20px rgba($color-black, 0.1), inset 0 2px 0 rgba($color-white, 0.6);
+    transform: translateY(-2px) scale(1.02);
+  }
 
-    &:not(.active):hover {
-        background: rgba(255, 255, 255, 0.6);
-        transform: translateY(-1px);
-        color: $color-text-dark;
-    }
+  &:not(.active):hover {
+    background: rgba($color-white, 0.6);
+    transform: translateY(-1px);
+    color: $color-text-primary;
+  }
 
-    svg {
-        width: 16px;
-        height: 16px;
-        fill: currentColor;
-    }
+  svg, 
+  i {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+  }
+  
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 13px;
+    padding: 10px $space-md;
+    min-height: 36px;
+  }
 }
 
 // ======================================
@@ -305,395 +601,888 @@ ion-content.puriva-register-page {
   padding: 0 10px;
 }
 
-// ======================================
-// 📌 Form
-// ======================================
+//------------------------------------------------
+// 9. Form Section
+//------------------------------------------------
+
 .puriva-form-section {
-    padding: 0 $space-l $space-xl;
-    margin-top: $space-l; // push form a bit lower from header
-    background: $color-white;
-    animation: slideInUp 0.8s ease-out 0.2s both;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
+  padding: 0 $space-2xl $space-3xl;
+  margin-top: $space-2xl;
+  background: $color-bg-primary;
+  animation: slideInUp 0.8s ease-out 0.2s both;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 
-.puriva-form-item {
-    margin-bottom: $space-m;
-    border-radius: $radius-l;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    transition: $transition-main;
-    position: relative;
-    overflow: hidden;
-    min-height: 72px;
-    display: flex;
-    align-items: center;
-    padding: 0 $space-m;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-
-    &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
-        transition: left 0.7s;
-    }
-
-    &:hover:not(:focus-within) {
-        transform: translateY(-3px);
-        background: $color-white;
-        box-shadow: 0 8px 35px rgba(0, 0, 0, 0.08);
-        border-color: rgba(255, 255, 255, 0.5);
-    }
-
-    &:focus-within {
-        background: $color-white;
-        transform: translateY(-6px) scale(1.02);
-        box-shadow: 0 10px 40px rgba(102, 126, 234, 0.25);
-        border-color: rgba(102, 126, 234, 0.6);
-
-        .puriva-input-icon {
-            color: $color-blue-link;
-            transform: scale(1.15);
-        }
-
-        &::before {
-            left: 100%;
-        }
-    }
-}
-
-.puriva-form-input {
-    flex: 1;
-    border: none;
-    outline: none;
-    background: transparent;
-    font-size: 18px;
-    font-weight: 600;
-    color: $color-text-dark;
-    padding: $space-m 0;
-
-    &::placeholder {
-        color: $color-placeholder;
-        font-weight: 500;
-        opacity: 0.8;
-    }
-}
-
-.puriva-input-icon {
-    color: $color-icon;
-    font-size: 22px;
-    margin-right: $space-s;
-    transition: $transition-bounce;
-    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.08));
-}
-
-.puriva-toggle-password {
-  color: #64748b;
-  cursor: pointer;
-  transition: $transition-bounce;
-  font-size: 20px;
-  padding: 4px;
-  border-radius: $radius-s;
-
-  &:hover {
-    color: $color-icon;
-    transform: scale(1.1);
-    background: rgba(102, 126, 234, 0.1);
+  @media (max-width: $breakpoint-mobile) {
+    padding: 0 $space-xl $space-2xl;
+    margin-top: $space-xl;
   }
 }
 
-// Hide native reveal/clear icons to avoid duplicate eye icon on Windows/Edge
-ion-input .native-input::-ms-reveal,
-ion-input .native-input::-ms-clear { display: none; }
-input::-ms-reveal, input::-ms-clear { display: none; }
-// Safari/iOS variants (defensive)
-input[type='password']::-webkit-textfield-decoration-container { display: none; }
-input[type='text']::-webkit-clear-button { display: none; }
+//------------------------------------------------
+// 10. Form Items & Inputs
+//------------------------------------------------
 
-// ======================================
-// 📌 Checkbox
-// ======================================
-.puriva-checkbox-group {
-    display: flex;
-    align-items: center;
-    margin: $space-l 0;
-    cursor: pointer;
-    user-select: none;
-    transition: $transition-main;
-    padding: $space-s;
-    border-radius: $radius-m;
+.puriva-form-item {
+  margin-bottom: $space-xl;
+  border-radius: $border-radius-large;
+  background: rgba($color-white, 0.95);
+  border: 1px solid rgba($color-white, 0.35);
+  transition: $transition-curve;
+  position: relative;
+  overflow: hidden;
+  min-height: 72px;
+  display: flex;
+  align-items: center;
+  padding: 0 $space-xl;
+  box-shadow: $box-shadow-light;
 
-    &:hover {
-        background: rgba(102, 126, 234, 0.05);
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: $gradient-shine-focus;
+    transition: left 0.7s;
+  }
+
+  &:hover:not(:focus-within) {
+    transform: translateY(-3px);
+    background: $color-white;
+    box-shadow: 0 8px 35px rgba($color-black, 0.08);
+    border-color: rgba($color-white, 0.5);
+  }
+
+  &:focus-within {
+    background: $color-white;
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 10px 40px rgba($color-primary, 0.25);
+    border-color: rgba($color-primary, 0.6);
+
+    &::before {
+      left: 100%;
     }
+
+    .puriva-input-icon {
+      color: $color-royal-blue;
+      transform: scale(1.15);
+    }
+  }
+  
+  @media (max-width: $breakpoint-mobile) {
+    min-height: 68px;
+    padding: 0 $space-lg;
+    margin-bottom: $space-lg;
+  }
+}
+
+// Login button container
+.login-button-container {
+  margin-bottom: 0;
+  
+  .puriva-btn-primary {
+    margin-bottom: 0;
+  }
+  
+  .puriva-forgot-section {
+    text-align: right;
+    margin: -8px $space-sm 0 0;
+    
+    .puriva-forgot-link {
+      text-decoration: none;
+      display: inline-block;
+      
+      ion-button {
+        --color: #{$color-gray-600};
+        --color-hover: #{$color-primary};
+        --background-hover: transparent;
+        --background-activated: transparent;
+        --box-shadow: none;
+        --padding-top: 0;
+        --padding-bottom: 0;
+        margin: 0;
+        font-size: $font-size-sm;
+        text-transform: none;
+        letter-spacing: 0.3px;
+        
+        &:hover {
+          --color: #{$color-primary};
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+// Ionic item styling
+ion-item.puriva-form-item {
+  --background: transparent;
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  --inner-padding-start: 0;
+  --min-height: 80px;
+  --border-radius: #{$radius-lg};
+  --highlight-color-focused: #{$color-primary};
+  --highlight-height: 2px;
+  margin-bottom: $space-xl;
+  transition: all 0.2s ease;
+  
+  &:last-child {
+    margin-bottom: $space-xl;
+  }
+  
+  &.item-has-focus {
+    --highlight-background: #{$color-primary};
+  }
+  --border-style: none;
+  --highlight-color-focused: transparent;
+  --highlight-color-valid: transparent;
+  --highlight-color-invalid: transparent;
+  --min-height: auto;
+  margin-bottom: $space-xl;
+  background: transparent;
+  box-shadow: none;
+  border: none;
+  min-height: auto;
+  padding: 0;
+  
+  ion-label {
+    font-weight: $font-weight-bold;
+    color: $color-text-primary;
+    margin-bottom: $space-md;
+    font-size: $font-size-base;
+    display: block;
+    transform: none;
+    transition: $transition-curve;
+    position: static;
+    max-width: 100%;
+    pointer-events: none;
+  }
+  
+  ion-input {
+    --padding-start: #{$space-base};
+    --padding-end: #{$space-base};
+    --padding-top: #{$space-md};
+    --padding-bottom: #{$space-md};
+    --background: #{$color-bg-secondary};
+    --border-radius: #{$border-radius-medium};
+    --border-color: #{$color-gray-200};
+    --border-style: solid;
+    --border-width: 1px;
+    --box-shadow: #{$shadow-sm};
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    transition: $transition-curve;
+    min-height: 60px;
+    
+    &::part(native) {
+      border-radius: $border-radius-medium;
+      background: $color-bg-secondary;
+      transition: $transition-curve;
+    }
+    
+    &.ion-focused {
+      --border-color: #{$color-royal-blue};
+      --box-shadow: 0 0 0 3px rgba(#{red($color-royal-blue)}, #{green($color-royal-blue)}, #{blue($color-royal-blue)}, 0.1);
+    }
+    
+    &.ion-valid {
+      --border-color: #{$color-success};
+      --box-shadow: 0 0 0 3px rgba(#{red($color-success)}, #{green($color-success)}, #{blue($color-success)}, 0.1);
+    }
+    
+    &.ion-invalid.ion-touched {
+      --border-color: #{$color-error};
+      --box-shadow: 0 0 0 3px rgba(#{red($color-error)}, #{green($color-error)}, #{blue($color-error)}, 0.1);
+    }
+
+    @media (max-width: $breakpoint-mobile) {
+      font-size: 17px;
+      min-height: 56px;
+      --padding-start: #{$space-base};
+      --padding-top: #{$space-md};
+      --padding-bottom: #{$space-md};
+    }
+  }
+  
+  .puriva-input-icon {
+    position: absolute;
+    left: $space-lg;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $color-primary;
+    font-size: 22px;
+    z-index: 2;
+    transition: $transition-bounce;
+    margin-top: 0;
+    filter: drop-shadow(0 2px 6px rgba($color-black, 0.08));
+
+    @media (max-width: $breakpoint-mobile) {
+      left: $space-base;
+      font-size: 20px;
+    }
+  }
+  
+  .puriva-toggle-password {
+    position: absolute;
+    right: $space-lg;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $color-text-muted;
+    cursor: pointer;
+    transition: $transition-bounce;
+    font-size: 20px;
+    z-index: 2;
+    padding: $space-xs;
+    border-radius: $border-radius-small;
+    margin-top: 0;
+    
+    &:hover {
+      color: $color-primary;
+      transform: translateY(-50%) scale(1.1);
+      background: rgba($color-primary, 0.1);
+    }
+
+    @media (max-width: $breakpoint-mobile) {
+      right: $space-base;
+      font-size: 18px;
+    }
+  }
+  
+  &.ion-focused .puriva-input-icon {
+    color: $color-royal-blue;
+    transform: translateY(-50%) scale(1.15);
+  }
+}
+
+//------------------------------------------------
+// 11. Checkbox & Controls
+//------------------------------------------------
+
+.puriva-checkbox-group {
+  display: flex;
+  align-items: center;
+  margin: $space-2xl 0;
+  cursor: pointer;
+  user-select: none;
+  transition: $transition-curve;
+  padding: $space-base;
+  border-radius: $border-radius-medium;
+
+  &:hover {
+    background: rgba($color-primary, 0.05);
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    margin: $space-xl 0;
+    padding: $space-md;
+  }
 }
 
 .puriva-custom-checkbox {
-    width: 28px;
-    height: 28px;
-    border: 2px solid #d1d5db;
-    border-radius: $radius-s;
-    background: $color-white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: $space-s;
-    transition: $transition-bounce;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  width: 22px;
+  height: 22px;
+  border: 2px solid $color-gray-300;
+  border-radius: $border-radius-small;
+  background: $color-white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: $space-sm;
+  transition: $transition-bounce;
+  box-shadow: $shadow-sm;
+  position: relative;
 
-    &.checked {
-        background: linear-gradient(135deg, $color-primary-start 0%, $color-primary-end 25%, $color-secondary-start 75%, $color-secondary-end 100%);
-        border-color: transparent;
-        transform: scale(1.1);
-        box-shadow: 0 4px 24px rgba(102, 126, 234, 0.4);
+  &.checked {
+    background: $gradient-button;
+    border-color: transparent;
+    transform: scale(1.1);
+    box-shadow: 0 4px 24px rgba($color-primary, 0.4);
 
-        &::after {
-            content: '✓';
-            color: $color-white;
-            font-size: $space-s;
-            font-weight: bold;
-            animation: checkmark 0.4s ease-in-out;
-        }
+    &::after {
+      content: '✓';
+      color: $color-white;
+      font-size: 12px;
+      font-weight: bold;
+      animation: checkmark 0.4s ease-in-out;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    width: 20px;
+    height: 20px;
+    margin-right: $space-sm;
+    
+    &.checked {
+      background: $color-primary;
+      border-color: $color-primary;
+      box-shadow: 0 4px 24px rgba($color-primary, 0.4);
+
+      &::after {
+        content: '✓';
+        color: $color-white;
+        font-size: 14px;
+        font-weight: $font-weight-bold;
+        animation: checkmark 0.4s ease-in-out;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    width: 24px;
+    height: 24px;
+    margin-right: $space-md;
+    
+    &.checked::after {
+      font-size: 14px;
+    }
+  }
 }
 
 .puriva-checkbox-label {
-    font-size: $space-s;
-    color: $color-text-dark;
-    font-weight: 600;
-    line-height: 1.5;
+  font-size: $font-size-base;
+  color: $color-text-primary;
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-normal;
+
+  @media (max-width: $breakpoint-mobile) {
+    font-size: 15px;
+  }
 }
 
-// ======================================
-// 📌 Buttons
-// ======================================
-.puriva-btn-primary {
-    width: 100%;
-    height: $btn-height;
-    background: linear-gradient(135deg, $color-primary-start 0%, $color-primary-end 25%, $color-secondary-start 75%, $color-secondary-end 100%);
-    color: $color-white;
-    font-size: 18px;
-    font-weight: 700;
-    border: none;
-    border-radius: $radius-l;
-    cursor: pointer;
-    transition: $transition-main;
-    margin: $space-l 0 $space-m;
-    position: relative;
-    overflow: hidden;
-    box-shadow: $shadow-btn-primary;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
-        transition: left 0.8s;
-    }
-
-    &:hover {
-        transform: translateY(-5px) scale(1.02);
-        box-shadow: 0 15px 50px rgba(102, 126, 234, 0.5);
-        &::before {
-            left: 100%;
-        }
-    }
-}
-
-.puriva-btn-secondary {
-    width: 100%;
-    height: 56px;
-    background: $color-white;
-    border: 2px solid rgba(102, 126, 234, 0.3);
-    color: $color-icon;
-    font-size: $space-s;
-    font-weight: 600;
-    border-radius: $radius-l;
-    cursor: pointer;
-    transition: $transition-main;
-    margin: $space-s 0;
-    backdrop-filter: blur(10px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    &:hover {
-        border-color: $color-blue-link;
-        transform: translateY(-3px);
-        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
-        color: $color-blue-link;
-    }
-}
-
-// ======================================
-// 📌 Register Link
-// ======================================
-.puriva-register-section {
-    text-align: center;
-    margin-top: auto;
-    padding-top: $space-l;
-    font-size: $space-s;
-    color: $color-text-gray;
-    font-weight: 500;
-    line-height: 1.6;
-}
-
-// Forgot password section
 .puriva-forgot-section {
-    text-align: right;
-    margin-top: -$space-s; // tuck closer to the button
-    margin-bottom: $space-m;
+  text-align: right;
+  margin-top: -$space-base;
+  margin-bottom: $space-xl;
+
+  @media (max-width: $breakpoint-mobile) {
+    margin-top: -$space-md;
+    margin-bottom: $space-lg;
+  }
 }
 
 .puriva-forgot-link {
-    color: $color-blue-link;
-    font-weight: 700;
-    cursor: pointer;
-    text-decoration: none;
-    transition: $transition-main;
-    position: relative;
-    padding: 2px 0;
+  color: $color-royal-blue;
+  font-weight: $font-weight-bold;
+  cursor: pointer;
+  text-decoration: none;
+  transition: $transition-curve;
+  position: relative;
+  padding: 2px 0;
 
-    &:hover {
-        color: $color-blue-dark;
-        transform: translateY(-1px);
+  &:hover {
+    color: $color-royal-blue-dark;
+    transform: translateY(-1px);
+  }
+
+  &:focus-visible {
+    @include focus-ring($color-royal-blue);
+  }
+}
+
+//------------------------------------------------
+// 12. Buttons
+//------------------------------------------------
+
+.puriva-btn-primary {
+  width: 100%;
+  height: 68px;
+  background: $gradient-button;
+  color: $color-white;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  border: none;
+  border-radius: $border-radius-large;
+  cursor: pointer;
+  transition: $transition-curve;
+  margin: $space-2xl 0 $space-xl;
+  position: relative;
+  overflow: hidden;
+  box-shadow: $box-shadow-primary;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: $gradient-shine;
+    transition: left 0.8s;
+  }
+
+  &:hover:not(:disabled) {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: $box-shadow-primary-hover;
+
+    &::before {
+      left: 100%;
     }
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(-2px) scale(1.01);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none;
+  }
+
+  &:focus-visible {
+    @include focus-ring($color-white);
+  }
+
+  .puriva-loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba($color-white, 0.3);
+    border-radius: $radius-full;
+    border-top-color: $color-white;
+    animation: spin 1s linear infinite;
+    margin-right: $space-sm;
+  }
+  
+  @media (max-width: $breakpoint-mobile) {
+    height: 64px;
+    font-size: 17px;
+    margin: $space-xl 0;
+  }
+}
+
+.puriva-btn-google {
+  width: calc(100% - 32px);
+  height: 68px;
+  background: $color-white;
+  color: $color-text-primary;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  border-radius: $border-radius-large;
+  border: 2px solid rgba($color-black, 0.1);
+  cursor: pointer;
+  transition: $transition-curve;
+  box-shadow: $box-shadow-medium;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-base;
+  margin: 0 16px $space-xl;
+  
+  ion-label {
+    margin: 0 $space-sm;
+  }
+
+  .google-icon {
+    font-size: $font-size-2xl;
+    color: #4285F4;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 15px 50px rgba($color-black, 0.15);
+    border-color: $color-royal-blue;
+    color: $color-royal-blue;
+
+    .google-icon {
+      transform: scale(1.1);
+    }
+  }
+
+  &:focus-visible {
+    @include focus-ring($color-royal-blue);
+  }
+  
+  @media (max-width: $breakpoint-mobile) {
+    height: 64px;
+    font-size: 17px;
+    margin-bottom: $space-xl;
+  }
+}
+
+// Ionic Button Overrides
+ion-button {
+  --border-radius: #{$radius-md};
+  --padding-top: #{$space-base};
+  --padding-bottom: #{$space-base};
+  --padding-start: #{$space-xl};
+  --padding-end: #{$space-xl};
+  height: 56px;
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  text-transform: none;
+  margin: 0;
+  transition: $transition-main;
+  
+  &.puriva-btn-primary {
+    --background: #{$gradient-button};
+    --color: #{$color-white};
+    --box-shadow: #{$shadow-button};
+    margin: $space-2xl 0 $space-sm;
+    
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      --box-shadow: #{$shadow-button-hover};
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+      --box-shadow: none;
+    }
+  }
+  
+  &.puriva-btn-google {
+    --background: #{$color-white};
+    --color: #{$color-text-dark};
+    --border-style: solid;
+    --border-width: 1px;
+    --border-color: #dadce0;
+    --box-shadow: #{$shadow-sm};
+    margin-bottom: $space-xl;
+  }
+}
+
+//------------------------------------------------
+// 13. Toast Notifications
+//------------------------------------------------
+
+.puriva-toast {
+  --background: rgba(#{red($color-white)}, #{green($color-white)}, #{blue($color-white)}, 0.95);
+  --color: #{$color-text-primary};
+  --border-radius: #{$space-base};
+  --box-shadow: #{$shadow-lg};
+  --padding-start: #{$space-xl};
+  --padding-end: #{$space-xl};
+  --padding-top: #{$space-base};
+  --padding-bottom: #{$space-base};
+  margin: $space-base;
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  transition: $transition-curve;
+  @include backdrop-blur(20px);
+
+  &.toast-success {
+    --background: rgba(#{red($color-success)}, #{green($color-success)}, #{blue($color-success)}, 0.95);
+    --color: #{$color-white};
+    
+    .toast-close-button {
+      color: rgba($color-white, 0.8);
+      
+      &:hover {
+        color: $color-white;
+      }
+    }
+  }
+  
+  &.toast-danger {
+    --background: rgba(#{red($color-error)}, #{green($color-error)}, #{blue($color-error)}, 0.95);
+    --color: #{$color-white};
+    
+    .toast-close-button {
+      color: rgba($color-white, 0.8);
+      
+      &:hover {
+        color: $color-white;
+      }
+    }
+  }
+  
+  .toast-close-button {
+    font-size: $font-size-2xl;
+    opacity: 0.8;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    
+    &:hover {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    &:focus-visible {
+      @include focus-ring();
+    }
+  }
+
+  @media (max-width: $breakpoint-mobile) {
+    --padding-start: #{$space-lg};
+    --padding-end: #{$space-lg};
+    --padding-top: 14px;
+    --padding-bottom: 14px;
+    margin: $space-md;
+    font-size: 15px;
+    
+    .toast-close-button {
+      font-size: 22px;
+    }
+  }
+}
+
+//------------------------------------------------
+// 14. Divider
+//------------------------------------------------
+
+.puriva-divider {
+  display: flex;
+  align-items: center;
+  margin: -2px 0 $space-md;
+  color: $color-gray-400;
+  text-align: center;
+  position: relative;
+  
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, $color-gray-200, transparent);
+  }
+  
+  span {
+    display: inline-flex;
+    align-items: center;
+    height: 24px;
+    padding: 0 $space-base;
+    font-size: $font-size-sm;
+    color: $color-gray-500;
+    background: $color-bg-primary;
+    position: relative;
+    z-index: 1;
+    margin-top: -2px; /* Slight upward adjustment */
+  }
+  
+  &::before {
+    margin-right: $space-base;
+  }
+  
+  &::after {
+    margin-left: $space-base;
+  }
+}
+
+//------------------------------------------------
+// 15. Register Section
+//------------------------------------------------
+
+.puriva-register-section {
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
+  color: $color-gray-600;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-relaxed;
+
+  @media (max-width: $breakpoint-mobile) {
+    padding-top: $space-xl;
+    font-size: 15px;
+  }
 }
 
 .puriva-register-link {
-    color: $color-blue-link;
-    font-weight: 700;
-    cursor: pointer;
-    text-decoration: none;
-    transition: $transition-main;
-    position: relative;
-    padding: 2px 0;
+  color: $color-royal-blue;
+  font-weight: $font-weight-bold;
+  cursor: pointer;
+  text-decoration: none;
+  transition: $transition-curve;
+  position: relative;
+  padding: 2px 0;
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    background: linear-gradient(90deg, $color-royal-blue, $color-primary);
+    transition: $transition-curve;
+    border-radius: 1px;
+  }
+
+  &:hover {
+    color: $color-royal-blue-dark;
+    transform: translateY(-1px);
 
     &::after {
-        content: '';
-        position: absolute;
-        width: 0;
-        height: 2px;
-        bottom: 0;
-        left: 50%;
-        background: linear-gradient(90deg, $color-blue-link, $color-icon);
-        transition: $transition-main;
-        border-radius: 1px;
+      width: 100%;
+      left: 0;
     }
+  }
 
-    &:hover {
-        color: $color-blue-dark;
-        transform: translateY(-1px);
-
-        &::after {
-            width: 100%;
-            left: 0;
-        }
-    }
+  &:focus-visible {
+    @include focus-ring($color-royal-blue);
+  }
 }
 
-// ======================================
-// 📌 Animations
-// ======================================
-@keyframes materialIn {
-    0% { opacity: 0; transform: translateY(100px) scale(0.8) rotateX(45deg); }
-    100% { opacity: 1; transform: translateY(0) scale(1) rotateX(0deg); }
+//------------------------------------------------
+// 16. Loading States
+//------------------------------------------------
+
+.form-loading {
+  position: relative;
+  pointer-events: none;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba($color-white, 0.6);
+    z-index: $z-modal;
+    border-radius: $border-radius-large;
+    @include backdrop-blur(4px);
+  }
+  
+  .puriva-btn-primary,
+  .puriva-btn-google,
+  ion-input,
+  ion-button {
+    position: relative;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba($color-white, 0.6);
+      z-index: 1;
+      border-radius: inherit;
+      @include backdrop-blur(4px);
+    }
+  }
 }
 
-@keyframes shimmer {
-    0%, 100% { opacity: 0.8; }
-    50% { opacity: 1; }
+//------------------------------------------------
+// 17. Responsive Design
+//------------------------------------------------
+
+// Mobile devices (up to 480px)
+@media (max-width: $breakpoint-mobile) {
+  .puriva-login-container {
+    padding: 0;
+  }
 }
 
-@keyframes glow {
-    0% { text-shadow: 0 0 40px rgba(255, 255, 255, 0.6); }
-    100% {
-        text-shadow: 0 0 50px rgba(255, 255, 255, 0.9),
-                     0 0 70px rgba(102, 126, 234, 0.4),
-                     0 0 90px rgba(240, 147, 251, 0.3);
-    }
+// Safe area support for devices with notches
+@supports (padding: max(0px)) {
+  .puriva-login-container {
+    padding-bottom: max(#{$space-xl}, env(safe-area-inset-bottom));
+  }
 }
 
-@keyframes float {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-40px) rotate(5deg); }
+//------------------------------------------------
+// 18. Utility Classes
+//------------------------------------------------
+
+.animated {
+  animation-duration: 0.5s;
+  animation-fill-mode: both;
 }
 
-@keyframes slideInDown {
-    from { opacity: 0; transform: translateY(-50px); }
-    to { opacity: 1; transform: translateY(0); }
+.fadeIn {
+  animation-name: fadeIn;
 }
 
-@keyframes slideInUp {
-    from { opacity: 0; transform: translateY(60px); }
-    to { opacity: 1; transform: translateY(0); }
+.pulse {
+  animation: pulse 2s infinite;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+.sr-only {
+  @include sr-only;
 }
 
-@keyframes checkmark {
-    0% { transform: scale(0) rotate(45deg); }
-    50% { transform: scale(1.3) rotate(45deg); }
-    100% { transform: scale(1) rotate(45deg); }
+.truncate {
+  @include truncate;
 }
 
-// ======================================
-// 📌 Responsive
-// ======================================
-@media (max-width: 480px) {
-    .puriva-login-container {
-        padding: 0;
-    }
+//------------------------------------------------
+// 19. State Classes
+//------------------------------------------------
 
-    .puriva-login-header {
-        padding: $space-xl $space-m;
-    }
+// Focus states for accessibility
+.puriva-form-item:focus-within .puriva-input-icon,
+ion-item.puriva-form-item.ion-focused .puriva-input-icon {
+  color: $color-primary-start;
+  transform: translateY(-50%) scale(1.1);
+}
 
-    .puriva-form-section {
-        padding: 0 $space-m $space-l;
-        margin-top: $space-m;
-    }
+// Loading state
+.loading {
+  .puriva-btn-primary {
+    pointer-events: none;
+    opacity: 0.8;
+  }
+}
 
-    .puriva-logo {
-        font-size: 44px;
-    }
+// Error states
+.error {
+  ion-input {
+    --border-color: #{$color-error} !important;
+    --box-shadow: 0 0 0 3px rgba(#{red($color-error)}, #{green($color-error)}, #{blue($color-error)}, 0.1) !important;
+  }
+}
 
-    .puriva-welcome-text {
-        font-size: 28px;
-    }
+// Success states  
+.success {
+  ion-input {
+    --border-color: #{$color-success} !important;
+    --box-shadow: 0 0 0 3px rgba(#{red($color-success)}, #{green($color-success)}, #{blue($color-success)}, 0.1) !important;
+  }
+}
 
-    .puriva-method-selector {
-        width: 260px;
-        margin: $space-m auto;
-        max-width: calc(100% - #{$space-m * 2});
-    }
+// Disabled states
+.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+  cursor: not-allowed;
+}
 
-    .puriva-method-button {
-        font-size: 13px;
-        padding: 10px 12px;
-        min-height: 36px;
-    }
+//------------------------------------------------
+// 20. Print Styles
+//------------------------------------------------
 
-    .puriva-form-item {
-        min-height: 68px;
-    }
-
-    .puriva-btn-primary {
-        height: 64px;
-        font-size: 17px;
-    }
+@media print {
+  .puriva-login-page {
+    background: $color-white;
+    box-shadow: none;
+  }
+  
+  .puriva-login-header {
+    background: $color-gray-100;
+    color: $color-text-primary;
+  }
+  
+  .puriva-btn-primary,
+  .puriva-btn-google {
+    border: 1px solid $color-gray-400;
+    box-shadow: none;
+  }
 }

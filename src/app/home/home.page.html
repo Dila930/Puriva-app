@@ -4,16 +4,12 @@
     <div class="header-top">
       <div class="user-info">
         <div class="greeting">{{ greeting }}, <span class="user-name">{{ userName }}</span></div>
-        <div class="user-email" *ngIf="userEmail">{{ userEmail }}</div>
       </div>
       <div class="header-actions">
         <button class="notification-btn" (click)="goToNotifications()" aria-label="Buka notifikasi">
           <ion-icon name="notifications-outline" class="fa"></ion-icon>
           <div class="notification-dot" *ngIf="hasUnread"></div>
         </button>
-        <div class="user-avatar" *ngIf="userPhotoUrl">
-          <img [src]="userPhotoUrl" alt="Avatar" />
-        </div>
       </div>
     </div>
     <div class="logo-section">

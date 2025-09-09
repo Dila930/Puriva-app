@@ -1,51 +1,64 @@
 <ion-header>
-    <ion-toolbar color="primary">
-      <ion-title>AI Chat</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  
-  <ion-content class="ion-padding">
-    <div id="chat-messages">
-      <div class="flex items-start space-x-3">
-        <div class="w-10 h-10 bg-gradient-to-r from-indigo-400 to-purple-500 rounded-full flex items-center justify-center text-white text-lg font-bold flex-shrink-0">
-          AI
-        </div>
-        <div class="bg-white rounded-2xl rounded-tl-none p-4 shadow-lg max-w-xs">
-          <p class="text-gray-800 text-sm">
-            Halo! Saya siap membantu Anda. Ajukan pertanyaan apa saja.
-          </p>
-          <span class="text-gray-400 text-xs block text-right mt-2">Baru saja</span>
-        </div>
-      </div>
-      
-      <div *ngFor="let message of messages" [ngClass]="{'flex-row-reverse': message.sender === 'user'}" class="flex items-start space-x-3 mt-4">
-        <div *ngIf="message.sender === 'user'" class="w-10 h-10 bg-gradient-to-r from-pink-300 to-purple-300 rounded-full flex items-center justify-center text-white text-lg font-bold flex-shrink-0">
-          Anda
-        </div>
-        <div [ngClass]="{'bg-indigo-500 text-white rounded-br-none': message.sender === 'user', 'bg-white text-gray-800 rounded-tl-none': message.sender === 'bot'}" class="rounded-2xl p-4 shadow-lg max-w-xs">
-          <p class="text-sm" [innerHTML]="message.text"></p>
-          <span class="text-xs block mt-2" [ngClass]="{'text-indigo-200': message.sender === 'user', 'text-gray-400': message.sender === 'bot'}">
-            {{ message.time }}
-          </span>
-        </div>
-        <div *ngIf="message.sender === 'bot'" class="w-10 h-10 bg-gradient-to-r from-indigo-400 to-purple-500 rounded-full flex items-center justify-center text-white text-lg font-bold flex-shrink-0">
-          AI
-        </div>
-      </div>
-  
+  <div class="chatbot-header">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="home" class="chatbot-header__back-btn"></ion-back-button>
+    </ion-buttons>
+    <div class="chatbot-header__avatar">
+      <ion-icon name="sparkles-outline"></ion-icon>
     </div>
-  </ion-content>
-  
-  <ion-footer>
-    <div class="p-4 bg-white border-t border-gray-200 flex-shrink-0">
-      <div class="flex items-center space-x-3 mx-auto">
-        <div class="flex-1 relative">
-          <ion-input type="text" [(ngModel)]="newMessage" placeholder="Ketik pertanyaan Anda..." class="w-full p-4 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500"></ion-input>
-        </div>
-        <ion-button (click)="sendMessage()" [disabled]="!newMessage.trim()" class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-4 rounded-2xl hover:shadow-lg transition-shadow">
-          <ion-icon name="send"></ion-icon>
-        </ion-button>
+    <div class="chatbot-header__info">
+      <h1>AI Moral Intelligence</h1>
+      <p>Online</p>
+    </div>
+  </div>
+</ion-header>
+
+<ion-content class="chatbot-container" [fullscreen]="true">
+  <div class="messages-container" id="chat-messages">
+    <div class="message">
+      <div class="message__avatar message__avatar--bot">
+        <ion-icon name="sparkles-outline"></ion-icon>
+      </div>
+      <div class="message__content message__content--bot">
+        <p>Halo! Saya siap membantu Anda. Silakan ajukan pertanyaan.</p>
+        <div class="timestamp">Baru saja</div>
       </div>
     </div>
-    <app-bottom-nav activeTab="chat"></app-bottom-nav>
-  </ion-footer>
+
+    <div *ngFor="let message of messages" class="message" [ngClass]="{'message--user': message.sender === 'user'}">
+      <div class="message__avatar" [ngClass]="{'message__avatar--user': message.sender === 'user', 'message__avatar--bot': message.sender === 'bot'}">
+        <div *ngIf="message.sender === 'user'">
+          <ion-icon name="person-circle-outline"></ion-icon>
+        </div>
+        <div *ngIf="message.sender === 'bot'">
+          <ion-icon name="sparkles-outline"></ion-icon>
+        </div>
+      </div>
+      <div class="message__content" [ngClass]="{'message__content--user': message.sender === 'user', 'message__content--bot': message.sender === 'bot'}">
+        <p [innerHTML]="message.text"></p>
+        <div class="timestamp">{{ message.time }}</div>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <div class="input-area">
+    <div class="input-area__container">
+      <ion-input
+        class="input-area__input"
+        type="text"
+        [(ngModel)]="newMessage"
+        placeholder="Ketik pertanyaan Anda..."
+      ></ion-input>
+      <ion-button
+        (click)="sendMessage()"
+        [disabled]="!newMessage.trim()"
+        [ngClass]="{'active': newMessage.trim(), 'disabled': !newMessage.trim()}"
+        class="input-area__send-btn"
+      >
+        <ion-icon name="send"></ion-icon>
+      </ion-button>
+    </div>
+  </div>
+</ion-footer>

@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig, AxiosProgressEvent } from 'axios';
 import { Injectable } from '@angular/core';
 
 export interface CloudinaryUploadResult {
@@ -29,7 +29,7 @@ export class CloudinaryService {
 
     const config: AxiosRequestConfig = {
       headers: { 'X-Requested-With': 'XMLHttpRequest' },
-      onUploadProgress: (e) => {
+      onUploadProgress: (e: AxiosProgressEvent) => {
         if (!e.total) return;
         const pct = Math.round((e.loaded / e.total) * 100);
         onProgress?.(pct);

@@ -28,6 +28,8 @@ export class HomePage implements OnInit, OnDestroy {
   activeTab: string = 'home';
   greeting: string = '';
   userName: string = 'Pengguna';
+  userEmail: string | null = null;
+  userPhotoUrl: string | null = null;
   notificationCount: number = 0;
   hasUnread: boolean = false;
   
@@ -191,11 +193,23 @@ export class HomePage implements OnInit, OnDestroy {
     this.subscribeSterilizationEvents();
     this.subscribeCurrentSessionState();
     this.bindDatabaseListeners();
-    // Initialize userName from current session immediately (mirror Profile logic)
+    // Initialize user profile from current session immediately
     try {
       const cu = this.auth.currentUser as User | null;
-      this.userName = cu ? (cu.displayName || cu.email || 'Pengguna') : 'Pengguna';
-    } catch { this.userName = 'Pengguna'; }
+      if (cu) {
+        this.userName = cu.displayName || cu.email || 'Pengguna';
+        this.userEmail = cu.email || null;
+        this.userPhotoUrl = cu.photoURL || null;
+      } else {
+        this.userName = 'Pengguna';
+        this.userEmail = null;
+        this.userPhotoUrl = null;
+      }
+    } catch {
+      this.userName = 'Pengguna';
+      this.userEmail = null;
+      this.userPhotoUrl = null;
+    }
     // Ticker setiap 1s agar progress & sisa waktu ter-update
     this.sessionTimer = setInterval(() => { this.nowTs = Date.now(); }, 1000);
   }
@@ -572,6 +586,8 @@ export class HomePage implements OnInit, OnDestroy {
     // Get full name and extract first name only
     const fullName = user.displayName || user.email?.split('@')[0] || 'Pengguna';
     this.userName = fullName.split(' ')[0];
+    this.userEmail = user.email || null;
+    this.userPhotoUrl = user.photoURL || null;
   }
 
   private detachDatabaseListeners(): void {
@@ -586,6 +602,8 @@ export class HomePage implements OnInit, OnDestroy {
   // Fully reset UI state so old account data does not leak into new session
   private resetHomeState(): void {
     this.userName = 'Pengguna';
+    this.userEmail = null;
+    this.userPhotoUrl = null;
     this.notificationCount = 0;
     this.hasUnread = false;
     this.totalToday = 0;

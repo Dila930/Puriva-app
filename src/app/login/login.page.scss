@@ -265,6 +265,47 @@ ion-content.puriva-register-page {
 }
 
 // ======================================
+// 📌 Social Auth (Google)
+// ======================================
+.google-button,
+.google-login-btn {
+  --border-radius: 8px;
+  --padding-top: 14px;
+  --padding-bottom: 14px;
+  --border-color: #db4437;
+  --color: #db4437;
+  --background: #fff;
+  font-weight: 600;
+  text-transform: none;
+  margin-top: $space-m;
+
+  &:hover {
+    --background: #f7f7f7;
+    transform: translateY(-2px);
+  }
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: $space-m 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.divider span {
+  padding: 0 10px;
+}
+
+// ======================================
 // 📌 Form
 // ======================================
 .puriva-form-section {

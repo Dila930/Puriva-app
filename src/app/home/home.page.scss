@@ -118,9 +118,23 @@ $sayur-gradient: linear-gradient(135deg, #d299c2 0%, $puriva-yellow 100%);
 .header-top {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center; /* center vertically for bell & avatar */
+  gap: 12px; /* spacing between user-info, bell, and avatar */
   margin-bottom: 28px; /* Slightly increased bottom margin */
   padding: 0 8px; /* Added horizontal padding */
+}
+
+/* Right block: notification + avatar grouped tighter */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* make bell and avatar close */
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* allow text ellipsis */
 }
 
 .greeting {
@@ -128,6 +142,16 @@ $sayur-gradient: linear-gradient(135deg, #d299c2 0%, $puriva-yellow 100%);
   font-size: 20px; // reduced for better balance
   margin-bottom: 8px; /* Increased bottom margin */
   padding: 4px 0; /* Added vertical padding */
+}
+
+.user-email {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13px;
+  line-height: 1.2;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .user-name {
@@ -190,6 +214,22 @@ $sayur-gradient: linear-gradient(135deg, #d299c2 0%, $puriva-yellow 100%);
   border-radius: 50%;
 }
 
+.user-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid rgba(255,255,255,0.9);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
 .logo-section {
   text-align: center;
   margin-bottom: 20px;
@@ -215,7 +255,6 @@ $sayur-gradient: linear-gradient(135deg, #d299c2 0%, $puriva-yellow 100%);
   max-width: 280px; 
   margin: 0 auto; 
 }
-
 
 // Main Content
 .main-content {
@@ -413,7 +452,6 @@ $sayur-gradient: linear-gradient(135deg, #d299c2 0%, $puriva-yellow 100%);
 .stat-number { font-size: 24px; font-weight: 800; color: #1e293b; margin-bottom: 6px; }
 .stat-label { font-size: 13px; color: #64748b; font-weight: 500; }
 
-
 // Quick Actions
 .quick-actions { 
   display: grid; 
@@ -459,7 +497,6 @@ $sayur-gradient: linear-gradient(135deg, #d299c2 0%, $puriva-yellow 100%);
 }
 
 .action-subtitle { font-size: 12px; opacity: 0.8; position: relative; z-index: 2; }
-
 
 // Recent Activity
 .activity-list { list-style: none; margin: 0; padding: 0; }
@@ -522,7 +559,6 @@ $sayur-gradient: linear-gradient(135deg, #d299c2 0%, $puriva-yellow 100%);
 .status-processing { background: linear-gradient(135deg, #fef3c7, #fde68a); color: #92400e; }
 .status-stopped { background: linear-gradient(135deg, #fee2e2, #fecaca); color: #991b1b; }
 
-
 // Animations
 @keyframes slideInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } }
@@ -535,7 +571,6 @@ $sayur-gradient: linear-gradient(135deg, #d299c2 0%, $puriva-yellow 100%);
 .main-content > *:nth-child(2) { animation-delay: 0.2s; }
 .main-content > *:nth-child(3) { animation-delay: 0.3s; }
 .main-content > *:nth-child(4) { animation-delay: 0.4s; }
-
 
 // Content padding adjustments
 .content { 
@@ -685,6 +720,10 @@ $sayur-gradient: linear-gradient(135deg, #d299c2 0%, $puriva-yellow 100%);
   .content { padding: 20px 16px calc(180px + env(safe-area-inset-bottom)); } /* juga lebih lega di bawah + safe area */
   .logo { font-size: 32px; }
   .activities-card, .recent-activity { padding: 20px; }
+  .greeting { font-size: 18px; margin-bottom: 4px; }
+  .notification-btn { width: 40px; height: 40px; border-radius: 12px; }
+  .user-avatar { width: 38px; height: 38px; border-radius: 10px; }
+  .header-actions { gap: 6px; }
 }
 
 /* ============================

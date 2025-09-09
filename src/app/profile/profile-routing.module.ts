@@ -15,7 +15,8 @@ const routes: Routes = [
   {
     path: 'help',
     loadComponent: () => import('./help/profile-help.page').then(m => m.ProfileHelpPage)
-  }
+  },
+  // Admin routes removed
 ];
 
 @NgModule({

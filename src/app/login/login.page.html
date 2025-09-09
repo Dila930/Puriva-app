@@ -10,32 +10,8 @@
         <div class="puriva-welcome-subtitle">Silakan masuk ke akun Anda</div>
       </div>
 
-      <ion-segment [(ngModel)]="currentMethod" class="puriva-method-selector" aria-label="Metode Login">
-        <ion-segment-button
-          value="email"
-          class="puriva-method-button"
-          [class.active]="currentMethod === 'email'"
-          [disabled]="isLoading"
-          aria-label="Login dengan Email"
-        >
-          <ion-icon name="mail-outline"></ion-icon>
-          <ion-label>Email</ion-label>
-        </ion-segment-button>
-        <ion-segment-button
-          value="phone"
-          class="puriva-method-button"
-          [class.active]="currentMethod === 'phone'"
-          [disabled]="isLoading"
-          aria-label="Login dengan Telepon"
-        >
-          <ion-icon name="call-outline"></ion-icon>
-          <ion-label>Telepon</ion-label>
-        </ion-segment-button>
-      </ion-segment>
-
-      <div id="recaptcha-container" [class.hidden]="currentMethod !== 'phone'"></div>
-
-      <ng-container *ngIf="currentMethod === 'email'">
+      <!-- Email-only login -->
+      <ng-container>
         <form #emailForm="ngForm" class="puriva-form-section animated fadeIn" (ngSubmit)="handleEmailLogin()">
           <ion-list lines="none" class="ion-no-margin">
             <ion-item class="puriva-form-item">
@@ -55,7 +31,7 @@
             <ion-item class="puriva-form-item">
               <ion-label position="stacked">Password</ion-label>
               <ion-input
-                [type]="showPassword ? 'text' : 'password'"
+                type="password"
                 placeholder="Masukkan password Anda"
                 [(ngModel)]="password"
                 name="password"
@@ -63,12 +39,6 @@
                 required
               ></ion-input>
               <ion-icon name="lock-closed-outline" slot="start" class="puriva-input-icon"></ion-icon>
-              <ion-icon
-                [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"
-                slot="end"
-                class="puriva-toggle-password"
-                (click)="togglePassword()"
-              ></ion-icon>
             </ion-item>
           </ion-list>
 
@@ -83,94 +53,20 @@
             <ion-label>Masuk</ion-label>
           </ion-button>
 
+          <div class="puriva-forgot-section">
+            <a
+              class="puriva-forgot-link"
+              href="mailto:purivaakun@gmail.com?subject=Bantuan%20Reset%20Kode%20Akses%20Puriva&body=Halo%20Tim%20CS%20Puriva,%0D%0A%0D%0ASaya%20ingin%20meminta%20bantuan%20reset%20kode%20akses%20(password)%20akun%20Puriva.%0D%0A%0D%0AData%20saya:%0D%0A-%20Email:%20...%0D%0A-%20Username:%20...%0D%0A-%20Tanggal%20registrasi%20(jika%20masih%20ingat):%20...%0D%0A%0D%0ATerima%20kasih."
+              aria-label="Lupa Password"
+            >
+              <ion-button size="small" fill="clear">Lupa Password</ion-button>
+            </a>
+          </div>
+
           <div class="puriva-register-section">
             <span>Belum punya akun? </span>
             <a (click)="goToRegister()" class="puriva-register-link">Daftar di sini</a>
           </div>
-        </form>
-      </ng-container>
-
-      <ng-container *ngIf="currentMethod === 'phone' && !otpSent">
-        <form #phoneForm="ngForm" class="puriva-form-section animated fadeIn" (ngSubmit)="sendOTP()">
-          <div class="puriva-info-note">
-            <ion-icon name="information-circle-outline" class="puriva-info-note-icon"></ion-icon>
-            <span class="puriva-info-note-text">Format: 812345678 (tanpa +62)</span>
-          </div>
-
-          <ion-list lines="none" class="ion-no-margin">
-            <ion-item class="puriva-form-item">
-              <ion-label position="stacked">Nomor Telepon</ion-label>
-              <ion-input
-                type="tel"
-                placeholder="812345678"
-                [(ngModel)]="phoneNumber"
-                name="phoneNumber"
-                class="puriva-ionic-input"
-                required
-                minlength="8"
-                maxlength="15"
-              ></ion-input>
-              <ion-icon name="call-outline" slot="start" class="puriva-input-icon"></ion-icon>
-            </ion-item>
-          </ion-list>
-
-          <ion-button
-            expand="block"
-            class="puriva-btn-primary"
-            [disabled]="phoneForm.invalid || isLoading"
-            type="submit"
-          >
-            <div *ngIf="isLoading" class="puriva-loading-spinner"></div>
-            <ion-icon *ngIf="!isLoading" name="send-outline"></ion-icon>
-            <ion-label>Kirim OTP</ion-label>
-          </ion-button>
-        </form>
-      </ng-container>
-
-      <ng-container *ngIf="currentMethod === 'phone' && otpSent">
-        <form #otpForm="ngForm" class="puriva-form-section otp-section animated fadeIn" (ngSubmit)="verifyOTP()">
-          <div class="puriva-otp-info">
-            <div class="puriva-otp-info-text">Kode OTP telah dikirim ke:</div>
-            <div class="puriva-phone-display">+62{{ phoneNumber }}</div>
-          </div>
-
-          <ion-list lines="none" class="ion-no-margin">
-            <ion-item class="puriva-form-item">
-              <ion-label position="stacked">Masukkan Kode OTP</ion-label>
-              <ion-input
-                type="tel"
-                placeholder="123456"
-                [(ngModel)]="otpCode"
-                name="otpCode"
-                class="puriva-ionic-input"
-                required
-                minlength="6"
-                maxlength="6"
-              ></ion-input>
-              <ion-icon name="key-outline" slot="start" class="puriva-input-icon"></ion-icon>
-            </ion-item>
-          </ion-list>
-
-          <ion-button
-            expand="block"
-            class="puriva-btn-primary"
-            [disabled]="otpForm.invalid || isLoading"
-            type="submit"
-          >
-            <div *ngIf="isLoading" class="puriva-loading-spinner"></div>
-            <ion-icon *ngIf="!isLoading" name="checkmark-circle-outline"></ion-icon>
-            <ion-label>Verifikasi OTP</ion-label>
-          </ion-button>
-
-          <ion-button
-            expand="block"
-            fill="clear"
-            class="puriva-btn-secondary"
-            (click)="backToPhoneForm()"
-          >
-            <ion-icon name="arrow-back-outline"></ion-icon>
-            <ion-label>Kembali ke Nomor Telepon</ion-label>
-          </ion-button>
         </form>
       </ng-container>
     </div>

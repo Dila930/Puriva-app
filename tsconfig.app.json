@@ -10,11 +10,13 @@
     "src/polyfills.ts"
   ],
   "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts"
+    "src/**/*.ts"
   ],
+  
   "exclude": [
     "src/**/*.spec.ts",
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "src/test.ts",
+    "src/app/profile/admin/profile-admin.page.ts"
   ]
 }

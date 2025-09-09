@@ -3,7 +3,10 @@
     <!-- Header -->
     <div class="header">
       <h1 class="header-title">Profil</h1>
-      <div class="profile-avatar">{{ profile.initials }}</div>
+      <div class="profile-avatar">
+        <img *ngIf="hasProfilePhoto" [src]="profilePhotoUrl" alt="Foto profil" />
+        <span *ngIf="!hasProfilePhoto">{{ profile.initials }}</span>
+      </div>
       <div class="profile-info">
         <div class="profile-name">{{ profile.name }}</div>
         <div class="profile-email">{{ maskedEmail }}</div>
@@ -11,8 +14,9 @@
       </div>
     </div>
 
+
     <!-- Stats -->
-    <div class="stats-container">
+    <div class="stats-container" [ngClass]="{ 'admin-stats': isAdminView, 'user-stats': !isAdminView }">
       <div class="stat-card" *ngFor="let stat of profile.stats">
         <div class="stat-number">{{ stat.number }}</div>
         <div class="stat-label">{{ stat.label }}</div>
@@ -53,10 +57,16 @@
           <div class="menu-arrow">›</div>
         </a>
       </div>
+
+      <!-- Admin-only items removed -->
+
     </div>
 
-    <!-- Logout Button -->
+    <!-- Refresh + Logout Buttons -->
     <div class="logout-section">
+      <button class="refresh-btn" (click)="refreshApp()">
+        🔄 Refresh Aplikasi
+      </button>
       <button class="logout-btn" (click)="logout()">
         🚪 Keluar dari Akun
       </button>

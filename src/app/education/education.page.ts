@@ -166,9 +166,9 @@ export class EducationPage implements OnInit, OnDestroy {
   newsItems: Array<{ id: string; title: string; category: string; content: string; createdAt: number; authorUid: string; authorEmail?: string; authorMaskedEmail?: string }>= [];
 
   // UI-model list consumed by template
-  filteredNews: Array<{ id: string; title: string; description: string; category: string; categoryLabel: string; icon: string; date: string; readTime: number; thumbnail?: string }>= [];
-  featuredNews: { id: string; title: string; description: string; category: string; categoryLabel: string; icon: string; date: string; readTime: number; thumbnail?: string } = {
-    id: '', title: '', description: '', category: 'semua', categoryLabel: 'Umum', icon: '📰', date: '', readTime: 1, thumbnail: ''
+  filteredNews: Array<{ id: string; title: string; description: string; category: string; categoryLabel: string; icon: string; date: string; readTime: number; isNew: boolean; thumbnail?: string }>= [];
+  featuredNews: { id: string; title: string; description: string; category: string; categoryLabel: string; icon: string; date: string; readTime: number; isNew: boolean; thumbnail?: string } = {
+    id: '', title: '', description: '', category: 'semua', categoryLabel: 'Umum', icon: '📰', date: '', readTime: 1, isNew: false, thumbnail: ''
   };
   private unsubscribeFn?: () => void;
   get isAdmin(): boolean { return isAdmin(this.auth); }
@@ -285,7 +285,7 @@ export class EducationPage implements OnInit, OnDestroy {
   }
 
   // Internal helpers
-  private toUiNews(it: any): { id: string; title: string; description: string; category: string; categoryLabel: string; icon: string; date: string; readTime: number; thumbnail?: string } {
+  private toUiNews(it: any): { id: string; title: string; description: string; category: string; categoryLabel: string; icon: string; date: string; readTime: number; isNew: boolean; thumbnail?: string } {
     const cat = (it.category || 'Umum').toString().toLowerCase();
     const map: Record<string, { label: string; icon: string }> = {
       'teknologi': { label: 'Teknologi', icon: '💻' },
@@ -300,6 +300,10 @@ export class EducationPage implements OnInit, OnDestroy {
     const text = (it.content || '').toString();
     const words = text.split(/\s+/).filter(Boolean).length;
     const readTime = Math.max(1, Math.ceil(words / 200));
+    // Mark as NEW if within last 3 days
+    const createdAt: number = Number(it.createdAt || 0);
+    const threeDaysMs = 3 * 24 * 60 * 60 * 1000;
+    const isNew = createdAt > 0 && (Date.now() - createdAt) <= threeDaysMs;
     return {
       id: it.id,
       title: (it.title || '').toString(),
@@ -309,11 +313,12 @@ export class EducationPage implements OnInit, OnDestroy {
       icon: meta.icon,
       date: this.formatDate(it.createdAt),
       readTime,
+      isNew,
       thumbnail: (it.thumbnail || '').toString()
     };
   }
 
-  private applyFilters(source?: Array<{ id: string; title: string; description: string; category: string; categoryLabel: string; icon: string; date: string; readTime: number; thumbnail?: string }>): void {
+  private applyFilters(source?: Array<{ id: string; title: string; description: string; category: string; categoryLabel: string; icon: string; date: string; readTime: number; isNew: boolean; thumbnail?: string }>): void {
     const base = source || this.newsItems.map((it: any) => this.toUiNews(it));
     const q = (this.searchQuery || '').toLowerCase();
     const cat = this.currentFilter;

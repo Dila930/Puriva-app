@@ -2,6 +2,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { Router, RouterModule } from '@angular/router';
+import { Auth } from '@angular/fire/auth';
+import { onAuthStateChanged } from 'firebase/auth';
+import { isAdmin } from '../../utils/admin-ids';
 
 @Component({
   selector: 'app-bottom-nav',
@@ -13,16 +16,19 @@ import { Router, RouterModule } from '@angular/router';
 export class BottomNavComponent implements OnInit {
   @Input() activeTab: string = '';
 
-  constructor(private router: Router) { }
+  isAdminUser = false;
 
-  ngOnInit() {}
+  constructor(private router: Router, private auth: Auth) { }
+
+  ngOnInit() {
+    // Reactive admin detection to avoid stale state on first paint
+    onAuthStateChanged(this.auth as any, () => {
+      this.isAdminUser = isAdmin(this.auth);
+    });
+  }
 
   goToHome(): void {
     this.router.navigate(['/home']);
-  }
-
-  goToControl(): void {
-    this.router.navigate(['/control']);
   }
 
   goToNews(): void {
@@ -35,6 +41,21 @@ export class BottomNavComponent implements OnInit {
 
   goToProfile(): void {
     this.router.navigate(['/profile']);
+  }
+
+  goToControl(): void {
+    this.router.navigate(['/control']);
+  }
+
+  goToNotifications(): void {
+    this.router.navigate(['/notifikasi']);
+  }
+
+  goToAdmin(): void {
+    // Route is guarded; this ensures nav only if admin
+    if (this.isAdminUser) {
+      this.router.navigate(['/admin/management']);
+    }
   }
 
 }

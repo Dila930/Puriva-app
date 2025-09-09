@@ -2,60 +2,73 @@
   <ion-toolbar color="primary">
     <ion-title>{{ isEdit ? 'Edit Berita' : 'Tambah Berita' }}</ion-title>
   </ion-toolbar>
+  
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-item>
-    <ion-label position="stacked">Judul</ion-label>
-    <ion-input [(ngModel)]="title" placeholder="Judul berita"></ion-input>
-  </ion-item>
+  <div [ngClass]="{ 'form-field-error': touchedTitle && !titleValid, 'form-field-success': touchedTitle && titleValid }">
+    <ion-item>
+      <ion-label position="stacked">Judul</ion-label>
+      <ion-input [(ngModel)]="title" (ionBlur)="touchedTitle = true" placeholder="Judul berita"></ion-input>
+    </ion-item>
+  </div>
 
-  <ion-item>
-    <ion-label position="stacked">Kategori</ion-label>
-    <ion-select [(ngModel)]="category">
-      <ion-select-option *ngFor="let c of categories" [value]="c">{{ c }}</ion-select-option>
-    </ion-select>
-  </ion-item>
+  <div [ngClass]="{ 'form-field-error': touchedCategory && !categoryValid, 'form-field-success': touchedCategory && categoryValid }">
+    <ion-item>
+      <ion-label position="stacked">Kategori</ion-label>
+      <ion-select [(ngModel)]="category" (ionBlur)="touchedCategory = true">
+        <ion-select-option *ngFor="let c of categories" [value]="c">{{ c }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </div>
 
   <ion-item lines="full">
     <ion-label position="stacked">URL Gambar (opsional)</ion-label>
     <ion-input [(ngModel)]="imageUrl" placeholder="https://..."></ion-input>
   </ion-item>
 
-  <div *ngIf="imageUrl" style="margin:12px 0; display:flex; justify-content:center;">
-    <img [src]="imageUrl" alt="Preview Gambar" style="max-width:100%; max-height:220px; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.1);"/>
+  <div class="image-preview-container" *ngIf="imageUrl">
+    <img [src]="imageUrl" alt="Preview Gambar" />
   </div>
 
   <!-- Local upload -->
-  <div style="display:flex; align-items:center; gap:8px; margin:8px 0 4px;">
-    <div style="flex:1; height:1px; background:#e2e8f0;"></div>
-    <div style="font-size:12px; color:#64748b;">atau</div>
-    <div style="flex:1; height:1px; background:#e2e8f0;"></div>
+  <div class="divider-container">
+    <div class="divider-line"></div>
+    <div class="divider-text">atau</div>
+    <div class="divider-line"></div>
   </div>
   <input #fileChooser type="file" accept="image/jpeg,image/png,image/webp" hidden (change)="onFileSelected($event)" />
-  <ion-button expand="block" fill="outline" (click)="fileChooser.click()" [disabled]="isUploading || isSaving">
+  <ion-button class="upload-button" expand="block" fill="outline" (click)="fileChooser.click()" [disabled]="isUploading || isSaving">
     <ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
     Unggah Gambar dari Perangkat
   </ion-button>
-  <div style="text-align:center; font-size:12px; color:#64748b; margin-top:6px;">
-    Maksimal 1 foto, ukuran ≤ 1MB (JPG/PNG/WebP)
-  </div>
-  <div *ngIf="isUploading" style="margin-top:8px;">
+  <div class="upload-info">Maksimal 1 foto, ukuran ≤ 1MB (JPG/PNG/WebP)</div>
+  <div class="upload-progress-container" *ngIf="isUploading">
     <ion-progress-bar [value]="uploadProgress / 100"></ion-progress-bar>
-    <div style="text-align:center; font-size:12px; color:#475569; margin-top:4px;">{{ uploadProgress | number:'1.0-0' }}%</div>
+    <div class="progress-text">{{ uploadProgress | number:'1.0-0' }}%</div>
   </div>
 
-  <ion-item lines="full">
-    <ion-label position="stacked">Konten</ion-label>
-    <ion-textarea [(ngModel)]="content" auto-grow="true" rows="8" placeholder="Tulis isi berita..."></ion-textarea>
-  </ion-item>
+  <div [ngClass]="{ 'form-field-error': touchedContent && !contentValid, 'form-field-success': touchedContent && contentValid }">
+    <ion-item lines="full">
+      <ion-label position="stacked">Konten</ion-label>
+      <ion-textarea [(ngModel)]="content" (ionBlur)="touchedContent = true" auto-grow="true" rows="8" placeholder="Tulis isi berita..."></ion-textarea>
+    </ion-item>
+  </div>
 
-  <ion-row class="ion-padding-top">
+  <ion-row class="action-buttons">
     <ion-col size="6">
-      <ion-button expand="block" color="medium" (click)="cancel()" [disabled]="isSaving">Batal</ion-button>
+      <ion-button class="cancel-button" expand="block" color="medium" (click)="cancel()" [disabled]="isSaving">Batal</ion-button>
     </ion-col>
     <ion-col size="6">
-      <ion-button expand="block" color="primary" (click)="save()" [disabled]="isSaving">{{ isEdit ? 'Perbarui' : 'Simpan' }}</ion-button>
+      <ion-button class="save-button" expand="block" color="primary" (click)="onSubmit()" [disabled]="isSaving || !formValid">{{ isEdit ? 'Perbarui' : 'Simpan' }}</ion-button>
     </ion-col>
   </ion-row>
+
+  <!-- Loading overlay -->
+  <div class="loading-overlay fade-in" *ngIf="isSaving">
+    <div class="loading-content">
+      <ion-spinner name="crescent"></ion-spinner>
+      <div class="loading-text">Menyimpan...</div>
+    </div>
+  </div>
 </ion-content>

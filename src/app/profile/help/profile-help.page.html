@@ -7,11 +7,11 @@
 </ion-header>
 
 <ion-content class="profile-detail" [fullscreen]="true">
-  <div class="header">
+  <div class="header" [class.fade-in]="isPageReady">
     <h1>Pusat Bantuan</h1>
     <p>FAQ, hubungi CS & panduan.</p>
   </div>
-  <div class="content">
+  <div class="content" [class.fade-in]="isPageReady">
     <ion-accordion-group multiple="true" expand="inset">
       <ion-accordion value="faq">
         <ion-item slot="header" class="card">
@@ -19,28 +19,32 @@
         </ion-item>
         <div class="ion-padding" slot="content">
           <ion-list lines="none">
+            <!-- Lupa kata sandi: arahkan user untuk email CS. Kode akan dikirim ke email peminta. -->
             <ion-item class="card" detail="true"
-              href="https://mail.google.com/mail/?view=cm&fs=1&to=fadhilahnormaghfiroh@gmail.com&su=%5BPURIVA%20Support%5D%20Lupa%20Kata%20Sandi&body=Halo%20Tim%20PURIVA%2C%0A%0ASaya%20membutuhkan%20bantuan%20untuk%20reset%20kata%20sandi.%0AEmail%20akun%3A%20_____%0ADevice%20(Opsional)%3A%20Android%2FiOS%0AError%20yang%20muncul%20(jika%20ada)%3A%20_____%0A%0ATerima%20kasih." target="_blank" rel="noopener">
+              href="mailto:purivaakun@gmail.com?subject=%5BPURIVA%20Support%5D%20Lupa%20Kata%20Sandi&body=Halo%20Tim%20CS%20Puriva,%0D%0A%0D%0ASaya%20lupa%20kode%20akses%20(password)%20akun%20Puriva%20dan%20meminta%20bantuan%20reset.%0D%0A%0D%0AData%20akun%3A%0D%0A-%20Email%3A%20...%0D%0A-%20Username%3A%20...%0D%0A-%20Tanggal%20registrasi%20(jika%20ingat)%3A%20...%0D%0A%0D%0AMohon%20kirim%20kode%20ke%20email%20ini.%0D%0ATerima%20kasih." aria-label="Email CS untuk lupa kata sandi">
               <ion-label>Lupa Kata Sandi</ion-label>
             </ion-item>
+
+            <!-- Hapus aksi reset langsung -->
+
             <ion-item class="card" detail="true"
-              href="https://mail.google.com/mail/?view=cm&fs=1&to=fadhilahnormaghfiroh@gmail.com&su=%5BPURIVA%20Support%5D%20Tidak%20Bisa%20Login&body=Halo%20Tim%20PURIVA%2C%0A%0ASaya%20tidak%20bisa%20login.%0AEmail%20akun%3A%20_____%0AWaktu%20kejadian%3A%20_____%0APesan%20error%20(jika%20ada)%3A%20_____%0ADevice%20%2F%20OS%3A%20_____%0AVersi%20aplikasi%20(jika%20ada)%3A%20_____%0A%0ATerima%20kasih." target="_blank" rel="noopener">
+              href="mailto:purivaakun@gmail.com?subject=%5BPURIVA%20Support%5D%20Tidak%20Bisa%20Login&body=Halo%20Tim%20CS%20Puriva,%0D%0A%0D%0ASaya%20tidak%20bisa%20login.%0D%0AEmail%20akun%3A%20...%0D%0AWaktu%20kejadian%3A%20...%0D%0APesan%20error%20(jika%20ada)%3A%20...%0D%0ADevice%2FOS%3A%20...%0D%0AVersi%20aplikasi%3A%20...%0D%0A%0D%0ATerima%20kasih." aria-label="Email CS untuk kendala login">
               <ion-label>Tidak Bisa Login</ion-label>
             </ion-item>
             <ion-item class="card" detail="true"
-              href="https://mail.google.com/mail/?view=cm&fs=1&to=fadhilahnormaghfiroh@gmail.com&su=%5BPURIVA%20Support%5D%20Data%20Tidak%20Sinkron&body=Halo%20Tim%20PURIVA%2C%0A%0ASaya%20mengalami%20masalah%20sinkronisasi%20data.%0ARincian%20data%20yang%20tidak%20sesuai%3A%20_____%0AWaktu%20kejadian%3A%20_____%0ADevice%20%2F%20OS%3A%20_____%0AKoneksi%3A%20Wi-Fi%2FData%20Seluler%0A%0ATerima%20kasih." target="_blank" rel="noopener">
+              href="mailto:purivaakun@gmail.com?subject=%5BPURIVA%20Support%5D%20Data%20Tidak%20Sinkron&body=Halo%20Tim%20CS%20Puriva,%0D%0A%0D%0ASaya%20mengalami%20masalah%20sinkronisasi%20data.%0D%0ARincian%3A%20...%0D%0AWaktu%20kejadian%3A%20...%0D%0ADevice%2FOS%3A%20...%0D%0AKoneksi%3A%20Wi-Fi%2FData%20Seluler%0D%0A%0D%0ATerima%20kasih." aria-label="Email CS untuk data tidak sinkron">
               <ion-label>Data Tidak Sinkron</ion-label>
             </ion-item>
             <ion-item class="card" detail="true"
-              href="https://mail.google.com/mail/?view=cm&fs=1&to=fadhilahnormaghfiroh@gmail.com&su=%5BPURIVA%20Support%5D%20Permintaan%20Fitur&body=Halo%20Tim%20PURIVA%2C%0A%0ASaya%20ingin%20mengusulkan%20fitur%3A%20_____%0AManfaat%20untuk%20pengguna%3A%20_____%0AWorkflow%20yang%20diinginkan%3A%20_____%0APrioritas%3A%20Rendah%2FSedang%2FTinggi%0A%0ATerima%20kasih." target="_blank" rel="noopener">
+              href="mailto:purivaakun@gmail.com?subject=%5BPURIVA%20Support%5D%20Permintaan%20Fitur&body=Halo%20Tim%20CS%20Puriva,%0D%0A%0D%0ASaya%20ingin%20mengusulkan%20fitur%3A%20...%0D%0AManfaat%20untuk%20pengguna%3A%20...%0D%0APrioritas%3A%20Rendah%2FSedang%2FTinggi%0D%0A%0D%0ATerima%20kasih." aria-label="Email CS untuk permintaan fitur">
               <ion-label>Permintaan Fitur</ion-label>
             </ion-item>
             <ion-item class="card" detail="true"
-              href="https://mail.google.com/mail/?view=cm&fs=1&to=fadhilahnormaghfiroh@gmail.com&su=%5BPURIVA%20Support%5D%20Laporan%20Bug&body=Halo%20Tim%20PURIVA%2C%0A%0ASaya%20menemukan%20bug.%0ALangkah%20reproduksi%3A%0A1.%20_____%0A2.%20_____%0A3.%20_____%0A%0APesan%20error%2Fcuplikan%20layar%3A%20_____%0ADevice%20%2F%20OS%3A%20_____%0AVersi%20aplikasi%3A%20_____%0A%0ATerima%20kasih." target="_blank" rel="noopener">
+              href="mailto:purivaakun@gmail.com?subject=%5BPURIVA%20Support%5D%20Laporan%20Bug&body=Halo%20Tim%20CS%20Puriva,%0D%0A%0D%0ASaya%20menemukan%20bug.%0D%0ALangkah%20reproduksi%3A%0D%0A1.%20...%0D%0A2.%20...%0D%0A3.%20...%0D%0APesan%20error%20(jika%20ada)%3A%20...%0D%0ADevice%2FOS%3A%20...%0D%0AVersi%20aplikasi%3A%20...%0D%0A%0D%0ATerima%20kasih." aria-label="Email CS untuk laporan bug">
               <ion-label>Laporan Bug</ion-label>
             </ion-item>
             <ion-item class="card" detail="true"
-              href="https://mail.google.com/mail/?view=cm&fs=1&to=fadhilahnormaghfiroh@gmail.com&su=%5BPURIVA%20Support%5D%20Bantuan%20Umum&body=Halo%20Tim%20PURIVA%2C%0A%0ASaya%20membutuhkan%20bantuan%20terkait%3A%20_____%0A%0ATerima%20kasih." target="_blank" rel="noopener">
+              href="mailto:purivaakun@gmail.com?subject=%5BPURIVA%20Support%5D%20Bantuan%20Umum&body=Halo%20Tim%20CS%20Puriva,%0D%0A%0D%0ASaya%20membutuhkan%20bantuan%20terkait%3A%20...%0D%0A%0D%0ATerima%20kasih." aria-label="Email CS untuk bantuan umum">
               <ion-label><strong>Hubungi CS</strong></ion-label>
             </ion-item>
           </ion-list>
@@ -52,7 +56,18 @@
           <ion-label><strong>Panduan Aplikasi</strong></ion-label>
         </ion-item>
         <div class="ion-padding" slot="content">
-          <p>Pelajari cara menggunakan fitur utama seperti Control Panel, Statistik, dan Berita. (Konten panduan mendetail dapat ditambahkan di rilis berikutnya.)</p>
+          <p>Penggunaan umum aplikasi PURIVA (Ionic):</p>
+          <ul>
+            <li><strong>Masuk/Daftar</strong>: Buat akun atau login dengan email + kode akses. Jika lupa, hubungi CS email.</li>
+            <li><strong>Beranda</strong>: Ringkasan aktivitas & pintasan fitur.</li>
+            <li><strong>Control</strong>: Panel kendali fitur inti (mis. perangkat/sterilisasi).</li>
+            <li><strong>Statistik/Riwayat</strong>: Lihat metrik & riwayat aktivitas.</li>
+            <li><strong>Berita/Artikel</strong>: Baca konten edukasi.</li>
+            <li><strong>Forum</strong>: Diskusi & tanya jawab.</li>
+            <li><strong>Profil</strong>: Ubah nama tampilan, preferensi, dan akses bantuan.</li>
+            <li><strong>Pusat Bantuan</strong>: FAQ atau email <a href="mailto:purivaakun@gmail.com">purivaakun@gmail.com</a>.</li>
+          </ul>
+          <p>Tips: Pastikan email aktif. Sertakan detail/kronologi saat menghubungi CS.</p>
         </div>
       </ion-accordion>
 
@@ -61,7 +76,9 @@
           <ion-label><strong>Tentang Pengembang</strong></ion-label>
         </ion-item>
         <div class="ion-padding" slot="content">
-          <p>Tim PURIVA mengembangkan solusi Smart UV Chamber untuk mendukung Program Makan Gratis Indonesia. Untuk kerja sama, silakan hubungi kami melalui email CS.</p>
+          <p>
+            Hai! Kami adalah tiga siswa jurusan PPLG yang suka ngulik teknologi sambil peduli sama kesehatan makanan. Dari semangat itu lahirlah aplikasi ini, yang kami bangun pakai Ionic. Buat kami, coding bukan cuma soal barisan kode, tapi juga cara bikin sesuatu yang berguna buat banyak orang. Harapan kami, aplikasi ini bisa jadi langkah kecil yang berarti dalam membantu gaya hidup sehat. Terima kasih sudah mendukung karya sederhana kami!
+          </p>
         </div>
       </ion-accordion>
     </ion-accordion-group>

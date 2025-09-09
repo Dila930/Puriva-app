@@ -57,7 +57,12 @@
             <div class="thread-title">{{ t.title }}</div>
             <div class="thread-excerpt">{{ getThreadExcerpt(t.content) }}</div>
             <div class="thread-meta">
-              <div class="thread-author">
+              <div class="thread-author" style="display:flex; align-items:center; gap:8px;">
+                <!-- Avatar -->
+                <div class="avatar" style="width:28px; height:28px; border-radius:50%; background:#e5e7eb; color:#374151; display:flex; align-items:center; justify-content:center; overflow:hidden; flex:0 0 auto;">
+                  <img *ngIf="shouldShowAvatar(t.authorUid)" [src]="getAvatarUrl(t.authorUid)" alt="avatar" style="width:100%; height:100%; object-fit:cover;"/>
+                  <span *ngIf="!shouldShowAvatar(t.authorUid)" style="font-size:12px; font-weight:700;">{{ getInitials(t.author) }}</span>
+                </div>
                 <span>{{ t.author }}</span>
                 <span class="author-role" [ngClass]="t.role">{{ getRoleText(t.role) }}</span>
               </div>
@@ -86,7 +91,11 @@
 
         <div class="thread-detail-header">
           <div class="thread-detail-title">{{ selectedThread.title }}</div>
-          <div class="thread-author">
+          <div class="thread-author" style="display:flex; align-items:center; gap:8px;">
+            <div class="avatar" style="width:32px; height:32px; border-radius:50%; background:#e5e7eb; color:#374151; display:flex; align-items:center; justify-content:center; overflow:hidden; flex:0 0 auto;">
+              <img *ngIf="shouldShowAvatar(selectedThread.authorUid)" [src]="getAvatarUrl(selectedThread.authorUid)" alt="avatar" style="width:100%; height:100%; object-fit:cover;"/>
+              <span *ngIf="!shouldShowAvatar(selectedThread.authorUid)" style="font-size:12px; font-weight:700;">{{ getInitials(selectedThread.author) }}</span>
+            </div>
             <span>{{ selectedThread.author }}</span>
             <span class="author-role" [ngClass]="selectedThread.role">{{ getRoleText(selectedThread.role) }}</span>
           </div>
@@ -99,7 +108,7 @@
             <ion-icon name="thumbs-up-outline"></ion-icon>
             Suka {{ getThreadCounts(selectedThread.id).likes }}
           </ion-button>
-          <ion-button class="action-btn" (click)="openLikersModal(selectedThread.id)">
+          <ion-button class="action-btn" *ngIf="canManageThread(selectedThread)" (click)="openLikersModal(selectedThread.id)">
             <ion-icon name="people-outline"></ion-icon>
             Lihat yang menyukai
           </ion-button>
@@ -111,7 +120,11 @@
           <div class="section-title">Komentar</div>
           <div *ngIf="selectedThread.comments.length === 0" class="no-comments">Belum ada komentar.</div>
           <div class="comment-item" *ngFor="let c of selectedThread.comments" [class.my-comment]="isMyComment(selectedThread.id, c)">
-            <div class="comment-author">
+            <div class="comment-author" style="display:flex; align-items:center; gap:8px;">
+              <div class="avatar" style="width:24px; height:24px; border-radius:50%; background:#e5e7eb; color:#374151; display:flex; align-items:center; justify-content:center; overflow:hidden; flex:0 0 auto;">
+                <img *ngIf="shouldShowAvatar(c.authorUid)" [src]="getAvatarUrl(c.authorUid)" alt="avatar" style="width:100%; height:100%; object-fit:cover;"/>
+                <span *ngIf="!shouldShowAvatar(c.authorUid)" style="font-size:10px; font-weight:700;">{{ getInitials(c.author) }}</span>
+              </div>
               <span>{{ c.author }}</span>
               <span class="comment-time">{{ getTimeAgo(c.timestamp) }}</span>
             </div>
@@ -132,7 +145,9 @@
 
         <div class="reply-form">
           <ion-textarea class="reply-input" [(ngModel)]="newComment" placeholder="Tulis balasan..."></ion-textarea>
-          <ion-button class="reply-submit" (click)="submitReply()">Kirim</ion-button>
+          <ion-button class="reply-submit" (click)="submitReply()" [disabled]="isPostingComment || !newComment">
+            Kirim
+          </ion-button>
         </div>
       </div>
     </ng-template>
@@ -166,14 +181,50 @@
             </ion-item>
 
             <div style="height: 12px"></div>
-            <ion-button expand="block" (click)="createNewThread()" [disabled]="!newThreadForm.title || !newThreadForm.category || !newThreadForm.content">
+            <ion-button expand="block" (click)="createNewThread()" [disabled]="isPostingThread || !newThreadForm.title || !newThreadForm.category || !newThreadForm.content">
               Simpan Thread
             </ion-button>
           </div>
         </ion-content>
       </ng-template>
     </ion-modal>
-
-    <app-bottom-nav [activeTab]="'forum'"></app-bottom-nav>
+    <!-- Modal: Likers -->
+    <ion-modal [isOpen]="showLikersModal" (didDismiss)="closeLikersModal()" class="likers-modal">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Yang Menyukai</ion-title>
+            <ion-buttons slot="end">
+              <ion-button (click)="closeLikersModal()">Tutup</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content>
+          <div class="likers-list" style="padding: 12px;">
+            <div *ngIf="likersForThreadId as tid; else commentLikersTpl">
+              <div class="section-title">Disukai oleh</div>
+              <div *ngIf="(threadLikers[tid]?.length || 0) === 0" class="empty-state">Belum ada yang menyukai.</div>
+              <ion-list *ngIf="(threadLikers[tid]?.length || 0) > 0">
+                <ion-item *ngFor="let name of threadLikers[tid]">
+                  <ion-label>{{ name }}</ion-label>
+                </ion-item>
+              </ion-list>
+            </div>
+            <ng-template #commentLikersTpl>
+              <div *ngIf="likersForComment as lc">
+                <div class="section-title">Disukai oleh</div>
+                <div *ngIf="(commentLikers[lc.threadId]?.[lc.commentId]?.length || 0) === 0" class="empty-state">Belum ada yang menyukai.</div>
+                <ion-list *ngIf="(commentLikers[lc.threadId]?.[lc.commentId]?.length || 0) > 0">
+                  <ion-item *ngFor="let name of commentLikers[lc.threadId][lc.commentId]">
+                    <ion-label>{{ name }}</ion-label>
+                  </ion-item>
+                </ion-list>
+              </div>
+            </ng-template>
+          </div>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
   </div>
 </ion-content>
+<app-bottom-nav [activeTab]="'forum'"></app-bottom-nav>

@@ -1,13 +1,451 @@
-.profile-detail { --background: #EDF2FB; }
-.header { background: #EDF2FB; padding: calc(env(safe-area-inset-top, 0px) + 16px) 20px 24px; color: #1e293b; text-align: center; border-radius: 0 0 24px 24px; }
-.content { padding: 20px; background: #EDF2FB; min-height: calc(100vh - 120px); }
-.card { --background: #fff; margin: 10px 0; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+/* Help Center Page - Clean & Modern Design */
 
-/* Transparent toolbar and simple back icon (no box) */
-ion-header {
-  ion-toolbar {
-    --background: transparent;
-    /* use primary icon color from HTML color attribute */
-    /* no ::part(native) box styling */
+/* ===== ROOT VARIABLES ===== */
+.profile-detail {
+  --bg-primary: #ffffff;
+  --bg-card: #ffffff;
+  --bg-content: #ffffff;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  --shadow-light: 0 2px 8px rgba(15, 23, 42, 0.08);
+  --shadow-hover: 0 4px 16px rgba(15, 23, 42, 0.12);
+  --border-color: rgba(226, 232, 240, 0.6);
+  --border-radius: 18px;
+  --border-radius-large: 32px;
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 0.75rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+  --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Accent Colors */
+  --accent-primary: var(--ion-color-primary);
+  --accent-success: #10b981;
+  --accent-info: #3b82f6;
+}
+
+/* ===== MAIN CONTAINER ===== */
+.profile-detail {
+  background: var(--bg-primary);
+  min-height: 100vh;
+}
+
+/* ===== HEADER SECTION ===== */
+.profile-detail .header {
+  background: linear-gradient(
+    135deg, 
+    var(--ion-color-primary) 0%, 
+    var(--ion-color-primary-shade) 100%
+  );
+  color: white;
+  padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-2xl);
+  margin-top: -56px;
+  padding-top: calc(56px + var(--spacing-lg));
+  position: relative;
+  border-radius: 0 0 var(--border-radius-large) var(--border-radius-large);
+  overflow: hidden;
+}
+
+/* Header decorative elements */
+.profile-detail .header::before {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 0;
+  right: 0;
+  height: 24px;
+  background: linear-gradient(
+    135deg, 
+    var(--ion-color-primary) 0%, 
+    var(--ion-color-primary-shade) 100%
+  );
+  border-radius: 0 0 var(--border-radius-large) var(--border-radius-large);
+  opacity: 0.8;
+  z-index: -1;
+}
+
+.profile-detail .header::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  right: 0;
+  height: 32px;
+  background: linear-gradient(
+    135deg, 
+    var(--ion-color-primary-tint) 20%, 
+    transparent 80%
+  );
+  border-radius: 0 0 var(--border-radius-large) var(--border-radius-large);
+  opacity: 0.2;
+  z-index: -2;
+}
+
+/* Header typography */
+.profile-detail .header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 var(--spacing-xs) 0;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.profile-detail .header p {
+  font-size: 1rem;
+  margin: 0;
+  opacity: 0.9;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+/* ===== CONTENT SECTION ===== */
+.profile-detail .content {
+  padding: var(--spacing-xl) var(--spacing-md) var(--spacing-lg);
+  position: relative;
+  z-index: 2;
+  margin-top: 8px;
+  background: #EDF2FB;
+}
+
+/* ===== ACCORDION GROUP ===== */
+.profile-detail ion-accordion-group {
+  background: transparent;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+}
+
+.profile-detail ion-accordion {
+  margin-bottom: var(--spacing-md);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-light);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  background: var(--bg-card);
+  transition: var(--transition);
+}
+
+.profile-detail ion-accordion:last-child {
+  margin-bottom: 0;
+}
+
+.profile-detail ion-accordion:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-1px);
+}
+
+/* ===== ACCORDION HEADERS ===== */
+.profile-detail ion-accordion ion-item[slot="header"] {
+  --background: var(--bg-card);
+  --border-radius: var(--border-radius);
+  --padding-start: var(--spacing-lg);
+  --padding-end: var(--spacing-lg);
+  --min-height: 64px;
+  --color: var(--text-primary);
+  --inner-border-width: 0;
+  --border-width: 0;
+  --highlight-height: 0;
+  
+  background: var(--bg-card);
+  border: none;
+  transition: var(--transition);
+}
+
+.profile-detail ion-accordion ion-item[slot="header"] ion-label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.profile-detail ion-accordion ion-item[slot="header"] ion-label strong {
+  font-weight: 700;
+  color: var(--accent-primary);
+}
+
+/* ===== ACCORDION CONTENT ===== */
+.profile-detail ion-accordion [slot="content"] {
+  background: var(--bg-content);
+  border-top: 1px solid var(--border-color);
+  padding: var(--spacing-lg);
+}
+
+.profile-detail ion-accordion [slot="content"] p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin: 0;
+  font-weight: 400;
+}
+
+/* ===== FAQ LIST ITEMS ===== */
+.profile-detail ion-accordion ion-list {
+  background: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+.profile-detail ion-accordion ion-list ion-item.card {
+  --background: var(--bg-card);
+  --border-radius: 14px;
+  --padding-start: var(--spacing-lg);
+  --padding-end: var(--spacing-lg);
+  --min-height: 56px;
+  --color: var(--text-primary);
+  --inner-border-width: 0;
+  --border-width: 0;
+  --highlight-height: 0;
+  --ripple-color: rgba(var(--ion-color-primary-rgb), 0.1);
+  
+  background: var(--bg-card);
+  border-radius: 14px;
+  margin-bottom: var(--spacing-sm);
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06);
+  border: 1px solid var(--border-color);
+  transition: var(--transition);
+  cursor: pointer;
+  text-decoration: none;
+  overflow: hidden;
+}
+
+/* FAQ Item Hover Effects */
+.profile-detail ion-accordion ion-list ion-item.card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.1);
+  border-color: rgba(var(--ion-color-primary-rgb), 0.2);
+}
+
+.profile-detail ion-accordion ion-list ion-item.card:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.06);
+}
+
+.profile-detail ion-accordion ion-list ion-item.card:last-child {
+  margin-bottom: 0;
+}
+
+/* FAQ Item Labels */
+.profile-detail ion-accordion ion-list ion-item.card ion-label {
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.profile-detail ion-accordion ion-list ion-item.card ion-label strong {
+  font-weight: 700;
+  color: var(--accent-primary);
+}
+
+/* Special styling for Contact CS item */
+.profile-detail ion-accordion ion-list ion-item.card:last-child {
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--ion-color-primary-shade) 100%);
+  border-color: var(--accent-primary);
+}
+
+.profile-detail ion-accordion ion-list ion-item.card:last-child ion-label {
+  color: white;
+}
+
+.profile-detail ion-accordion ion-list ion-item.card:last-child ion-label strong {
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.profile-detail ion-accordion ion-list ion-item.card:last-child:hover {
+  background: linear-gradient(135deg, var(--ion-color-primary-shade) 0%, var(--ion-color-primary) 100%);
+}
+
+/* ===== IONIC OVERRIDES ===== */
+.profile-detail ion-item {
+  --inner-border-width: 0;
+  --border-width: 0;
+  --highlight-height: 0;
+}
+
+.profile-detail ion-item .item-native {
+  border-radius: var(--border-radius) !important;
+  overflow: hidden;
+}
+
+.profile-detail ion-item::part(native) {
+  border-radius: var(--border-radius) !important;
+  overflow: hidden;
+  background: transparent;
+  border: none;
+}
+
+/* Remove default ionic borders */
+.profile-detail ion-list ion-item:not(:last-child) {
+  --border-width: 0;
+  border-bottom: none;
+}
+
+/* ===== TOOLBAR STYLING ===== */
+ion-header ion-toolbar {
+  --background: transparent;
+  --color: white;
+  --border-width: 0;
+}
+
+ion-header ion-toolbar ion-title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: white;
+}
+
+ion-header ion-toolbar ion-back-button {
+  --color: white;
+  --icon-font-size: 1.5rem;
+}
+
+/* ===== CONTENT BACKGROUND ===== */
+ion-content.profile-detail {
+  --background: var(--bg-primary);
+  background: var(--bg-primary);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (min-width: 768px) {
+  .profile-detail .header {
+    padding: var(--spacing-xl) var(--spacing-xl) 4rem;
+    border-radius: 0 0 32px 32px;
+  }
+  
+  .profile-detail .header::before {
+    bottom: -16px;
+    height: 32px;
+    border-radius: 0 0 32px 32px;
+  }
+  
+  .profile-detail .header::after {
+    bottom: -28px;
+    height: 44px;
+    border-radius: 0 0 40px 40px;
+  }
+  
+  .profile-detail .header h1 {
+    font-size: 2.25rem;
+  }
+  
+  .profile-detail .header p {
+    font-size: 1.125rem;
+  }
+  
+  .profile-detail .content {
+    padding: var(--spacing-2xl) var(--spacing-xl) var(--spacing-xl);
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  
+  .profile-detail ion-accordion {
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  .profile-detail ion-accordion ion-item[slot="header"] {
+    --min-height: 72px;
+    --padding-start: var(--spacing-xl);
+    --padding-end: var(--spacing-xl);
+  }
+  
+  .profile-detail ion-accordion ion-item[slot="header"] ion-label {
+    font-size: 1.125rem;
+  }
+  
+  .profile-detail ion-accordion [slot="content"] {
+    padding: var(--spacing-xl);
+  }
+  
+  .profile-detail ion-accordion [slot="content"] p {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+  
+  .profile-detail ion-accordion ion-list ion-item.card {
+    --min-height: 60px;
+    --padding-start: var(--spacing-xl);
+    --padding-end: var(--spacing-xl);
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .profile-detail ion-accordion ion-list ion-item.card ion-label {
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .profile-detail .content {
+    max-width: 720px;
+  }
+}
+
+/* ===== ACCESSIBILITY & FOCUS STATES ===== */
+.profile-detail ion-accordion:focus-within {
+  outline: 2px solid var(--ion-color-primary);
+  outline-offset: 2px;
+}
+
+.profile-detail ion-accordion ion-list ion-item.card:focus {
+  outline: 2px solid var(--ion-color-primary);
+  outline-offset: 2px;
+}
+
+/* ===== ANIMATION UTILITIES ===== */
+.profile-detail .fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== ENHANCED INTERACTIVITY ===== */
+.profile-detail ion-accordion ion-list ion-item.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--accent-primary);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.3s ease;
+  border-radius: 0 2px 2px 0;
+}
+
+.profile-detail ion-accordion ion-list ion-item.card:hover::before {
+  transform: scaleY(1);
+  transform-origin: top;
+}
+
+/* Special indicator for Contact CS */
+.profile-detail ion-accordion ion-list ion-item.card:last-child::before {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+/* ===== DARK MODE OVERRIDE (Force Light) ===== */
+@media (prefers-color-scheme: dark) {
+  .profile-detail {
+    --bg-primary: #ffffff !important;
+    --bg-card: #ffffff !important;
+    --bg-content: #ffffff !important;
+    --text-primary: #1e293b !important;
+    --text-secondary: #64748b !important;
+    --text-muted: #94a3b8 !important;
+    --border-color: rgba(226, 232, 240, 0.6) !important;
+    --shadow-light: 0 2px 8px rgba(15, 23, 42, 0.08) !important;
+    --shadow-hover: 0 4px 16px rgba(15, 23, 42, 0.12) !important;
   }
 }

@@ -1,12 +1,46 @@
 // Ensure content is not obscured by bottom nav
-:host ion-content {
-  --padding-bottom: 88px; // space for bottom nav
+:host {
+  ion-content {
+    --background: #f8fafc;
+    --padding-bottom: calc(88px + env(safe-area-inset-bottom)); // space for bottom nav + safe area
+    --padding-top: 0;
+    --padding-start: 0;
+    --padding-end: 0;
+  }
+
+  // Smooth fade out effect at the bottom
+  ion-content::part(scroll) {
+    padding-bottom: 24px; // Extra space at the bottom for better scrolling
+    margin-bottom: env(safe-area-inset-bottom); // Account for safe area
+  }
 }
 
-.home-content,
-.container,
-.page-container {
-  padding-bottom: 88px; // extra safety
+// Container styles
+.container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 16px calc(env(safe-area-inset-bottom) + 24px); // Add safe area to bottom padding
+  position: relative;
+  z-index: 1;
+}
+
+// Shadow and gradient overlay for bottom of scrollable content
+.scroll-shadow {
+  position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: linear-gradient(to bottom, 
+      rgba(248, 250, 252, 0) 0%, 
+      rgba(248, 250, 252, 0.8) 40%, 
+      rgba(248, 250, 252, 1) 70%);
+    pointer-events: none;
+    z-index: 2;
+  }
 }
 /* =========================================================
    PURIVA - Smart UV Chamber
@@ -49,7 +83,7 @@ $sayur-gradient: linear-gradient(135deg, #d299c2 0%, $puriva-yellow 100%);
 // Header Section
 .header {
   background: $header-gradient;
-  padding: 36px 24px 28px;
+  padding: 42px 24px 32px; /* Increased top and bottom padding */
   border-radius: 0 0 28px 28px;
   margin: 0 -16px 24px;
   margin-top: 0 !important; /* FIX ATAS */
@@ -85,13 +119,15 @@ $sayur-gradient: linear-gradient(135deg, #d299c2 0%, $puriva-yellow 100%);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 24px;
+  margin-bottom: 28px; /* Slightly increased bottom margin */
+  padding: 0 8px; /* Added horizontal padding */
 }
 
 .greeting {
   color: rgba(255, 255, 255, 0.9);
   font-size: 20px; // reduced for better balance
-  margin-bottom: 5px;
+  margin-bottom: 8px; /* Increased bottom margin */
+  padding: 4px 0; /* Added vertical padding */
 }
 
 .user-name {
@@ -142,6 +178,18 @@ $sayur-gradient: linear-gradient(135deg, #d299c2 0%, $puriva-yellow 100%);
   animation: pulse 2s infinite;
 }
 
+// Plain red dot for unread indicator (no number)
+.notification-dot {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 10px;
+  height: 10px;
+  background: #ef4444; // red
+  border: 2px solid #ffffff; // white outline for contrast
+  border-radius: 50%;
+}
+
 .logo-section {
   text-align: center;
   margin-bottom: 20px;
@@ -180,6 +228,7 @@ $sayur-gradient: linear-gradient(135deg, #d299c2 0%, $puriva-yellow 100%);
   background: white;
   border-radius: 24px;
   padding: 24px;
+  margin: 0 16px 24px; // Added margin for better spacing
   box-shadow: 0 10px 40px rgba(0,0,0,0.08);
   margin-bottom: 24px;
   border: 1px solid rgba(255,255,255,0.8);
@@ -187,10 +236,28 @@ $sayur-gradient: linear-gradient(135deg, #d299c2 0%, $puriva-yellow 100%);
 
 .recent-activity {
   background: white;
-  border-radius: 24px;
-  padding: 24px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.08);
-  border: 1px solid rgba(255,255,255,0.8);
+  border-radius: 20px;
+  padding: 20px;
+  margin: 0 16px 80px; /* Increased bottom margin to prevent overlap with bottom nav */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  position: relative;
+  overflow: hidden;
+  
+  // Subtle inner shadow for depth
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: linear-gradient(to bottom, 
+      rgba(0,0,0,0.02) 0%, 
+      rgba(0,0,0,0.01) 50%, 
+      transparent 100%);
+    z-index: 1;
+  }
 }
 
 // Active Session Card
@@ -351,8 +418,9 @@ $sayur-gradient: linear-gradient(135deg, #d299c2 0%, $puriva-yellow 100%);
 .quick-actions { 
   display: grid; 
   grid-template-columns: 1fr 1fr; 
-  gap: 16px; 
-  margin-bottom: 24px; 
+  gap: 12px; 
+  margin: 0 16px 16px;
+  padding: 4px 0 0;
 }
 
 .action-card {
@@ -396,7 +464,23 @@ $sayur-gradient: linear-gradient(135deg, #d299c2 0%, $puriva-yellow 100%);
 // Recent Activity
 .activity-list { list-style: none; margin: 0; padding: 0; }
 
-.activity-item { display: flex; align-items: center; padding: 16px 0; border-bottom: 1px solid #f1f5f9; transition: all 0.3s ease; }
+.activity-item { 
+  display: flex; 
+  align-items: center; 
+  padding: 16px; 
+  background: white;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease; 
+  position: relative;
+  border: none;
+  
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-1px);
+  }
+}
 .activity-item:last-child { border-bottom: none; }
 .activity-item:hover { background: #f8fafc; margin: 0 -16px; padding: 16px; border-radius: 12px; }
 

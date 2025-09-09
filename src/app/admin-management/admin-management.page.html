@@ -1,0 +1,197 @@
+<ion-header translucent="true">
+  <ion-toolbar>
+    <ion-title>Manajemen Pengguna</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="refresh()" [disabled]="loading" aria-label="Refresh">
+        <ion-icon name="refresh-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="admin-content">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat stat-primary">
+        <div class="label">Total User</div>
+        <div class="value gradient-text">{{ stats.totalUsers | number }}</div>
+      </div>
+      <div class="stat stat-secondary">
+        <div class="label">Sterilisasi</div>
+        <div class="value">{{ stats.sterilizations | number }}</div>
+      </div>
+      <div class="stat stat-tertiary">
+        <div class="label">Forum</div>
+        <div class="value">{{ stats.forums | number }}</div>
+      </div>
+      <div class="stat stat-aurora">
+        <div class="label">Komentar</div>
+        <div class="value">{{ stats.comments | number }}</div>
+      </div>
+    </div>
+
+    <div class="section glass-section">
+      <div class="section-title gradient-title">Grafik Aktivitas</div>
+      
+      <div class="chart-legend">
+        <div class="legend-item"><span class="legend-swatch" style="background:#3B82F6"></span> Sterilisasi</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:#10B981"></span> Forum</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:#F59E0B"></span> Komentar</div>
+        <div class="legend-item"><span class="legend-swatch" style="background:#EF4444"></span> Berita</div>
+      </div>
+
+      <div class="chart-wrapper">
+        <svg [attr.viewBox]="'0 0 320 160'" width="100%" style="display:block">
+          <!-- Horizontal grid lines -->
+          <ng-container *ngFor="let y of yTickYs; let i = index">
+            <line x1="32" [attr.y1]="y" x2="304" [attr.y2]="y" stroke="#E5E7EB" stroke-width="1" shape-rendering="crispEdges"></line>
+            <!-- Y-axis labels on the left -->
+            <text x="28" [attr.y]="y + 3" text-anchor="end" font-size="9" fill="#64748B">{{ yTickLabels[i] | number:'1.0-0' }}</text>
+          </ng-container>
+
+          <!-- Series lines -->
+          <polyline [attr.points]="chartLineA" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline>
+          <polyline [attr.points]="chartLineB" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline>
+          <polyline [attr.points]="chartLineC" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline>
+          <polyline [attr.points]="chartLineD" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline>
+
+          <!-- Dots with titles for tooltip on long-press/hover -->
+          <ng-container *ngFor="let p of chartDotsA">
+            <circle [attr.cx]="p.x" [attr.cy]="p.y" r="2.5" fill="#3B82F6"><title>Sterilisasi: {{ p.v }}</title></circle>
+          </ng-container>
+          <ng-container *ngFor="let p of chartDotsB">
+            <circle [attr.cx]="p.x" [attr.cy]="p.y" r="2.5" fill="#10B981"><title>Forum: {{ p.v }}</title></circle>
+          </ng-container>
+          <ng-container *ngFor="let p of chartDotsC">
+            <circle [attr.cx]="p.x" [attr.cy]="p.y" r="2.5" fill="#F59E0B"><title>Komentar: {{ p.v }}</title></circle>
+          </ng-container>
+          <ng-container *ngFor="let p of chartDotsD">
+            <circle [attr.cx]="p.x" [attr.cy]="p.y" r="2.5" fill="#EF4444"><title>Berita: {{ p.v }}</title></circle>
+          </ng-container>
+
+          <!-- X axis labels (month abbr + range) -->
+          <ng-container *ngFor="let x of viewLabelXs; let i = index">
+            <text [attr.x]="x" y="146" text-anchor="middle" font-size="10" fill="#64748B">{{ viewMonthAbbr[i] | uppercase }}</text>
+            <text [attr.x]="x" y="158" text-anchor="middle" font-size="9" fill="#94A3B8">{{ viewMonthLabels[i] }}</text>
+          </ng-container>
+        </svg>
+      </div>
+
+      <div class="chart-controls">
+        <ion-button size="small" fill="outline" (click)="prevWindow()" [disabled]="viewStart <= 0">
+          <ion-icon slot="start" name="chevron-back-outline"></ion-icon>
+          Sebelumnya
+        </ion-button>
+        <ion-button size="small" fill="outline" (click)="toggleOrder()">
+          Urutan {{ reverseOrder ? 'Terbaru → Terlama' : 'Terlama → Terbaru' }}
+        </ion-button>
+        <ion-button size="small" fill="outline" (click)="nextWindow()" [disabled]="viewStart + viewSize >= totalMonths">
+          Berikutnya
+          <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+        </ion-button>
+      </div>
+
+      <div class="empty" *ngIf="!hasChartData">Belum ada data untuk ditampilkan.</div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Tindakan Cepat</div>
+      <div class="chart-controls" style="padding-top:12px">
+        <ion-button size="small" fill="outline" routerLink="/news/create">
+          <ion-icon slot="start" name="newspaper-outline"></ion-icon>
+          Buat Berita
+        </ion-button>
+        <ion-button size="small" fill="outline" routerLink="/forum">
+          <ion-icon slot="start" name="chatbubbles-outline"></ion-icon>
+          Kelola Forum
+        </ion-button>
+        <ion-button size="small" fill="outline" routerLink="/forum/create">
+          <ion-icon slot="start" name="create-outline"></ion-icon>
+          Buat Forum
+        </ion-button>
+      </div>
+    </div>
+
+    <div class="section" *ngIf="usersPreview?.length">
+      <div class="section-title">Pengguna Terbaru</div>
+      <div class="user-table-wrapper">
+        <table class="user-table">
+          <thead>
+            <tr>
+              <th>Pengguna</th>
+              <th>Email</th>
+              <th>Terdaftar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let u of usersPreview">
+              <td>
+                <div class="primary-text">{{ u.username || '-' }}</div>
+              </td>
+              <td><span class="secondary-text">{{ u.email || '-' }}</span></td>
+              <td>
+                <span class="muted">{{ u.lastActive ? (u.lastActive | date:'dd MMM y, HH:mm') : '-' }}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Aktivitas Per Pengguna</div>
+      <div class="chart-controls" style="padding:12px 16px; gap:12px; display:flex; align-items:center;">
+        <ion-searchbar
+          placeholder="Cari UID / nama / email"
+          [(ngModel)]="userSearch"
+          (ionInput)="applyUserFilter()"
+          animated="true"
+          debounce="200"
+          style="flex:1"
+        ></ion-searchbar>
+      </div>
+      <div class="user-table-wrapper">
+        <table class="user-table">
+          <thead>
+            <tr>
+              <th>UID</th>
+              <th>Pengguna</th>
+              <th>Sterilisasi</th>
+              <th>Thread</th>
+              <th>Komentar</th>
+              <th>Password</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngIf="(filteredUserAggRows?.length || 0) === 0">
+              <td colspan="6" class="empty">Belum ada data aktivitas pengguna.</td>
+            </tr>
+            <tr *ngFor="let r of filteredUserAggRows">
+              <td><span class="uid">{{ r.uid }}</span></td>
+              <td>
+                <div class="primary-text">{{ r.username || '-' }}</div>
+                <span class="secondary-text">{{ r.email || '-' }}</span>
+              </td>
+              <td><span class="badge green">{{ r.steril | number }}</span></td>
+              <td><span class="badge blue">{{ r.threads | number }}</span></td>
+              <td><span class="badge amber">{{ r.comments | number }}</span></td>
+              <td class="password-cell">
+                <div class="password-display">
+                  <span class="password-text">
+                    {{ r.showPassword ? (r.password || 'Loading...') : getMaskedPassword(r.password) }}
+                  </span>
+                  <ion-button fill="clear" size="small" (click)="$event.stopPropagation(); togglePasswordVisibility(r)">
+                    <ion-icon [name]="r.showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+                  </ion-button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <app-bottom-nav [activeTab]="'admin'"></app-bottom-nav>
+
+  </div>
+</ion-content>

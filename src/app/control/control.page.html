@@ -2,6 +2,11 @@
   <div class="container">
     <div class="header">
       <div class="header-top">
+        <div class="admin-back" *ngIf="admin">
+          <ion-button fill="clear" size="small" color="light" (click)="goToAdmin()">
+            <ion-icon name="arrow-back-circle-outline" slot="icon-only"></ion-icon>
+          </ion-button>
+        </div>
         <div class="page-info">
           <div class="page-title">Control Panel</div>
           <div class="page-subtitle">Kendali Smart UV Chamber</div>
@@ -108,7 +113,7 @@
             <div class="info-label">Intensitas Saat Ini</div>
           </div>
           <div class="info-item">
-            <div class="info-value">{{ temperature }}°C</div>
+            <div class="info-value">{{ temperature | number:'1.2-2' }}°C</div>
             <div class="info-label">Suhu Chamber</div>
           </div>
           <div class="info-item">

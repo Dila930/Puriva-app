@@ -1,6 +1,221 @@
+/* =====================================
+   Animations & Transitions
+   ===================================== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInFromLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInFromRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+// Page transition
+.forum-container {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+// Header animation
+.header {
+  animation: slideInFromLeft 0.6s ease-out;
+}
+
+// Stats animation
+.forum-stats {
+  .stat-pill {
+    animation: fadeIn 0.6s ease-out;
+    animation-fill-mode: both;
+    
+    @for $i from 1 through 5 {
+      &:nth-child(#{$i}) {
+        animation-delay: 0.1s * $i;
+      }
+    }
+  }
+}
+
+// Categories animation
+.categories-grid {
+  .category-item {
+    animation: fadeIn 0.6s ease-out;
+    animation-fill-mode: both;
+    
+    @for $i from 1 through 10 {
+      &:nth-child(#{$i}) {
+        animation-delay: 0.1s * $i;
+      }
+    }
+    
+    &:hover {
+      animation: pulse 2s infinite ease-in-out;
+    }
+  }
+}
+
+// Thread items animation
+.thread-list {
+  .thread-item {
+    animation: slideInFromRight 0.6s ease-out;
+    animation-fill-mode: both;
+    
+    @for $i from 1 through 10 {
+      &:nth-child(#{$i}) {
+        animation-delay: 0.1s * $i;
+      }
+    }
+    
+    &:hover {
+      transform: translateY(-3px) !important;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+  }
+}
+
+// Buttons animation
+ion-button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &:active {
+    transform: scale(0.96);
+  }
+  
+  &.create-thread-btn:hover {
+    animation: float 2s ease-in-out infinite;
+  }
+}
+
+// Comment items animation
+.comment-item {
+  animation: fadeIn 0.5s ease-out;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateX(5px);
+  }
+}
+
+// Input focus effects
+ion-input, ion-textarea, ion-select {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &:focus-within {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(65, 105, 225, 0.2) !important;
+  }
+}
+
+// Loading state animation
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 // Ensure content is not obscured by bottom nav
-:host ion-content {
-  --padding-bottom: 88px;
+:host {
+  ion-content {
+    --background: #f8fafc;
+    --padding-bottom: calc(88px + env(safe-area-inset-bottom)); // space for bottom nav + safe area
+    --padding-top: 0;
+    --padding-start: 0;
+    --padding-end: 0;
+  }
+
+  // Smooth fade out effect at the bottom
+  ion-content::part(scroll) {
+    padding-bottom: 24px;
+    margin-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+// Main container
+.forum-container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 16px calc(env(safe-area-inset-bottom) + 24px);
+  position: relative;
+  z-index: 1;
+}
+
+// Shadow and gradient overlay for bottom of scrollable content
+.scroll-shadow {
+  position: relative;
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: linear-gradient(to bottom, 
+      rgba(248, 250, 252, 0) 0%, 
+      rgba(248, 250, 252, 0.8) 40%, 
+      rgba(248, 250, 252, 1) 70%);
+    pointer-events: none;
+    z-index: 2;
+  }
+}
+
+// Variables
+$primary-color: #667eea;
+$secondary-color: #764ba2;
+$accent-color: #5a67d8;
+$purple-accent: #b794f6;
+$text-primary: #333;
+$text-secondary: #4a5568;
+$text-muted: #a0aec0;
+$warning-color: #f56565;
+$background-light: #f8f9fa;
+$white: #ffffff;
+
+// Gradients
+$primary-gradient: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+$header-gradient: linear-gradient(135deg, $accent-color 0%, $primary-color 50%, $purple-accent 100%);
+$button-gradient: linear-gradient(135deg, $accent-color 0%, $primary-color 100%);
+
+// Mixins
+@mixin transition($property: all, $duration: 0.3s, $timing: ease) {
+  transition: $property $duration $timing;
+}
+
+@mixin box-shadow($x: 0, $y: 2px, $blur: 10px, $color: rgba(0,0,0,0.05)) {
+  box-shadow: $x $y $blur $color;
+}
+
+@mixin hover-lift($y: -2px) {
+  transform: translateY($y);
+}
+
+@mixin border-radius($radius: 15px) {
+  border-radius: $radius;
+}
+
+@mixin input-focus($border-color: $primary-color, $shadow-color: rgba(102, 126, 234, 0.2)) {
+  outline: none;
+  border-color: $border-color;
+  box-shadow: 0 4px 20px $shadow-color;
+  transform: translateY(-2px);
 }
 
 /* New stat pill style used in header for active users, threads, comments */
@@ -271,19 +486,36 @@ ion-fab.fab-above-bottom-nav ion-fab-button {
 }
 
 .thread-item {
-  background: #f8fbff;
-  border: 1px solid #e8f4ff;
-  border-radius: 12px;
-  padding: 15px;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  border-radius: 16px;
+  padding: 20px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-}
-
-.thread-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  border-color: #4169E1;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05);
+  }
+  
+  // Subtle inner shadow for depth
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(to bottom, 
+      rgba(0,0,0,0.02) 0%, 
+      rgba(0,0,0,0.01) 50%, 
+      transparent 100%);
+    border-radius: 16px 16px 0 0;
+    z-index: 1;
+  }
 }
 
 .thread-header {
@@ -448,10 +680,17 @@ ion-fab.fab-above-bottom-nav ion-fab-button {
 }
 
 .comment-item {
-  background: #f8fbff;
-  padding: 12px;
-  border-radius: 10px;
-  margin-bottom: 10px;
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.02);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  }
 }
 
 .comment-item.my-comment {
@@ -906,7 +1145,8 @@ ion-fab.fab-above-bottom-nav ion-fab-button {
 
 // Create Thread Modal Styles
 .create-thread-content {
-  --background: linear-gradient(135deg, #e3f2fd 0%, #f8fbff 100%);
+  // Modal background matches container background
+  --background: #{$background-light};
 }
 
 .create-thread-form {
@@ -922,56 +1162,93 @@ ion-fab.fab-above-bottom-nav ion-fab-button {
 
 /* Create Thread Modal - toolbar/header to match hero gradient */
 .create-thread-content ion-header ion-toolbar {
-  --background: linear-gradient(159deg, #4169E1 0%, #89CFF0 100%);
-  --color: #fff;
+  --background: #{$header-gradient};
+  --color: #{$white};
   --border-width: 0;
   box-shadow: none;
 }
 
 /* Create Thread Modal - form controls styling to match forum-create */
 .create-thread-form {
+  // Align with provided form styles
   background: transparent;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
 
+  // Each field block
   ion-item {
-    --background: #ffffff;
-    --border-radius: 15px;
+    --background: #{$white};
     --inner-border-width: 0 0 0 0;
     --padding-start: 12px;
     --padding-end: 12px;
-    border: 2px solid #e8f4ff;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
-    margin-bottom: 14px;
+    border: 2px solid rgba(102, 126, 234, 0.1);
+    @include border-radius(15px);
+    @include box-shadow(0, 2px, 10px, rgba(0, 0, 0, 0.04));
   }
 
   ion-label {
-    font-size: 13px;
+    font-size: 16px; // match .form-label
     font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 6px;
+    color: $text-secondary;
+    margin-bottom: 10px;
   }
 
+  // Inputs
   ion-input,
   ion-textarea,
   ion-select {
-    --color: #2c3e50;
-    --placeholder-color: #95a5a6;
-    --padding-start: 12px;
-    --padding-end: 12px;
+    --color: #{$text-secondary};
+    --placeholder-color: #{$text-muted};
+    --padding-start: 15px;
+    --padding-end: 15px;
+    font-size: 16px;
+    background: #{$white};
+  }
+
+  // Select arrow
+  ion-select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 12px center;
+    background-repeat: no-repeat;
+    background-size: 16px;
   }
 
   ion-textarea {
-    --background: #ffffff;
-    --border-radius: 12px;
+    --background: #{$white};
+    --border-radius: 15px;
+    min-height: 120px;
+    font-family: inherit;
   }
 
-  /* Primary submit button */
+  // Focus interactions
+  ion-input:focus-within,
+  ion-textarea:focus-within,
+  ion-select:focus-within,
+  ion-item.item-has-focus {
+    border-color: $primary-color;
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.2);
+    transform: translateY(-2px);
+  }
+
+  // Submit Button
   ion-button {
-    --background: linear-gradient(135deg, #4169E1, #667eea);
-    --color: #fff;
+    --background: #{$button-gradient};
+    --color: #{$white};
     --border-radius: 15px;
     height: 48px;
     font-weight: 600;
-    box-shadow: 0 6px 20px rgba(65, 105, 225, 0.25);
+    @include box-shadow(0, 4px, 20px, rgba(90, 103, 216, 0.3));
+
+    &:hover {
+      @include hover-lift(-3px);
+      box-shadow: 0 8px 30px rgba(90, 103, 216, 0.4);
+    }
+
+    &:active {
+      @include hover-lift(-1px);
+    }
   }
 }
 
@@ -1013,11 +1290,10 @@ ion-fab.fab-above-bottom-nav ion-fab-button {
 
 @media (max-width: 430px) {
   .forum-container {
-    padding: 15px;
-  }
-  
-  .header {
-    padding: 20px;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 20px 16px;
+    position: relative;
   }
 
   .forum-stats {

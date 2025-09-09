@@ -1,0 +1,1926 @@
+// =============================================================================
+// VARIABLES
+// =============================================================================
+
+// Color Palette
+$colors: (
+  // Brand Colors - Softer Purple/Blue/Pink theme
+  primary: #A78BFA,      // Softer Purple
+  primary-light: #F8F7FF,
+  primary-dark: #8B5CF6,
+  
+  secondary: #F8BBD9,    // Softer Pink
+  secondary-light: #FDF2F8,
+  secondary-dark: #EC4899,
+  
+  tertiary: #93C5FD,     // Softer Blue
+  tertiary-light: #F0F9FF,
+  tertiary-dark: #3B82F6,
+  
+  // Status Colors
+  success: #10B981,
+  success-light: #D1FAE5,
+  success-dark: #047857,
+  
+  warning: #F59E0B,
+  warning-light: #FEF3C7,
+  warning-dark: #D97706,
+  
+  danger: #EF4444,
+  danger-light: #FEE2E2,
+  danger-dark: #DC2626,
+  
+  info: #06B6D4,        // Cyan blue
+  info-light: #CFFAFE,
+  info-dark: #0891B2,
+  
+  // Neutral Palette
+  white: #FFFFFF,
+  black: #000000,
+  
+  // Text colors
+  text-light: #C4B5FD,   // Softer light purple
+  text-medium: #64748B,
+  text-dark: #475569,
+  text-darker: #334155,
+  text-darkest: #1E293B,
+  text-black: #0F172A,
+  
+  // Semantic Colors
+  border-light: #F0F0FF,
+  border-default: #E0E7FF,
+  border-strong: #D1D5F0,
+  
+  background-primary: #FFFFFF,
+  background-secondary: #FDFDFF,  // Very subtle purple tint
+  background-tertiary: #FAFAFF,
+  
+  // Gradient Colors - Softer tones
+  gradient-purple: #A78BFA,
+  gradient-blue: #93C5FD,
+  gradient-pink: #F8BBD9,
+  gradient-cyan: #67E8F9,
+  gradient-indigo: #A5B4FC,
+  gradient-violet: #C4B5FD,
+);
+
+// Import sass:map for the new map.get() function
+@use 'sass:map';
+
+// Gradient System
+$gradients: (
+  primary: linear-gradient(135deg, #{map.get($colors, 'gradient-purple')}, #{map.get($colors, 'gradient-blue')}),
+  secondary: linear-gradient(135deg, #{map.get($colors, 'gradient-pink')}, #{map.get($colors, 'gradient-purple')}),
+  tertiary: linear-gradient(135deg, #{map.get($colors, 'gradient-blue')}, #{map.get($colors, 'gradient-cyan')}),
+  rainbow: linear-gradient(135deg, 
+    #{map.get($colors, 'gradient-purple')}, 
+    #{map.get($colors, 'gradient-pink')}, 
+    #{map.get($colors, 'gradient-blue')}
+  ),
+  sunset: linear-gradient(135deg, 
+    #{map.get($colors, 'gradient-pink')}, 
+    #{map.get($colors, 'gradient-purple')}, 
+    #{map.get($colors, 'gradient-indigo')}
+  ),
+  ocean: linear-gradient(135deg, 
+    #{map.get($colors, 'gradient-blue')}, 
+    #{map.get($colors, 'gradient-cyan')}, 
+    #{map.get($colors, 'gradient-indigo')}
+  ),
+  aurora: linear-gradient(135deg, 
+    #{map.get($colors, 'gradient-violet')}, 
+    #{map.get($colors, 'gradient-pink')}, 
+    #{map.get($colors, 'gradient-cyan')}
+  ),
+);
+
+// Shadow System
+$shadows: (
+  xs: 0 1px 2px rgba(167, 139, 250, 0.04),
+  sm: 0 1px 3px rgba(167, 139, 250, 0.06),
+  default: 0 2px 8px rgba(167, 139, 250, 0.08),
+  md: 0 4px 12px rgba(167, 139, 250, 0.10),
+  lg: 0 8px 24px rgba(167, 139, 250, 0.12),
+  xl: 0 16px 32px rgba(167, 139, 250, 0.15),
+  hover: 0 4px 16px rgba(167, 139, 250, 0.10),
+  focus: 0 0 0 3px rgba(167, 139, 250, 0.10),
+  glow: 0 0 20px rgba(167, 139, 250, 0.15),
+);
+
+// Border Radius System
+$border-radius: (
+  none: 0,
+  xs: 4px,
+  sm: 6px,
+  default: 8px,
+  md: 12px,
+  lg: 16px,
+  xl: 20px,
+  2xl: 24px,
+  3xl: 32px,
+  full: 9999px,
+);
+
+// Spacing System
+$spacing: (
+  0: 0,
+  px: 1px,
+  0.5: 2px,
+  1: 4px,
+  1.5: 6px,
+  2: 8px,
+  2.5: 10px,
+  3: 12px,
+  3.5: 14px,
+  4: 16px,
+  5: 20px,
+  6: 24px,
+  7: 28px,
+  8: 32px,
+  10: 40px,
+  12: 48px,
+  16: 64px,
+  20: 80px,
+  24: 96px,
+);
+
+// Typography System
+$font-sizes: (
+  2xs: 0.625rem,  // 10px
+  xs: 0.75rem,    // 12px
+  sm: 0.875rem,   // 14px
+  base: 1rem,     // 16px
+  lg: 1.125rem,   // 18px
+  xl: 1.25rem,    // 20px
+  2xl: 1.5rem,    // 24px
+  3xl: 1.875rem,  // 30px
+  4xl: 2.25rem,   // 36px
+);
+
+$line-heights: (
+  none: 1,
+  tight: 1.25,
+  snug: 1.375,
+  normal: 1.5,
+  relaxed: 1.625,
+  loose: 2,
+);
+
+$font-weights: (
+  thin: 100,
+  extralight: 200,
+  light: 300,
+  normal: 400,
+  medium: 500,
+  semibold: 600,
+  bold: 700,
+  extrabold: 800,
+  black: 900,
+);
+
+// Transition System
+$transitions: (
+  none: none,
+  fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+  normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+  slow: 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+  bounce: 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55),
+  elastic: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+);
+
+// Z-Index Scale
+$z-index: (
+  hide: -1,
+  auto: auto,
+  base: 0,
+  docked: 10,
+  dropdown: 1000,
+  sticky: 1020,
+  banner: 1030,
+  overlay: 1040,
+  modal: 1050,
+  popover: 1060,
+  skiplink: 1070,
+  toast: 1080,
+  tooltip: 1090,
+);
+
+// =============================================================================
+// MIXINS
+// =============================================================================
+
+@mixin card-base($elevated: false, $gradient: false) {
+  background: map-get($colors, background-primary);
+  border: 1px solid map-get($colors, border-light);
+  border-radius: map-get($border-radius, lg);
+  position: relative;
+  overflow: hidden;
+  
+  @if $elevated {
+    box-shadow: map-get($shadows, lg);
+  } @else {
+    box-shadow: map-get($shadows, sm);
+  }
+  
+  @if $gradient {
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: map-get($gradients, rainbow);
+      z-index: 1;
+    }
+  }
+}
+
+@mixin gradient-background($gradient-name: 'primary') {
+  background: map-get($gradients, $gradient-name);
+  color: map-get($colors, white);
+  
+  .label, .text {
+    color: rgba(255, 255, 255, 0.9);
+  }
+  
+  .value, .title {
+    color: map-get($colors, white);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+}
+
+@mixin hover-lift($scale: 1, $glow: false) {
+  transition: all map-get($transitions, normal);
+  
+  &:hover {
+    transform: translateY(-#{4px * $scale}) scale(1.02);
+    box-shadow: map-get($shadows, lg);
+    
+    @if $glow {
+      box-shadow: map-get($shadows, glow);
+    }
+  }
+  
+  &:active {
+    transform: translateY(-#{2px * $scale}) scale(1.01);
+    transition: all map-get($transitions, fast);
+  }
+}
+
+@mixin gradient-border($gradient-name: 'primary', $width: 2px) {
+  position: relative;
+  background: map-get($colors, background-primary);
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: map-get($gradients, $gradient-name);
+    border-radius: inherit;
+    padding: $width;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    z-index: -1;
+  }
+}
+
+@mixin text-gradient($gradient-name: 'primary') {
+  background: map-get($gradients, $gradient-name);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease-in-out infinite;
+}
+
+@mixin glass-effect($opacity: 0.1) {
+  background: rgba(255, 255, 255, $opacity);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+@mixin text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin text-truncate-multiline($lines: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@mixin focus-ring($color: map-get($colors, primary)) {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  
+  &:focus-visible {
+    box-shadow: 0 0 0 3px rgba($color, 0.15);
+  }
+}
+
+@mixin responsive-grid($min-width: 280px, $gap: map-get($spacing, 4)) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax($min-width, 1fr));
+  gap: $gap;
+}
+
+@mixin loading-shimmer {
+  position: relative;
+  overflow: hidden;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(139, 92, 246, 0.3),
+      transparent
+    );
+    animation: shimmer 2s infinite;
+  }
+}
+
+// =============================================================================
+// KEYFRAME ANIMATIONS
+// =============================================================================
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes bounce-in {
+  0% { 
+    transform: scale(0.3); 
+    opacity: 0; 
+  }
+  50% { 
+    transform: scale(1.05); 
+    opacity: 0.8; 
+  }
+  70% { 
+    transform: scale(0.9); 
+    opacity: 0.9; 
+  }
+  100% { 
+    transform: scale(1); 
+    opacity: 1; 
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+// =============================================================================
+// BASE STYLES
+// =============================================================================
+
+.admin-content {
+  --padding-bottom: #{map-get($spacing, 24)};
+  --padding-start: #{map-get($spacing, 2)};
+  --padding-end: #{map-get($spacing, 2)};
+  --background: #{map-get($colors, background-secondary)};
+  
+  min-height: calc(100vh - var(--padding-bottom));
+  background: var(--background);
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(167, 139, 250, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(248, 187, 217, 0.05) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(147, 197, 253, 0.06) 0%, transparent 50%);
+  color: map-get($colors, text-black);
+  position: relative;
+}
+
+.container {
+  padding: map-get($spacing, 4) map-get($spacing, 3) map-get($spacing, 6);
+  margin: 0 auto;
+  max-width: 560px;
+  width: 100%;
+  
+  @media (min-width: 640px) {
+    padding-left: map-get($spacing, 5);
+    padding-right: map-get($spacing, 5);
+  }
+}
+
+// =============================================================================
+// IONIC COMPONENTS
+// =============================================================================
+
+ion-header,
+ion-toolbar {
+  --background: #{map-get($colors, background-primary)};
+  --ion-toolbar-background: #{map-get($colors, background-primary)};
+  --border-color: #{map-get($colors, border-light)};
+  --ion-toolbar-border-color: #{map-get($colors, border-light)};
+  
+  border-bottom: 1px solid var(--border-color);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  
+  // Add gradient accent
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: map-get($gradients, rainbow);
+  }
+}
+
+ion-button {
+  --border-radius: #{map-get($border-radius, lg)};
+  --box-shadow: #{map-get($shadows, sm)};
+  --transition: #{map-get($transitions, normal)};
+  
+  &.button-outline {
+    --background: #ffffff;
+    --color: #{map-get($colors, primary-dark)};
+    --border-color: #{map-get($colors, border-default)};
+    --box-shadow: none;
+    
+    &:hover {
+      --background: #ffffff;
+      --border-color: #{map-get($colors, primary)};
+      transform: none;
+    }
+  }
+  
+  &.button-fill {
+    --background: linear-gradient(135deg, #{map-get($colors, primary)}, #{map-get($colors, tertiary)});
+    --color: #{map-get($colors, white)};
+    
+    &:hover {
+      --background: linear-gradient(135deg, #{map-get($colors, primary-dark)}, #{map-get($colors, tertiary-dark)});
+      transform: translateY(-2px);
+    }
+  }
+  
+  &.gradient-button {
+    --background: transparent;
+    background: linear-gradient(135deg, #{map-get($colors, primary)}, #{map-get($colors, secondary)});
+    color: map-get($colors, white);
+    
+    &:hover {
+      background: linear-gradient(135deg, #{map-get($colors, primary-dark)}, #{map-get($colors, secondary-dark)});
+      transform: translateY(-2px);
+      box-shadow: map-get($shadows, glow);
+    }
+  }
+}
+
+// =============================================================================
+// BUTTONS & ACTIONS
+// =============================================================================
+
+// Base button styles
+.btn-base {
+  padding: map-get($spacing, 3) map-get($spacing, 5);
+  border-radius: map-get($border-radius, lg);
+  font-weight: map-get($font-weights, medium);
+  font-size: map-get($font-sizes, sm);
+  transition: all map-get($transitions, normal);
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: map-get($spacing, 2);
+  text-decoration: none;
+  min-height: 44px; // Touch-friendly minimum
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+}
+
+// Primary button with soft but visible gradient
+.btn-primary {
+  @extend .btn-base;
+  background: linear-gradient(135deg, #{map-get($colors, primary)}, #{map-get($colors, tertiary)});
+  color: map-get($colors, white);
+  box-shadow: map-get($shadows, sm);
+  
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, #{map-get($colors, primary-dark)}, #{map-get($colors, tertiary-dark)});
+    transform: translateY(-2px);
+    box-shadow: map-get($shadows, md);
+  }
+  
+  &:active:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: map-get($shadows, sm);
+  }
+}
+
+// Secondary button with soft colored outline
+.btn-secondary {
+  @extend .btn-base;
+  background: rgba(167, 139, 250, 0.08);
+  color: map-get($colors, primary-dark);
+  border: 2px solid rgba(167, 139, 250, 0.3);
+  
+  &:hover:not(:disabled) {
+    background: rgba(167, 139, 250, 0.15);
+    border-color: map-get($colors, primary);
+    transform: translateY(-1px);
+  }
+  
+  &:active:not(:disabled) {
+    transform: translateY(0);
+  }
+}
+
+// Soft gradient button with visible colors
+.btn-soft {
+  @extend .btn-base;
+  background: linear-gradient(135deg, 
+    rgba(167, 139, 250, 0.15), 
+    rgba(147, 197, 253, 0.12)
+  );
+  color: map-get($colors, primary-dark);
+  border: 1px solid rgba(167, 139, 250, 0.25);
+  
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, 
+      rgba(167, 139, 250, 0.22), 
+      rgba(147, 197, 253, 0.18)
+    );
+    transform: translateY(-1px);
+    box-shadow: map-get($shadows, sm);
+  }
+}
+
+// Success button
+.btn-success {
+  @extend .btn-base;
+  background: linear-gradient(135deg, #{map-get($colors, success)}, #{map-get($colors, gradient-cyan)});
+  color: map-get($colors, white);
+  
+  &:hover:not(:disabled) {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+    box-shadow: map-get($shadows, md);
+  }
+}
+
+// Warning button  
+.btn-warning {
+  @extend .btn-base;
+  background: linear-gradient(135deg, #{map-get($colors, warning)}, #{map-get($colors, gradient-pink)});
+  color: map-get($colors, white);
+  
+  &:hover:not(:disabled) {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+    box-shadow: map-get($shadows, md);
+  }
+}
+
+// Danger button
+.btn-danger {
+  @extend .btn-base;
+  background: linear-gradient(135deg, #{map-get($colors, danger)}, #{map-get($colors, secondary-dark)});
+  color: map-get($colors, white);
+  
+  &:hover:not(:disabled) {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+    box-shadow: map-get($shadows, md);
+  }
+}
+
+// Ghost button
+.btn-ghost {
+  @extend .btn-base;
+  background: transparent;
+  color: map-get($colors, primary);
+  border: 1px solid transparent;
+  
+  &:hover:not(:disabled) {
+    background: rgba(167, 139, 250, 0.05);
+    color: map-get($colors, primary-dark);
+  }
+}
+
+// Small button variant
+.btn-sm {
+  padding: map-get($spacing, 2) map-get($spacing, 4);
+  font-size: map-get($font-sizes, xs);
+  min-height: 36px;
+  border-radius: map-get($border-radius, default);
+}
+
+// Large button variant
+.btn-lg {
+  padding: map-get($spacing, 4) map-get($spacing, 8);
+  font-size: map-get($font-sizes, base);
+  min-height: 52px;
+  border-radius: map-get($border-radius, xl);
+}
+
+// Icon button with visible background
+.btn-icon {
+  @extend .btn-base;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: map-get($border-radius, lg);
+  background: rgba(167, 139, 250, 0.15);
+  color: map-get($colors, primary-dark);
+  border: 1px solid rgba(167, 139, 250, 0.2);
+  
+  &:hover:not(:disabled) {
+    background: rgba(167, 139, 250, 0.25);
+    transform: scale(1.05);
+  }
+  
+  &.btn-icon-sm {
+    width: 36px;
+    height: 36px;
+    border-radius: map-get($border-radius, default);
+  }
+  
+  &.btn-icon-lg {
+    width: 52px;
+    height: 52px;
+    border-radius: map-get($border-radius, xl);
+  }
+}
+
+// Button group
+.btn-group {
+  display: inline-flex;
+  border-radius: map-get($border-radius, lg);
+  overflow: hidden;
+  box-shadow: map-get($shadows, sm);
+  
+  .btn-base {
+    border-radius: 0;
+    border-right: 1px solid rgba(167, 139, 250, 0.1);
+    
+    &:first-child {
+      border-top-left-radius: map-get($border-radius, lg);
+      border-bottom-left-radius: map-get($border-radius, lg);
+    }
+    
+    &:last-child {
+      border-top-right-radius: map-get($border-radius, lg);
+      border-bottom-right-radius: map-get($border-radius, lg);
+      border-right: none;
+    }
+    
+    &:only-child {
+      border-radius: map-get($border-radius, lg);
+      border-right: none;
+    }
+  }
+}
+
+// Floating Action Button - Enhanced
+.fab {
+  position: fixed;
+  bottom: map-get($spacing, 6);
+  right: map-get($spacing, 6);
+  width: 56px;
+  height: 56px;
+  border-radius: map-get($border-radius, full);
+  background: linear-gradient(135deg, #{map-get($colors, primary)}, #{map-get($colors, secondary)});
+  color: map-get($colors, white);
+  border: none;
+  box-shadow: map-get($shadows, lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: map-get($font-sizes, xl);
+  transition: all map-get($transitions, normal);
+  z-index: map-get($z-index, modal);
+  cursor: pointer;
+  
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: map-get($shadows, glow);
+  }
+  
+  &:active {
+    transform: scale(1.05);
+  }
+  
+  // FAB variants
+  &.fab-sm {
+    width: 48px;
+    height: 48px;
+    font-size: map-get($font-sizes, lg);
+  }
+  
+  &.fab-lg {
+    width: 64px;
+    height: 64px;
+    font-size: map-get($font-sizes, 2xl);
+  }
+}
+
+// Quick action buttons
+.quick-actions {
+  display: flex;
+  gap: map-get($spacing, 3);
+  flex-wrap: wrap;
+  margin: map-get($spacing, 4) 0;
+  
+  .quick-btn {
+    @extend .btn-soft;
+    flex: 1;
+    min-width: 120px;
+    
+    @media (max-width: 480px) {
+      flex: 1 1 100%;
+    }
+  }
+}
+
+// =============================================================================
+// ENHANCED STATS GRID
+// =============================================================================
+
+.stats-grid {
+  @include responsive-grid(160px, map-get($spacing, 4));
+  margin: map-get($spacing, 4) 0 map-get($spacing, 5);
+  
+  @media (min-width: 480px) {
+    gap: map-get($spacing, 5);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: map-get($spacing, 6);
+  }
+  
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.stat {
+  @include card-base(true, false);
+  @include hover-lift(1, false);
+  @include focus-ring;
+  
+  padding: map-get($spacing, 4);
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all map-get($transitions, normal);
+  animation: bounce-in 0.6s ease-out;
+  
+  // Force solid white boxes; only use subtle colored borders per variant
+  &.stat-primary {
+    background: map-get($colors, background-primary);
+    border: 1px solid rgba(167, 139, 250, 0.25);
+    color: map-get($colors, text-black);
+  }
+  
+  &.stat-secondary {
+    background: map-get($colors, background-primary);
+    border: 1px solid rgba(248, 187, 217, 0.25);
+    color: map-get($colors, text-black);
+  }
+  
+  &.stat-tertiary {
+    background: map-get($colors, background-primary);
+    border: 1px solid rgba(147, 197, 253, 0.25);
+    color: map-get($colors, text-black);
+  }
+  
+  &.stat-success {
+    background: map-get($colors, background-primary);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    color: map-get($colors, text-black);
+  }
+  
+  // Glass effect variant with softer opacity
+  &.stat-glass {
+    @include glass-effect(0.08);
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(167, 139, 250, 0.15);
+  }
+  
+  // Gentle hover only, no extra animation to keep crisp white look
+  &:hover {
+    animation: none;
+    transform: translateY(-2px);
+    box-shadow: map-get($shadows, md);
+  }
+  
+  .label {
+    font-size: map-get($font-sizes, sm);
+    font-weight: map-get($font-weights, medium);
+    color: map-get($colors, text-dark);
+    margin-bottom: map-get($spacing, 1.5);
+    line-height: map-get($line-heights, tight);
+    @include text-truncate;
+    text-transform: uppercase;
+    letter-spacing: 0.3px; // Reduced from 0.5px
+  }
+  
+  .value {
+    font-size: map-get($font-sizes, 2xl);
+    font-weight: map-get($font-weights, bold); // solid number
+    color: map-get($colors, text-black);
+    line-height: map-get($line-heights, none);
+    
+    // Force solid text even if gradient-text class is present from markup
+    &.gradient-text {
+      background: none !important;
+      -webkit-background-clip: initial !important;
+      background-clip: initial !important;
+      -webkit-text-fill-color: currentColor !important;
+      color: map-get($colors, text-black) !important;
+    }
+  }
+  
+  .trend {
+    display: flex;
+    align-items: center;
+    gap: map-get($spacing, 1.5);
+    margin-top: map-get($spacing, 2);
+    font-size: map-get($font-sizes, sm);
+    font-weight: map-get($font-weights, semibold);
+    
+    &.positive {
+      color: map-get($colors, success-dark);
+    }
+    
+    &.negative {
+      color: map-get($colors, danger-dark);
+    }
+    
+    &.neutral {
+      color: map-get($colors, text-medium);
+    }
+  }
+  
+  // Subtle decorative elements
+  &::after {
+    content: '';
+    position: absolute;
+    top: -30%;
+    right: -30%;
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle, rgba(167, 139, 250, 0.05) 0%, transparent 70%);
+    border-radius: 50%;
+    transition: all map-get($transitions, slow);
+    opacity: 0;
+  }
+  
+  &:hover::after {
+    opacity: 1;
+    top: -20%;
+    right: -20%;
+  }
+  
+  @media (min-width: 640px) {
+    padding: map-get($spacing, 5);
+    min-height: 120px;
+  }
+}
+
+// =============================================================================
+// SECTIONS
+// =============================================================================
+
+.section {
+  @include card-base(true, true);
+  
+  margin: map-get($spacing, 6) map-get($spacing, 4) map-get($spacing, 4);
+  overflow: hidden;
+  animation: bounce-in 0.8s ease-out;
+  
+  &:first-of-type {
+    margin-top: 0;
+  }
+  
+  &.glass-section {
+    @include glass-effect(0.1);
+    @include gradient-border('rainbow');
+  }
+  
+  .section-title {
+    padding: map-get($spacing, 4) map-get($spacing, 5);
+    font-size: map-get($font-sizes, lg);
+    font-weight: map-get($font-weights, bold);
+    color: map-get($colors, text-black);
+    background: map-get($colors, background-primary);
+    border-bottom: 1px solid map-get($colors, border-light);
+    line-height: map-get($line-heights, tight);
+    position: relative;
+    
+    &.gradient-title {
+      @include text-gradient('primary');
+    }
+    
+    // Decorative accent
+    &::before {
+      content: '';
+      position: absolute;
+      left: map-get($spacing, 5);
+      bottom: 0;
+      width: 60px;
+      height: 3px;
+      background: map-get($gradients, rainbow);
+      border-radius: map-get($border-radius, full);
+    }
+    
+    .section-subtitle {
+      display: block;
+      margin-top: map-get($spacing, 1);
+      font-size: map-get($font-sizes, sm);
+      font-weight: map-get($font-weights, normal);
+      color: map-get($colors, text-medium);
+    }
+  }
+  
+  .section-content {
+    padding: map-get($spacing, 5);
+    background: map-get($colors, background-primary);
+  }
+}
+
+// =============================================================================
+// CHARTS
+// =============================================================================
+
+.chart-wrapper {
+  padding: map-get($spacing, 3) map-get($spacing, 3) map-get($spacing, 4);
+  background: map-get($colors, background-primary);
+  border-radius: map-get($border-radius, lg);
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: map-get($gradients, ocean);
+    border-radius: map-get($border-radius, lg) map-get($border-radius, lg) 0 0;
+  }
+}
+
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: map-get($spacing, 4);
+  padding: 0 map-get($spacing, 4) map-get($spacing, 3);
+  font-size: map-get($font-sizes, sm);
+  color: map-get($colors, text-darkest);
+  background: map-get($colors, background-primary);
+  
+  .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: map-get($spacing, 2);
+    padding: map-get($spacing, 1.5) map-get($spacing, 3);
+    background: rgba(139, 92, 246, 0.05);
+    border-radius: map-get($border-radius, full);
+    transition: all map-get($transitions, fast);
+    
+    &:hover {
+      background: rgba(139, 92, 246, 0.1);
+      transform: scale(1.05);
+    }
+    
+    .legend-swatch {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border-radius: map-get($border-radius, sm);
+      flex-shrink: 0;
+      box-shadow: map-get($shadows, xs);
+    }
+  }
+}
+
+.chart-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: map-get($spacing, 3);
+  padding: 0 map-get($spacing, 3) map-get($spacing, 4);
+  
+  ion-button {
+    --background: #{map-get($colors, background-primary)};
+    --border-color: #{map-get($colors, border-default)};
+    --color: #{map-get($colors, primary)};
+    --box-shadow: #{map-get($shadows, sm)};
+    
+    &.button-solid {
+      background: map-get($gradients, primary);
+      --color: #{map-get($colors, white)};
+      
+      &:hover {
+        background: map-get($gradients, secondary);
+        transform: translateY(-2px);
+        box-shadow: map-get($shadows, glow);
+      }
+    }
+  }
+}
+
+// =============================================================================
+// TABLES
+// =============================================================================
+
+.user-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: map-get($colors, primary) transparent;
+  border-radius: map-get($border-radius, lg);
+  
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: rgba(139, 92, 246, 0.1);
+    border-radius: map-get($border-radius, full);
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: map-get($gradients, primary);
+    border-radius: map-get($border-radius, full);
+  }
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+  border-radius: map-get($border-radius, lg);
+  overflow: hidden;
+  
+  thead {
+    background: map-get($gradients, primary);
+    
+    th {
+      text-align: left;
+      font-size: map-get($font-sizes, sm);
+      font-weight: map-get($font-weights, bold);
+      color: map-get($colors, white);
+      padding: map-get($spacing, 4);
+      border: none;
+      position: sticky;
+      top: 0;
+      z-index: map-get($z-index, sticky);
+      white-space: nowrap;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  tbody {
+    td {
+      font-size: map-get($font-sizes, sm);
+      line-height: map-get($line-heights, snug);
+      padding: map-get($spacing, 4);
+      border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+      vertical-align: top;
+      background: map-get($colors, background-primary);
+      transition: all map-get($transitions, fast);
+      
+      .primary-text {
+        font-weight: map-get($font-weights, semibold);
+        color: map-get($colors, text-black);
+      }
+      
+      .secondary-text,
+      .muted {
+        display: block;
+        margin-top: map-get($spacing, 1);
+        font-size: map-get($font-sizes, xs);
+        color: map-get($colors, text-medium);
+        line-height: map-get($line-heights, tight);
+      }
+    }
+    
+    tr {
+      transition: all map-get($transitions, fast);
+      
+      &:hover td {
+        background: linear-gradient(90deg, 
+          rgba(167, 139, 250, 0.08), 
+          rgba(248, 187, 217, 0.06), 
+          rgba(147, 197, 253, 0.08)
+        );
+        transform: none; // Remove scale transform
+      }
+      
+      &:nth-child(even) {
+        background: rgba(167, 139, 250, 0.025);
+      }
+    }
+  }
+  
+  .uid {
+    font-family: ui-monospace, SFMono-Regular, 'SF Mono', Monaco, Menlo,
+                'Cascadia Code', 'Liberation Mono', 'Courier New', monospace;
+    font-size: map-get($font-sizes, xs);
+    font-weight: map-get($font-weights, medium);
+    color: map-get($colors, primary-dark);
+    background: rgba(167, 139, 250, 0.12);
+    padding: map-get($spacing, 1.5) map-get($spacing, 2.5);
+    border-radius: map-get($border-radius, lg);
+    border: 1px solid rgba(167, 139, 250, 0.2);
+    display: inline-block;
+  }
+  
+  .empty {
+    text-align: center;
+    color: map-get($colors, text-light);
+    font-style: italic;
+    padding: map-get($spacing, 12) map-get($spacing, 4);
+    
+    .empty-icon {
+      display: block;
+      margin: 0 auto map-get($spacing, 3);
+      width: 64px;
+      height: 64px;
+      opacity: 0.6;
+      filter: drop-shadow(0 4px 8px rgba(139, 92, 246, 0.2));
+    }
+  }
+}
+
+// =============================================================================
+// BADGES
+// =============================================================================
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  padding: map-get($spacing, 1.5) map-get($spacing, 3);
+  border-radius: map-get($border-radius, full);
+  font-size: map-get($font-sizes, xs);
+  font-weight: map-get($font-weights, bold);
+  line-height: map-get($line-heights, none);
+  text-align: center;
+  white-space: nowrap;
+  transition: all map-get($transitions, normal);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+  overflow: hidden;
+  
+  // Default variant with soft visible gradient
+  background: linear-gradient(135deg, #{map-get($colors, primary)}, #{map-get($colors, tertiary)});
+  color: map-get($colors, white);
+  box-shadow: map-get($shadows, sm);
+  
+  // Gradient variants with better visibility
+  &.primary {
+    background: linear-gradient(135deg, #{map-get($colors, primary)}, #{map-get($colors, tertiary)});
+    color: map-get($colors, white);
+  }
+  
+  &.secondary {
+    background: linear-gradient(135deg, #{map-get($colors, secondary)}, #{map-get($colors, gradient-violet)});
+    color: map-get($colors, white);
+  }
+  
+  &.tertiary {
+    background: linear-gradient(135deg, #{map-get($colors, tertiary)}, #{map-get($colors, gradient-cyan)});
+    color: map-get($colors, white);
+  }
+  
+  &.success,
+  &.green {
+    background: linear-gradient(135deg, #{map-get($colors, success)}, #{map-get($colors, gradient-cyan)});
+    color: map-get($colors, white);
+  }
+  
+  &.warning,
+  &.amber {
+    background: linear-gradient(135deg, #{map-get($colors, warning)}, #{map-get($colors, gradient-pink)});
+    color: map-get($colors, white);
+  }
+  
+  &.danger,
+  &.red {
+    background: linear-gradient(135deg, #{map-get($colors, danger)}, #{map-get($colors, gradient-purple)});
+    color: map-get($colors, white);
+  }
+  
+  &.info,
+  &.blue {
+    background: map-get($gradients, ocean);
+    color: map-get($colors, white);
+  }
+  
+  &.rainbow {
+    background: map-get($gradients, rainbow);
+    color: map-get($colors, white);
+    animation: gradient-shift 3s ease-in-out infinite;
+    background-size: 200% 200%;
+  }
+  
+  &.glass {
+    @include glass-effect(0.15);
+    background: rgba(167, 139, 250, 0.12);
+    color: map-get($colors, primary-dark);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(167, 139, 250, 0.25);
+  }
+  
+  // Size variants
+  &.badge-sm {
+    padding: map-get($spacing, 1) map-get($spacing, 2);
+    font-size: map-get($font-sizes, 2xs);
+    min-width: 24px;
+  }
+  
+  &.badge-lg {
+    padding: map-get($spacing, 2) map-get($spacing, 4);
+    font-size: map-get($font-sizes, sm);
+    min-width: 48px;
+  }
+  
+  // Dot variant with gradient
+  &.badge-dot {
+    padding: 0;
+    min-width: 12px;
+    width: 12px;
+    height: 12px;
+    background: linear-gradient(135deg, #{map-get($colors, primary)}, #{map-get($colors, tertiary)});
+    box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.15);
+    
+    &.pulse {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  }
+  
+  // Hover effects
+  &:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: map-get($shadows, lg);
+    filter: brightness(1.1);
+  }
+  
+  // Shimmer effect
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
+    transition: left 0.5s;
+  }
+  
+  &:hover::before {
+    left: 100%;
+  }
+}
+
+// =============================================================================
+// LOADING STATES
+// =============================================================================
+
+.loading {
+  @include loading-shimmer;
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(139, 92, 246, 0.1) 25%,
+    rgba(236, 72, 153, 0.1) 50%,
+    rgba(139, 92, 246, 0.1) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 2s infinite;
+  border-radius: map-get($border-radius, lg);
+  
+  &.skeleton-text {
+    height: 1em;
+    width: 100%;
+  }
+  
+  &.skeleton-title {
+    height: 1.5em;
+    width: 60%;
+  }
+  
+  &.skeleton-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: map-get($border-radius, full);
+  }
+  
+  &.skeleton-card {
+    height: 120px;
+    width: 100%;
+  }
+}
+
+// Pulse loading for interactive elements
+.pulse-loading {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+// =============================================================================
+// ENHANCED UI COMPONENTS
+// =============================================================================
+
+// Enhanced buttons with gradients
+.btn-gradient {
+  background: map-get($gradients, primary);
+  color: map-get($colors, white);
+  border: none;
+  padding: map-get($spacing, 3) map-get($spacing, 6);
+  border-radius: map-get($border-radius, xl);
+  font-weight: map-get($font-weights, semibold);
+  font-size: map-get($font-sizes, sm);
+  transition: all map-get($transitions, normal);
+  position: relative;
+  overflow: hidden;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: map-get($shadows, glow);
+    background: map-get($gradients, secondary);
+  }
+  
+  &:active {
+    transform: translateY(-1px);
+  }
+  
+  &.btn-secondary {
+    background: map-get($gradients, secondary);
+    
+    &:hover {
+      background: map-get($gradients, aurora);
+    }
+  }
+  
+  &.btn-outline {
+    background: transparent;
+    @include gradient-border('primary');
+    color: map-get($colors, primary);
+    
+    &:hover {
+      background: map-get($gradients, primary);
+      color: map-get($colors, white);
+    }
+  }
+}
+
+// Enhanced cards with glass effect
+.card-enhanced {
+  @include card-base(true, true);
+  @include glass-effect(0.1);
+  padding: map-get($spacing, 6);
+  margin: map-get($spacing, 4) 0;
+  transition: all map-get($transitions, normal);
+  
+  &:hover {
+    transform: translateY(-8px) rotateX(5deg);
+    box-shadow: map-get($shadows, xl);
+  }
+  
+  .card-header {
+    @include text-gradient('primary');
+    font-size: map-get($font-sizes, xl);
+    font-weight: map-get($font-weights, bold);
+    margin-bottom: map-get($spacing, 4);
+  }
+  
+  .card-content {
+    color: map-get($colors, text-dark);
+    line-height: map-get($line-heights, relaxed);
+  }
+}
+
+// Floating action button
+.fab {
+  position: fixed;
+  bottom: map-get($spacing, 6);
+  right: map-get($spacing, 6);
+  width: 64px;
+  height: 64px;
+  border-radius: map-get($border-radius, full);
+  background: map-get($gradients, primary);
+  color: map-get($colors, white);
+  border: none;
+  box-shadow: map-get($shadows, lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: map-get($font-sizes, xl);
+  transition: all map-get($transitions, normal);
+  z-index: map-get($z-index, modal);
+  
+  &:hover {
+    transform: scale(1.1) rotate(15deg);
+    box-shadow: map-get($shadows, glow);
+    background: map-get($gradients, secondary);
+  }
+  
+  &:active {
+    transform: scale(1.05) rotate(10deg);
+  }
+}
+
+// Notification/Alert with gradient
+.alert-gradient {
+  padding: map-get($spacing, 4) map-get($spacing, 5);
+  border-radius: map-get($border-radius, lg);
+  margin: map-get($spacing, 4) 0;
+  position: relative;
+  overflow: hidden;
+  color: map-get($colors, white);
+  
+  &.alert-success {
+    background: linear-gradient(135deg, #{map-get($colors, success)}, #{map-get($colors, gradient-cyan)});
+  }
+  
+  &.alert-warning {
+    background: linear-gradient(135deg, #{map-get($colors, warning)}, #{map-get($colors, gradient-pink)});
+  }
+  
+  &.alert-danger {
+    background: linear-gradient(135deg, #{map-get($colors, danger)}, #{map-get($colors, gradient-purple)});
+  }
+  
+  &.alert-info {
+    background: map-get($gradients, ocean);
+  }
+  
+  .alert-icon {
+    float: left;
+    margin-right: map-get($spacing, 3);
+    font-size: map-get($font-sizes, xl);
+  }
+  
+  .alert-title {
+    font-weight: map-get($font-weights, bold);
+    margin-bottom: map-get($spacing, 1);
+  }
+  
+  .alert-message {
+    opacity: 0.9;
+  }
+}
+
+// Progress bar with gradient
+.progress-gradient {
+  width: 100%;
+  height: 12px;
+  background: rgba(139, 92, 246, 0.1);
+  border-radius: map-get($border-radius, full);
+  overflow: hidden;
+  position: relative;
+  
+  .progress-bar {
+    height: 100%;
+    background: map-get($gradients, rainbow);
+    border-radius: inherit;
+    transition: width map-get($transitions, normal);
+    position: relative;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+      );
+      animation: shimmer 2s infinite;
+    }
+  }
+  
+  &.progress-sm {
+    height: 8px;
+  }
+  
+  &.progress-lg {
+    height: 16px;
+  }
+}
+
+// =============================================================================
+// RESPONSIVE DESIGN
+// =============================================================================
+
+@media (min-width: 640px) {
+  .container {
+    max-width: 720px;
+  }
+  
+  .stats-grid {
+    gap: map-get($spacing, 6);
+  }
+  
+  .stat {
+    min-height: 140px;
+    
+    .value {
+      font-size: map-get($font-sizes, 3xl);
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 960px;
+  }
+  
+  .admin-content {
+    --padding-start: #{map-get($spacing, 5)};
+    --padding-end: #{map-get($spacing, 5)};
+  }
+  
+  .section-title {
+    font-size: map-get($font-sizes, xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1200px;
+  }
+  
+  .stats-grid {
+    gap: map-get($spacing, 8);
+  }
+  
+  .stat {
+    min-height: 160px;
+    
+    .value {
+      font-size: map-get($font-sizes, 4xl);
+    }
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1400px;
+  }
+}
+
+// =============================================================================
+// SPECIFIC DASHBOARD FIXES WITH GRADIENT ENHANCEMENTS
+// =============================================================================
+
+// Stats container with enhanced gradients
+.stats-container,
+.dashboard-stats {
+  background: map-get($colors, background-primary);
+  padding: map-get($spacing, 4);
+  border-radius: map-get($border-radius, xl);
+  
+  .stat-item {
+    background: map-get($colors, background-primary);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    position: relative;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      padding: 2px;
+      background: map-get($gradients, rainbow);
+      border-radius: inherit;
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: subtract;
+      -webkit-mask-composite: destination-out;
+    }
+    
+    .stat-title {
+      color: map-get($colors, text-dark);
+      font-weight: map-get($font-weights, semibold);
+    }
+    
+    .stat-number {
+      @include text-gradient('primary');
+      font-weight: map-get($font-weights, extrabold);
+    }
+  }
+}
+
+// Chart section with glass effect
+.chart-section {
+  background: map-get($colors, background-primary);
+  border: 1px solid map-get($colors, border-light);
+  border-radius: map-get($border-radius, xl);
+
+  .chart-header {
+    background: map-get($colors, background-primary);
+    border-bottom: 1px solid map-get($colors, border-light);
+    padding: map-get($spacing, 4);
+    border-radius: map-get($border-radius, xl) map-get($border-radius, xl) 0 0;
+    
+    .chart-title {
+      color: map-get($colors, text-black);
+      font-weight: map-get($font-weights, bold);
+      font-size: map-get($font-sizes, lg);
+    }
+  }
+  
+  .chart-wrapper {
+    background: map-get($colors, background-primary);
+    padding: map-get($spacing, 4);
+  }
+}
+
+// Table section improvements
+.table-section {
+  @include glass-effect(0.05);
+  border-radius: map-get($border-radius, xl);
+  overflow: hidden;
+  
+  .table-header {
+    background: map-get($gradients, primary);
+    color: map-get($colors, white);
+    padding: map-get($spacing, 4) map-get($spacing, 5);
+    
+    h3, h4, .title {
+      color: map-get($colors, white);
+      margin: 0;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  .table-content {
+    background: map-get($colors, background-primary);
+  }
+}
+
+// Enhanced bottom navigation
+.bottom-nav,
+.tab-bar,
+ion-tab-bar {
+  --background: rgba(255, 255, 255, 0.9);
+  --color: #{map-get($colors, text-dark)};
+  border-top: 1px solid rgba(139, 92, 246, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: map-get($gradients, rainbow);
+  }
+  
+  ion-tab-button {
+    --color: #{map-get($colors, text-dark)};
+    --color-selected: #{map-get($colors, primary)};
+    
+    &.tab-selected {
+      --color: #{map-get($colors, primary)};
+      position: relative;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 32px;
+        height: 3px;
+        background: map-get($gradients, primary);
+        border-radius: 0 0 map-get($border-radius, full) map-get($border-radius, full);
+      }
+    }
+  }
+}
+
+// Header/toolbar with gradient accent
+.header-section,
+.page-header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: map-get($gradients, rainbow);
+  }
+  
+  .header-title {
+    @include text-gradient('primary');
+    font-weight: map-get($font-weights, extrabold);
+  }
+  
+  .header-subtitle {
+    color: map-get($colors, text-medium);
+  }
+}
+
+// Enhanced action buttons
+.action-buttons {
+  display: flex;
+  gap: map-get($spacing, 3);
+  padding: map-get($spacing, 4);
+  background: map-get($colors, background-primary);
+  
+  ion-button {
+    flex: 1;
+    --border-radius: #{map-get($border-radius, xl)};
+    
+    &.primary-btn {
+      background: map-get($gradients, primary);
+      --color: #{map-get($colors, white)};
+      
+      &:hover {
+        background: map-get($gradients, secondary);
+        transform: translateY(-2px);
+        box-shadow: map-get($shadows, glow);
+      }
+    }
+    
+    &.secondary-btn {
+      @include gradient-border('primary');
+      --background: #{map-get($colors, background-primary)};
+      --color: #{map-get($colors, primary)};
+      
+      &:hover {
+        background: rgba(139, 92, 246, 0.1);
+        transform: translateY(-2px);
+      }
+    }
+    
+    &.success-btn {
+      background: linear-gradient(135deg, #{map-get($colors, success)}, #{map-get($colors, gradient-cyan)});
+      --color: #{map-get($colors, white)};
+      
+      &:hover {
+        filter: brightness(1.1);
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
+
+// Enhanced list items
+.list-item,
+ion-item {
+  --background: #{map-get($colors, background-primary)};
+  --color: #{map-get($colors, text-black)};
+  --border-color: rgba(139, 92, 246, 0.1);
+  transition: all map-get($transitions, fast);
+  
+  .item-title {
+    color: map-get($colors, text-black);
+    font-weight: map-get($font-weights, semibold);
+  }
+  
+  .item-subtitle {
+    color: map-get($colors, text-medium);
+  }
+  
+  &:hover {
+    --background: linear-gradient(90deg, 
+      rgba(139, 92, 246, 0.05), 
+      rgba(236, 72, 153, 0.03), 
+      rgba(59, 130, 246, 0.05)
+    );
+    transform: translateX(4px);
+  }
+}
+
+// =============================================================================
+// DARK MODE ALTERNATIVE - KEEPING GRADIENT THEME
+// =============================================================================
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-primary: #0F0F23;
+    --background-secondary: #1A1A2E;
+    --text-primary: #EAEAEA;
+    --text-secondary: #A0A0A0;
+    
+    .admin-content {
+      background: var(--background-primary);
+      background-image: 
+        radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+    }
+    
+    .stat,
+    .section,
+    .card-enhanced {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      backdrop-filter: blur(12px);
+    }
+  }
+}
+
+// =============================================================================
+// PRINT STYLES
+// =============================================================================
+
+@media print {
+  .admin-content {
+    --padding-bottom: 0;
+    min-height: auto;
+    background: white !important;
+    background-image: none !important;
+  }
+  
+  .stat,
+  .section {
+    break-inside: avoid;
+    box-shadow: none;
+    background: white !important;
+    border: 1px solid #ccc;
+  }
+  
+  .chart-controls,
+  .fab,
+  .action-buttons {
+    display: none;
+  }
+  
+  // Remove gradients for print
+  .badge,
+  .btn-gradient,
+  .stat-item::before,
+  .chart-header::after,
+  ion-header::after {
+    background: #333 !important;
+    background-image: none !important;
+  }
+}

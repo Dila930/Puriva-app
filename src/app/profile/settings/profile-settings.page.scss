@@ -1,202 +1,350 @@
-// Account Settings Page - Clean & Modern
+/* Account Settings Page - Clean & Modern Design */
+
+/* ===== ROOT VARIABLES ===== */
 .profile-detail {
-  --background: #f5f7fa;
-  
-  .header {
-    background: linear-gradient(135deg, var(--ion-color-primary) 0%, var(--ion-color-primary-shade) 100%);
-    color: white;
-    padding: 1.5rem 1.5rem 2.5rem;
-    margin-top: -56px;
-    padding-top: calc(56px + 1.5rem);
-    position: relative;
-    
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: -15px;
-      left: 0;
-      right: 0;
-      height: 30px;
-      background: linear-gradient(135deg, var(--ion-color-primary) 0%, var(--ion-color-primary-shade) 100%);
-      border-radius: 0 0 50% 50%;
-    }
-    
-    h1 {
-      font-size: 1.6rem;
-      font-weight: 600;
-      margin: 0 0 0.5rem 0;
-      letter-spacing: -0.3px;
-    }
-    
-    p {
-      font-size: 0.95rem;
-      margin: 0;
-      opacity: 0.9;
-      font-weight: 400;
-    }
-  }
-  
-  .content {
-    padding: 1.5rem 1rem;
-    position: relative;
-    z-index: 2;
-    
-    ion-list {
-      background: transparent;
-      padding: 0;
-      
-      ion-item.card {
-        --background: #3a4454;
-        --border-radius: 12px;
-        --padding-start: 1.25rem;
-        --padding-end: 1.25rem;
-        --min-height: 64px;
-        margin-bottom: 0.75rem;
-        
-        // Clean shadow
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        border: none;
-        
-        // Smooth transitions
-        transition: all 0.2s ease;
-        
-        &:hover {
-          transform: translateY(-1px);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-        
-        &:last-child {
-          margin-bottom: 0;
-        }
-        
-        ion-label {
-          font-weight: 500;
-          font-size: 0.95rem;
-          color: white;
-          margin: 0;
-        }
-        
-        ion-button {
-          --border-radius: 8px;
-          --padding-start: 0.875rem;
-          --padding-end: 0.875rem;
-          --height: 32px;
-          font-weight: 500;
-          font-size: 0.8rem;
-          text-transform: none;
-          
-          &:not([fill="clear"]) {
-            --background: var(--ion-color-primary);
-            --background-hover: var(--ion-color-primary-shade);
-            --color: white;
-          }
-        }
-        
-        ion-toggle {
-          --track-background: #5a6474;
-          --track-background-checked: var(--ion-color-primary);
-          --handle-background: white;
-          --handle-background-checked: white;
-          transform: scale(0.85);
-          
-          &::part(track) {
-            border-radius: 12px;
-          }
-          
-          &::part(handle) {
-            border-radius: 50%;
-          }
-        }
-      }
-    }
-  }
+  --bg-primary: #f8fafc;
+  --bg-card: #ffffff;
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --shadow-light: 0 2px 8px rgba(15, 23, 42, 0.08);
+  --shadow-hover: 0 4px 16px rgba(15, 23, 42, 0.12);
+  --border-radius: 16px;
+  --border-radius-large: 24px;
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 0.75rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+  --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-// Toolbar styling
-ion-header {
-  ion-toolbar {
-    --background: transparent; /* transparent header */
-    --color: white;
-    --border-width: 0;
-    
-    ion-title {
-      font-weight: 600;
-      font-size: 1rem;
-    }
-    
-    ion-back-button {
-      --color: white;
-      --icon-font-size: 1.4rem;
-      /* remove box styling */
-    }
-  }
+/* ===== MAIN CONTAINER ===== */
+.profile-detail {
+  background: var(--bg-primary);
+  min-height: 100vh;
 }
 
-// Responsive adjustments
+/* ===== HEADER SECTION ===== */
+.profile-detail .header {
+  background: linear-gradient(
+    135deg, 
+    var(--ion-color-primary) 0%, 
+    var(--ion-color-primary-shade) 100%
+  );
+  color: white;
+  padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-2xl);
+  margin-top: -56px;
+  padding-top: calc(56px + var(--spacing-lg));
+  position: relative;
+  border-radius: 0 0 var(--border-radius-large) var(--border-radius-large);
+  overflow: hidden;
+}
+
+/* Header decorative elements */
+.profile-detail .header::before {
+  content: '';
+  position: absolute;
+  bottom: -12px;
+  left: 0;
+  right: 0;
+  height: 24px;
+  background: linear-gradient(
+    135deg, 
+    var(--ion-color-primary) 0%, 
+    var(--ion-color-primary-shade) 100%
+  );
+  border-radius: 0 0 var(--border-radius-large) var(--border-radius-large);
+  opacity: 0.8;
+  z-index: -1;
+}
+
+.profile-detail .header::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  right: 0;
+  height: 32px;
+  background: linear-gradient(
+    135deg, 
+    var(--ion-color-primary-tint) 20%, 
+    transparent 80%
+  );
+  border-radius: 0 0 var(--border-radius-large) var(--border-radius-large);
+  opacity: 0.2;
+  z-index: -2;
+}
+
+/* Header typography */
+.profile-detail .header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 var(--spacing-xs) 0;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.profile-detail .header p {
+  font-size: 1rem;
+  margin: 0;
+  opacity: 0.9;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+/* ===== CONTENT SECTION ===== */
+.profile-detail .content {
+  padding: var(--spacing-xl) var(--spacing-md) var(--spacing-lg);
+  position: relative;
+  z-index: 2;
+  margin-top: 8px;
+}
+
+/* List container */
+.profile-detail .content ion-list {
+  background: transparent;
+  padding: 0;
+  margin: 0;
+}
+
+/* ===== CARD ITEMS ===== */
+.profile-detail ion-item.card {
+  --background: var(--bg-card);
+  --border-radius: var(--border-radius);
+  --padding-start: var(--spacing-lg);
+  --padding-end: var(--spacing-lg);
+  --min-height: 68px;
+  --color: var(--text-primary);
+  
+  background: var(--bg-card);
+  border-radius: var(--border-radius);
+  margin-bottom: var(--spacing-sm);
+  box-shadow: var(--shadow-light);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  transition: var(--transition);
+}
+
+.profile-detail ion-item.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+  border-color: rgba(var(--ion-color-primary-rgb), 0.1);
+}
+
+.profile-detail ion-item.card:last-child {
+  margin-bottom: 0;
+}
+
+/* Card labels */
+.profile-detail ion-item.card ion-label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* ===== BUTTONS ===== */
+.profile-detail ion-item.card ion-button {
+  --border-radius: 14px;
+  --padding-start: var(--spacing-md);
+  --padding-end: var(--spacing-md);
+  --height: 36px;
+  --background: var(--ion-color-primary);
+  --background-hover: var(--ion-color-primary-shade);
+  --color: white;
+  
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: none;
+  letter-spacing: 0.01em;
+  transition: var(--transition);
+  border-radius: 14px;
+}
+
+.profile-detail ion-item.card ion-button[fill="clear"] {
+  --background: transparent;
+  --color: var(--ion-color-primary);
+  --background-hover: rgba(var(--ion-color-primary-rgb), 0.08);
+}
+
+.profile-detail ion-item.card ion-button:hover {
+  transform: translateY(-1px);
+}
+
+/* ===== TOGGLES ===== */
+.profile-detail ion-item.card ion-toggle {
+  --track-background: #e2e8f0;
+  --track-background-checked: var(--ion-color-primary);
+  --handle-background: white;
+  --handle-background-checked: white;
+  --handle-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  
+  transform: scale(0.9);
+  transition: var(--transition);
+}
+
+.profile-detail ion-item.card ion-toggle::part(track) {
+  border-radius: 20px;
+  transition: var(--transition);
+}
+
+.profile-detail ion-item.card ion-toggle::part(handle) {
+  border-radius: 50%;
+  box-shadow: var(--handle-box-shadow);
+  transition: var(--transition);
+}
+
+/* ===== SPINNER ===== */
+.profile-detail ion-item.card ion-spinner {
+  --color: var(--ion-color-primary);
+}
+
+/* ===== TOOLBAR STYLING ===== */
+ion-header ion-toolbar {
+  --background: transparent;
+  --color: white;
+  --border-width: 0;
+}
+
+ion-header ion-toolbar ion-title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: white;
+}
+
+ion-header ion-toolbar ion-back-button {
+  --color: white;
+  --icon-font-size: 1.5rem;
+}
+
+/* ===== CONTENT BACKGROUND ===== */
+ion-content.profile-detail {
+  --background: var(--bg-primary);
+  background: var(--bg-primary);
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
 @media (min-width: 768px) {
-  .profile-detail {
-    .header {
-      padding: 2rem 2rem 3rem;
-      
-      h1 {
-        font-size: 2rem;
-      }
-      
-      p {
-        font-size: 1rem;
-      }
-    }
-    
-    .content {
-      padding: 2rem;
-      max-width: 600px;
-      margin: 0 auto;
-      
-      ion-list {
-        ion-item.card {
-          --min-height: 72px;
-          --padding-start: 1.5rem;
-          --padding-end: 1.5rem;
-          margin-bottom: 1rem;
-          
-          ion-label {
-            font-size: 1rem;
-          }
-          
-          ion-button {
-            --height: 36px;
-            font-size: 0.85rem;
-          }
-          
-          ion-toggle {
-            transform: scale(0.9);
-          }
-        }
-      }
-    }
+  .profile-detail .header {
+    padding: var(--spacing-xl) var(--spacing-xl) 4rem;
+    border-radius: 0 0 32px 32px;
+  }
+  
+  .profile-detail .header::before {
+    bottom: -16px;
+    height: 32px;
+    border-radius: 0 0 32px 32px;
+  }
+  
+  .profile-detail .header::after {
+    bottom: -28px;
+    height: 44px;
+    border-radius: 0 0 40px 40px;
+  }
+  
+  .profile-detail .header h1 {
+    font-size: 2.25rem;
+  }
+  
+  .profile-detail .header p {
+    font-size: 1.125rem;
+  }
+  
+  .profile-detail .content {
+    padding: var(--spacing-2xl) var(--spacing-xl) var(--spacing-xl);
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  
+  .profile-detail ion-item.card {
+    --min-height: 76px;
+    --padding-start: var(--spacing-xl);
+    --padding-end: var(--spacing-xl);
+    margin-bottom: var(--spacing-md);
+  }
+  
+  .profile-detail ion-item.card ion-label {
+    font-size: 1rem;
+  }
+  
+  .profile-detail ion-item.card ion-button {
+    --height: 40px;
+    font-size: 0.875rem;
+  }
+  
+  .profile-detail ion-item.card ion-toggle {
+    transform: scale(0.95);
   }
 }
 
-// Dark mode adjustments
-@media (prefers-color-scheme: dark) {
-  .profile-detail {
-    --background: #1a1a1a;
-    
-    .content {
-      ion-list {
-        ion-item.card {
-          --background: #2d3748;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-          
-          &:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-          }
-          
-          ion-toggle {
-            --track-background: #4a5568;
-          }
-        }
-      }
-    }
+@media (min-width: 1024px) {
+  .profile-detail .content {
+    max-width: 720px;
   }
+}
+
+/* ===== ACCESSIBILITY & FOCUS STATES ===== */
+.profile-detail ion-item.card:focus-within {
+  outline: 2px solid var(--ion-color-primary);
+  outline-offset: 2px;
+}
+
+.profile-detail ion-button:focus {
+  outline: 2px solid var(--ion-color-primary);
+  outline-offset: 2px;
+}
+
+/* ===== LOADING STATES ===== */
+.profile-detail ion-item.card.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+/* ===== ANIMATION UTILITIES ===== */
+.profile-detail .fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== UTILITIES ===== */
+.profile-detail .text-secondary {
+  color: var(--text-secondary) !important;
+}
+
+.profile-detail .mb-0 {
+  margin-bottom: 0 !important;
+}
+
+/* ===== IONIC OVERRIDE FIXES ===== */
+/* Force proper border radius on all ionic elements */
+.profile-detail ion-item {
+  --border-radius: var(--border-radius);
+  --inner-border-width: 0;
+  --border-width: 0;
+  --highlight-height: 0;
+}
+
+.profile-detail ion-item .item-inner {
+  border-radius: var(--border-radius);
+}
+
+/* Remove any default ionic borders or lines */
+.profile-detail ion-item::part(native) {
+  border: none;
+}
+
+.profile-detail ion-list ion-item:not(:last-child) {
+  --border-width: 0;
+  border-bottom: none;
 }

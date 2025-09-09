@@ -4,31 +4,37 @@
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
-  max-width: 420px;
+  // allow full width to fit 5-6 items without overflow
+  // max-width removed to prevent items from spilling out
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
   border-top: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 16px 24px calc(16px + env(safe-area-inset-bottom));
+  padding: 12px 16px calc(14px + env(safe-area-inset-bottom));
   border-radius: 24px 24px 0 0;
   box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1);
+  z-index: 999;
 
   .nav-items {
-    display: flex;
-    justify-content: space-between;
+    // Exactly 5 equal columns to avoid crowding
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
     align-items: center;
+    column-gap: 6px;
   }
 
   .nav-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    // Mengurangi padding horizontal dari 16px menjadi 12px
-    padding: 8px 12px; 
+    // Compact padding so 5 items fit nicely on small screens
+    padding: 6px 10px; 
     border-radius: 16px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
     position: relative;
-    min-width: 60px;
+    // Allow items to shrink within grid cell
+    min-width: 0;
+    white-space: nowrap;
 
     &.active {
       background: linear-gradient(135deg, #667eea, #764ba2);
@@ -49,7 +55,7 @@
 
   .nav-icon {
     font-size: 20px;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
     transition: all 0.3s ease;
   }
 
@@ -58,7 +64,7 @@
   }
 
   .nav-label {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;

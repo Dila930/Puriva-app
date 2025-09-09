@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 // Ensure content is not obscured by bottom nav
 :host ion-content {
   --padding-bottom: 88px;
@@ -127,6 +129,15 @@ $transition-slow: all 0.5s ease;
   position: relative;
   z-index: 2;
   animation: avatarGlow 3s ease-in-out infinite alternate;
+
+  // Image avatar style
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+  }
 }
 
 .profile-info {
@@ -169,12 +180,21 @@ $transition-slow: all 0.5s ease;
 // ======================================
 .stats-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); // 3 kotak per baris
+  grid-template-columns: repeat(3, 1fr); // default 3 per baris
   gap: $space-m;
   padding: 0 $space-l $space-xl;
   margin-top: $space-l; // beri jarak dari profile-role ke stats
   position: relative;
   z-index: 3;
+}
+
+// Role-based layouts
+.stats-container.user-stats {
+  grid-template-columns: repeat(3, 1fr); // user: 3 kotak 1 baris
+}
+
+.stats-container.admin-stats {
+  grid-template-columns: repeat(2, 1fr); // admin: 1 baris 2 kotak (4 total -> 2 baris)
 }
 
 // Dashboard-style stats grid alias
@@ -188,7 +208,7 @@ $transition-slow: all 0.5s ease;
 
 .stat-card {
   background: $color-white;
-  padding: $space-m; // sedikit padat agar 3 muat
+  padding: $space-s; // sedikit lebih rapat agar 4 muat
   border-radius: $radius-l;
   text-align: center;
   box-shadow: $shadow-lg;
@@ -266,22 +286,22 @@ $transition-slow: all 0.5s ease;
   box-shadow: $shadow-md;
 
   &--primary {
-    background: linear-gradient(135deg, $color-primary, lighten($color-primary, 20%));
+    background: linear-gradient(135deg, $color-primary, color.adjust($color-primary, $lightness: 20%));
     color: $color-white;
   }
 
   &--success {
-    background: linear-gradient(135deg, $color-success, lighten($color-success, 20%));
+    background: linear-gradient(135deg, $color-success, color.adjust($color-success, $lightness: 20%));
     color: $color-white;
   }
 
   &--warning {
-    background: linear-gradient(135deg, $color-warning, lighten($color-warning, 20%));
+    background: linear-gradient(135deg, $color-warning, color.adjust($color-warning, $lightness: 20%));
     color: $color-white;
   }
 
   &--danger {
-    background: linear-gradient(135deg, $color-danger, lighten($color-danger, 20%));
+    background: linear-gradient(135deg, $color-danger, color.adjust($color-danger, $lightness: 20%));
     color: $color-white;
   }
 }
@@ -433,6 +453,51 @@ $transition-slow: all 0.5s ease;
   padding: $space-xl $space-l $space-xxl;
 }
 
+.refresh-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  color: $color-white;
+  border: none;
+  padding: $space-l;
+  border-radius: $radius-xl;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: $transition-normal;
+  box-shadow: 0 6px 24px rgba(37, 99, 235, 0.3);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-m;
+  margin-bottom: $space-m; // stack above logout
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s ease;
+  }
+
+  &:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 10px 40px rgba(37, 99, 235, 0.4);
+
+    &::before {
+      left: 100%;
+    }
+  }
+
+  &:active {
+    transform: translateY(-1px) scale(0.98);
+  }
+}
+
 .logout-btn {
   width: 100%;
   background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
@@ -530,10 +595,11 @@ $transition-slow: all 0.5s ease;
   .stats-container {
     padding: 0 $space-m $space-l;
     gap: $space-s;
+    grid-template-columns: repeat(2, 1fr); // di layar kecil, 2 per baris
   }
 
   .stat-card {
-    padding: $space-m;
+    padding: $space-s;
   }
 
   .stat-number {

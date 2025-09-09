@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, ToastController } from '@ionic/angular';
-import { Auth, signInWithEmailAndPassword, sendPasswordResetEmail, signOut } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, sendPasswordResetEmail, signOut, signInWithPopup, GoogleAuthProvider } from '@angular/fire/auth';
 // Use AngularFire's zone-aware Firestore functions to stay within injection context
 import { Firestore, doc, updateDoc, serverTimestamp, collection, addDoc, getDoc, setDoc } from '@angular/fire/firestore';
 import { Database, ref, update as rtdbUpdate } from '@angular/fire/database';
@@ -13,8 +13,6 @@ import { Database, ref, update as rtdbUpdate } from '@angular/fire/database';
 })
 export class LoginPage implements OnInit {
   // UI state
-  // Only email method is supported
-  showPassword = false;
   isLoading = false;
 
   // Form data
@@ -40,34 +38,65 @@ export class LoginPage implements OnInit {
     return `${first}***@${domain}`;
   }
 
-  // Request admin-assisted password reset (creates a request doc in Firestore)
-  async requestAdminReset() {
-    const mail = (this.email || '').trim();
-    if (!mail) {
-      this.presentToast('Masukkan email terlebih dahulu.', 'danger');
-      return;
+  private async checkConnection(): Promise<boolean> {
+    if (typeof navigator === 'undefined' || !navigator) {
+      return false;
     }
+
+    // Check basic online status
+    if (!navigator.onLine) {
+      return false;
+    }
+
+    // Check connection type and effective type if available
+    const connection = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
+    if (connection) {
+      // Check if connection is slow (2g or slow-2g)
+      if (connection.effectiveType && ['slow-2g', '2g'].includes(connection.effectiveType)) {
+        return false;
+      }
+      
+      // Check if connection type is none (offline)
+      if (connection.type === 'none') {
+        return false;
+      }
+    }
+
+    // Additional check by pinging a reliable server
     try {
-      const reqs = collection(this.firestore, 'passwordResetRequests');
-      await this.withTimeout(addDoc(reqs, {
-        email: mail,
-        at: serverTimestamp(),
-        status: 'pending',
-        source: 'login_page',
-        userAgent: (typeof navigator !== 'undefined' && navigator) ? (navigator as any).userAgent : undefined,
-        platform: (typeof navigator !== 'undefined' && navigator) ? (navigator as any).platform : undefined,
-      }), 6000, 'Mengirim permintaan');
-      this.presentToast('Permintaan reset terkirim. Admin akan menghubungi Anda.', 'success');
-    } catch (err: any) {
-      const msg = this.translateFirebaseError(err?.code, err?.message || 'Gagal mengirim permintaan.');
-      this.presentToast(msg, 'danger');
+      await fetch('https://www.google.com/favicon.ico', { 
+        method: 'HEAD',
+        cache: 'no-store',
+        mode: 'no-cors'
+      });
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 
-  private withTimeout<T>(p: Promise<T>, ms = 8000, label = 'Operasi'): Promise<T> {
-    return new Promise<T>((resolve, reject) => {
-      const t = setTimeout(() => reject(new Error(`${label} timeout. Periksa koneksi Anda dan coba lagi.`)), ms);
-      p.then(v => { clearTimeout(t); resolve(v); }).catch(e => { clearTimeout(t); reject(e); });
+  private withTimeout<T>(p: Promise<T>, ms = 12000, label = 'Operasi'): Promise<T> {
+    return new Promise<T>(async (resolve, reject) => {
+      // First check connection status
+      const isConnected = await this.checkConnection();
+      if (!isConnected) {
+        reject(new Error('Tidak ada koneksi internet yang stabil. Mohon periksa jaringan Anda.'));
+        return;
+      }
+
+      // Set timeout for the operation
+      const t = setTimeout(() => {
+        reject(new Error(`${label} timeout. Periksa koneksi internet Anda dan coba lagi.`));
+      }, ms);
+
+      // Execute the promise
+      p.then(v => { 
+        clearTimeout(t); 
+        resolve(v); 
+      }).catch(e => { 
+        clearTimeout(t); 
+        reject(e); 
+      });
     });
   }
 
@@ -85,6 +114,8 @@ export class LoginPage implements OnInit {
         return 'Terlalu banyak percobaan. Coba beberapa saat lagi.';
       case 'auth/network-request-failed':
         return 'Gagal terhubung ke jaringan. Periksa koneksi internet Anda.';
+      case 'auth/popup-closed-by-user':
+        return 'Jendela pop-up Google ditutup.';
       // Firestore errors
       case 'permission-denied':
         return 'Akses database ditolak. Periksa Firestore Rules untuk mengizinkan user terautentikasi.';
@@ -95,111 +126,65 @@ export class LoginPage implements OnInit {
     }
   }
 
-  // UI handlers
-  togglePassword() { this.showPassword = !this.showPassword; }
-
   // Email login
   async handleEmailLogin() {
     this.email = this.email?.trim();
     this.password = this.password?.trim();
+    
     if (!this.email || !this.password) {
       this.presentToast('Harap isi semua field', 'danger');
       return;
     }
+    
     if (this.password.length < 6) {
-      this.presentToast('Password minimal 6 karakter.', 'danger');
-      return;
-    }
-    if (typeof navigator !== 'undefined' && navigator && navigator.onLine === false) {
-      this.presentToast('Tidak ada koneksi internet.', 'danger');
+      this.presentToast('Password minimal 6 karakter', 'danger');
       return;
     }
 
+    // Add loading class to form
+    const form = document.querySelector('.puriva-form-section');
+    form?.classList.add('form-loading');
     this.isLoading = true;
+    
     try {
-      // Login only (sign up moved to dedicated Register page)
-      const cred = await this.withTimeout(signInWithEmailAndPassword(this.auth, this.email, this.password), 8000, 'Login');
+      // Check connection before proceeding
+      const isConnected = await this.checkConnection();
+      if (!isConnected) {
+        this.presentToast('Tidak ada koneksi internet yang stabil. Mohon periksa jaringan Anda.', 'danger');
+        this.isLoading = false;
+        return;
+      }
 
-      // Navigate immediately after successful auth
+      // Increased timeout to 12 seconds for login operation
+      const cred = await this.withTimeout(
+        signInWithEmailAndPassword(this.auth, this.email, this.password),
+        12000, // Increased timeout to 12 seconds
+        'Login'
+      );
+      
       await this.presentToast('Login berhasil!', 'success');
       this.navCtrl.navigateRoot('/home');
+      this.postLoginData(cred.user?.uid as string, this.email);
+    } catch (err: any) {
+      const code = err?.code as string | undefined;
+      const msg = this.translateFirebaseError(code, err?.message);
+      this.presentToast(msg, 'danger');
+      console.error('Login error:', err);
+    } finally {
+      this.isLoading = false;
+      form?.classList.remove('form-loading');
+    }
+  }
 
-      // 2) FIRESTORE WORK IN BACKGROUND (best-effort)
-      const uid = cred.user?.uid as string;
-      // Sync UID + email into RTDB users/{uid} (non-destructive)
-      try {
-        const userRtdbRef = ref(this.db, `users/${uid}`);
-        await this.withTimeout(rtdbUpdate(userRtdbRef, {
-          uid,
-          email: this.email
-        }), 6000, 'Sinkronisasi data realtime');
-      } catch {}
-      const userRef = doc(this.firestore, 'users', uid);
-      this.withTimeout(getDoc(userRef), 6000, 'Memeriksa profil')
-        .then(snap => {
-          if (!snap || !snap.exists()) {
-            return this.withTimeout(setDoc(userRef, {
-              uid,
-              email: cred.user?.email || this.email,
-              name: cred.user?.displayName || (this.email.split('@')[0] || 'Pengguna'),
-              createdAt: serverTimestamp(),
-              updatedAt: serverTimestamp(),
-            }, { merge: true } as any), 6000, 'Membuat profil');
-          }
-          return Promise.resolve();
-        })
-        .catch(() => { /* ignore permission/network issues */ });
-
-      this.withTimeout(updateDoc(userRef, { lastLogin: serverTimestamp(), lastLoginAt: serverTimestamp(), lastActive: serverTimestamp() }), 6000, 'Update profil')
-        .catch(() => { /* ignore */ });
-
-      const logsCol = collection(this.firestore, 'loginLogs');
-      this.withTimeout(addDoc(logsCol, {
-        action: 'login',
-        uid,
-        email: this.email,
-        byEmailMasked: this.maskEmail(this.email),
-        method: 'password',
-        at: serverTimestamp(),
-      }), 6000, 'Mencatat log').catch(() => { /* ignore */ });
-
-      // New collection 'login' as requested (without storing password)
-      try {
-        const loginCol = collection(this.firestore, 'login');
-        await this.withTimeout(addDoc(loginCol, {
-          uid,
-          email: this.email,
-          byEmailMasked: this.maskEmail(this.email),
-          username: cred.user?.displayName || (this.email.split('@')[0] || 'Pengguna'),
-          time: serverTimestamp(),
-          method: 'password'
-        } as any), 6000, 'Mencatat login');
-      } catch {}
-
-      // Additional audit logs similar to sterilisasi pattern
-      try {
-        const authLogs = collection(this.firestore, 'authLogs');
-        await this.withTimeout(addDoc(authLogs, {
-          action: 'login',
-          uid,
-          email: this.email,
-          byEmailMasked: this.maskEmail(this.email),
-          at: serverTimestamp(),
-          source: 'login_page'
-        } as any), 6000, 'Audit login');
-      } catch {}
-
-      try {
-        const perUser = collection(this.firestore, `authLogsByUser/${uid}/events`);
-        await this.withTimeout(addDoc(perUser, {
-          action: 'login',
-          uid,
-          email: this.email,
-          byEmailMasked: this.maskEmail(this.email),
-          at: serverTimestamp(),
-          source: 'login_page'
-        } as any), 6000, 'Audit login (user)');
-      } catch {}
+  // Google login
+  async handleGoogleLogin() {
+    this.isLoading = true;
+    try {
+      const provider = new GoogleAuthProvider();
+      const cred = await this.withTimeout(signInWithPopup(this.auth, provider), 8000, 'Login dengan Google');
+      await this.presentToast('Login berhasil!', 'success');
+      this.navCtrl.navigateRoot('/home');
+      this.postLoginData(cred.user?.uid as string, cred.user?.email as string, cred.user?.displayName as string, 'google');
     } catch (err: any) {
       const code = err?.code as string | undefined;
       const msg = this.translateFirebaseError(code, err?.message);
@@ -209,19 +194,96 @@ export class LoginPage implements OnInit {
     }
   }
 
-  // Phone login removed
+  private postLoginData(uid: string, email: string, name?: string, method = 'password') {
+    // 2) FIRESTORE WORK IN BACKGROUND (best-effort)
+    const userRtdbRef = ref(this.db, `users/${uid}`);
+    this.withTimeout(rtdbUpdate(userRtdbRef, {
+      uid,
+      email
+    }), 6000, 'Sinkronisasi data realtime').catch(() => {});
+    
+    const userRef = doc(this.firestore, 'users', uid);
+    this.withTimeout(getDoc(userRef), 6000, 'Memeriksa profil')
+      .then(snap => {
+        if (!snap || !snap.exists()) {
+          return this.withTimeout(setDoc(userRef, {
+            uid,
+            email,
+            name: name || (email.split('@')[0] || 'Pengguna'),
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
+          }, { merge: true } as any), 6000, 'Membuat profil');
+        }
+        return Promise.resolve();
+      })
+      .catch(() => { /* ignore permission/network issues */ });
+
+    this.withTimeout(updateDoc(userRef, { lastLogin: serverTimestamp(), lastLoginAt: serverTimestamp(), lastActive: serverTimestamp() }), 6000, 'Update profil')
+      .catch(() => { /* ignore */ });
+
+    const logsCol = collection(this.firestore, 'loginLogs');
+    this.withTimeout(addDoc(logsCol, {
+      action: 'login',
+      uid,
+      email,
+      byEmailMasked: this.maskEmail(email),
+      method,
+      at: serverTimestamp(),
+    }), 6000, 'Mencatat log').catch(() => { /* ignore */ });
+
+    try {
+      const loginCol = collection(this.firestore, 'login');
+      this.withTimeout(addDoc(loginCol, {
+        uid,
+        email,
+        byEmailMasked: this.maskEmail(email),
+        username: name || (email.split('@')[0] || 'Pengguna'),
+        time: serverTimestamp(),
+        method
+      } as any), 6000, 'Mencatat login').catch(() => {});
+    } catch {}
+
+    try {
+      const authLogs = collection(this.firestore, 'authLogs');
+      this.withTimeout(addDoc(authLogs, {
+        action: 'login',
+        uid,
+        email,
+        byEmailMasked: this.maskEmail(email),
+        at: serverTimestamp(),
+        source: 'login_page'
+      } as any), 6000, 'Audit login').catch(() => {});
+    } catch {}
+
+    try {
+      const perUser = collection(this.firestore, `authLogsByUser/${uid}/events`);
+      this.withTimeout(addDoc(perUser, {
+        action: 'login',
+        uid,
+        email,
+        byEmailMasked: this.maskEmail(email),
+        at: serverTimestamp(),
+        source: 'login_page'
+      } as any), 6000, 'Audit login (user)').catch(() => {});
+    } catch {}
+  }
 
   async presentToast(message: string, color: 'success' | 'danger') {
-    // Map to SCSS classes defined in login.page.scss (puriva-ionic-toast variants)
-    const variantClass = color === 'success' ? 'toast-success' : 'toast-error';
     const toast = await this.toastCtrl.create({
       message,
       duration: 3000,
       position: 'top',
-      cssClass: `puriva-ionic-toast ${variantClass}`,
-      buttons: [{ text: 'Tutup', role: 'cancel' }]
+      cssClass: `puriva-toast puriva-toast-${color}`,
+      buttons: [{
+        icon: 'close',
+        role: 'cancel'
+      }],
+      mode: 'md',
+      animated: true,
+      keyboardClose: true,
+      translucent: true
     });
-    toast.present();
+    await toast.present();
   }
 
   goToRegister() {
@@ -236,7 +298,6 @@ export class LoginPage implements OnInit {
       return;
     }
     try {
-      // Use action code settings so the Gmail-delivered email opens back to our app/site
       const actionCodeSettings = {
         url: (typeof window !== 'undefined' ? window.location.origin : 'https://puriva.app') + '/login',
         handleCodeInApp: false,

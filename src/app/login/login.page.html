@@ -1,5 +1,11 @@
-<ion-content class="puriva-login-page">
+<ion-content class="puriva-login-page" [class.form-loading]="isLoading">
   <div class="puriva-login-container">
+    <!-- Floating background elements -->
+    <div class="floating-bg">
+      <div class="floating-circle circle-1"></div>
+      <div class="floating-circle circle-2"></div>
+      <div class="floating-circle circle-3"></div>
+    </div>
     <div class="puriva-login-card">
       <div class="puriva-login-header">
         <div class="puriva-logo-section">
@@ -9,8 +15,6 @@
         <div class="puriva-welcome-text">Selamat Datang</div>
         <div class="puriva-welcome-subtitle">Silakan masuk ke akun Anda</div>
       </div>
-
-      <!-- Email-only login -->
       <ng-container>
         <form #emailForm="ngForm" class="puriva-form-section animated fadeIn" (ngSubmit)="handleEmailLogin()">
           <ion-list lines="none" class="ion-no-margin">
@@ -27,7 +31,6 @@
               ></ion-input>
               <ion-icon name="mail-outline" slot="start" class="puriva-input-icon"></ion-icon>
             </ion-item>
-
             <ion-item class="puriva-form-item">
               <ion-label position="stacked">Password</ion-label>
               <ion-input
@@ -41,34 +44,50 @@
               <ion-icon name="lock-closed-outline" slot="start" class="puriva-input-icon"></ion-icon>
             </ion-item>
           </ion-list>
-
           <ion-button
             expand="block"
             class="puriva-btn-primary"
             [disabled]="!email || !password || isLoading"
             type="submit"
+            [class.button-loading]="isLoading"
+            aria-live="polite"
           >
-            <div *ngIf="isLoading" class="puriva-loading-spinner"></div>
-            <ion-icon *ngIf="!isLoading" name="log-in-outline"></ion-icon>
-            <ion-label>Masuk</ion-label>
+            <div *ngIf="isLoading" class="puriva-loading-spinner" aria-hidden="true"></div>
+            <ion-icon *ngIf="!isLoading" name="log-in-outline" slot="start"></ion-icon>
+            <ion-label>{{ isLoading ? 'Memproses...' : 'Masuk' }}</ion-label>
           </ion-button>
-
-          <div class="puriva-forgot-section">
-            <a
-              class="puriva-forgot-link"
-              href="mailto:purivaakun@gmail.com?subject=Bantuan%20Reset%20Kode%20Akses%20Puriva&body=Halo%20Tim%20CS%20Puriva,%0D%0A%0D%0ASaya%20ingin%20meminta%20bantuan%20reset%20kode%20akses%20(password)%20akun%20Puriva.%0D%0A%0D%0AData%20saya:%0D%0A-%20Email:%20...%0D%0A-%20Username:%20...%0D%0A-%20Tanggal%20registrasi%20(jika%20masih%20ingat):%20...%0D%0A%0D%0ATerima%20kasih."
-              aria-label="Lupa Password"
-            >
-              <ion-button size="small" fill="clear">Lupa Password</ion-button>
-            </a>
-          </div>
-
-          <div class="puriva-register-section">
-            <span>Belum punya akun? </span>
-            <a (click)="goToRegister()" class="puriva-register-link">Daftar di sini</a>
-          </div>
         </form>
       </ng-container>
+      <div class="puriva-divider" aria-hidden="true">
+        <span>Atau</span>
+      </div>
+      <ion-button
+        expand="block"
+        class="puriva-btn-google"
+        (click)="handleGoogleLogin()"
+        [disabled]="isLoading"
+        [class.button-loading]="isLoading"
+      >
+        <ion-icon name="logo-google" slot="start" aria-hidden="true"></ion-icon>
+        <ion-label>{{ isLoading ? 'Memproses...' : 'Masuk dengan Google' }}</ion-label>
+      </ion-button>
+      <div class="puriva-forgot-section">
+        <a
+          class="puriva-forgot-link"
+          href="mailto:purivaakun@gmail.com?subject=Bantuan%20Reset%20Kode%20Akses%20Puriva&body=Halo%20Tim%20CS%20Puriva,%0D%0A%0D%0ASaya%20ingin%20meminta%20bantuan%20reset%20kode%20akses%20(password)%20akun%20Puriva.%0D%0A%0D%0AData%20saya:%0D%0A-%20Email:%20...%0D%0A-%20Username:%20...%0D%0A-%20Tanggal%20registrasi%20(jika%20masih%20ingat):%20...%0D%0A%0D%0ATerima%20kasih."
+          aria-label="Lupa Password"
+        >
+          <ion-button size="small" fill="clear">Lupa Password</ion-button>
+        </a>
+      </div>
+      <div class="puriva-register-section">
+        <span>Belum punya akun? </span>
+        <a (click)="!isLoading && goToRegister()" class="puriva-register-link" [class.disabled]="isLoading">Daftar di sini</a>
+      </div>
+      <!-- Loading overlay (shown when form is submitting) -->
+      <div *ngIf="isLoading" class="form-loading-overlay" aria-hidden="true">
+        <div class="loading-spinner"></div>
+      </div>
     </div>
   </div>
 </ion-content>

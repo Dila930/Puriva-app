@@ -81,6 +81,7 @@ $line-height-normal: 1.5;
 $line-height-relaxed: 1.6;
 
 // Spacing
+$space-xxs: 2px;
 $space-xs: 4px;
 $space-sm: 8px;
 $space-md: 12px;
@@ -89,6 +90,8 @@ $space-lg: 20px;
 $space-xl: 24px;
 $space-2xl: 32px;
 $space-3xl: 48px;
+$space-4xl: 64px;
+$space-5xl: 80px;
 
 // Border radius
 $radius-xs: 4px;
@@ -98,6 +101,8 @@ $radius-md: 12px;
 $radius-lg: 16px;
 $radius-xl: 20px;
 $radius-2xl: 24px;
+$radius-3xl: 32px;
+$radius-full: 9999px;
 $radius-3xl: 32px;
 $radius-full: 50%;
 
@@ -633,12 +638,64 @@ button {
   }
 }
 
+// Login button container
+.login-button-container {
+  margin-bottom: 0;
+  
+  .puriva-btn-primary {
+    margin-bottom: 0;
+  }
+  
+  .puriva-forgot-section {
+    text-align: right;
+    margin: -8px $space-sm 0 0;
+    
+    .puriva-forgot-link {
+      text-decoration: none;
+      display: inline-block;
+      
+      ion-button {
+        --color: #{$color-gray-600};
+        --color-hover: #{$color-primary};
+        --background-hover: transparent;
+        --background-activated: transparent;
+        --box-shadow: none;
+        --padding-top: 0;
+        --padding-bottom: 0;
+        margin: 0;
+        font-size: $font-size-sm;
+        text-transform: none;
+        letter-spacing: 0.3px;
+        
+        &:hover {
+          --color: #{$color-primary};
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
 // Ionic item styling
 ion-item.puriva-form-item {
   --background: transparent;
   --padding-start: 0;
   --inner-padding-end: 0;
   --inner-padding-start: 0;
+  --min-height: 80px;
+  --border-radius: #{$radius-lg};
+  --highlight-color-focused: #{$color-primary};
+  --highlight-height: 2px;
+  margin-bottom: $space-xl;
+  transition: all 0.2s ease;
+  
+  &:last-child {
+    margin-bottom: $space-xl;
+  }
+  
+  &.item-has-focus {
+    --highlight-background: #{$color-primary};
+  }
   --border-style: none;
   --highlight-color-focused: transparent;
   --highlight-color-valid: transparent;
@@ -970,7 +1027,7 @@ ion-item.puriva-form-item {
 }
 
 .puriva-btn-google {
-  width: 100%;
+  width: calc(100% - 32px);
   height: 68px;
   background: $color-white;
   color: $color-text-primary;
@@ -985,7 +1042,7 @@ ion-item.puriva-form-item {
   align-items: center;
   justify-content: center;
   gap: $space-base;
-  margin-bottom: $space-xl;
+  margin: 0 16px $space-xl;
   
   ion-label {
     margin: 0 $space-sm;
@@ -1037,7 +1094,7 @@ ion-button {
     --background: #{$gradient-button};
     --color: #{$color-white};
     --box-shadow: #{$shadow-button};
-    margin: $space-2xl 0 $space-base;
+    margin: $space-2xl 0 $space-sm;
     
     &:hover:not(:disabled) {
       transform: translateY(-2px);
@@ -1148,34 +1205,38 @@ ion-button {
 .puriva-divider {
   display: flex;
   align-items: center;
+  margin: -2px 0 $space-md;
+  color: $color-gray-400;
   text-align: center;
-  color: $color-text-secondary;
-  font-size: $font-size-base;
-  margin: $space-2xl 0;
-
+  position: relative;
+  
   &::before,
   &::after {
     content: '';
     flex: 1;
-    border-bottom: 1px dashed rgba($color-text-secondary, 0.3);
+    height: 1px;
+    background: linear-gradient(90deg, transparent, $color-gray-200, transparent);
   }
-
-  &:not(:empty)::before {
-    margin-right: $space-xl;
+  
+  span {
+    display: inline-flex;
+    align-items: center;
+    height: 24px;
+    padding: 0 $space-base;
+    font-size: $font-size-sm;
+    color: $color-gray-500;
+    background: $color-bg-primary;
+    position: relative;
+    z-index: 1;
+    margin-top: -2px; /* Slight upward adjustment */
   }
-
-  &:not(:empty)::after {
-    margin-left: $space-xl;
+  
+  &::before {
+    margin-right: $space-base;
   }
-
-  @media (max-width: $breakpoint-mobile) {
-    margin: $space-xl 0;
-    font-size: 15px;
-    
-    &:not(:empty)::before,
-    &:not(:empty)::after {
-      margin: 0 $space-base;
-    }
+  
+  &::after {
+    margin-left: $space-base;
   }
 }
 
@@ -1185,9 +1246,11 @@ ion-button {
 
 .puriva-register-section {
   text-align: center;
-  margin-top: auto;
-  padding-top: $space-2xl;
-  font-size: $font-size-base;
+  margin: 0;
+  padding: 0;
+  line-height: 1.2;
+  color: $color-gray-600;
+  font-size: $font-size-sm;
   color: $color-text-secondary;
   font-weight: $font-weight-medium;
   line-height: $line-height-relaxed;
@@ -1241,7 +1304,6 @@ ion-button {
 .form-loading {
   position: relative;
   pointer-events: none;
-  opacity: 0.8;
   
   &::after {
     content: '';

@@ -238,42 +238,19 @@ export class EducationPage implements OnInit, OnDestroy {
     this.applyFilters();
   }
 
-  // Open filter categories inside an Action Sheet (triggered by filter icon)
-  async openFilterSheet(): Promise<void> {
-    // Sorting options
-    const sortButtons: any[] = [
-      { text: `Terbaru${this.sortMode === 'terbaru' ? ' ✓' : ''}`, icon: 'arrow-down', handler: () => { this.setSort('terbaru'); } },
-      { text: `Terlama${this.sortMode === 'terlama' ? ' ✓' : ''}`, icon: 'arrow-up', handler: () => { this.setSort('terlama'); } },
-      { text: `A - Z${this.sortMode === 'az' ? ' ✓' : ''}`, icon: 'swap-vertical-outline', handler: () => { this.setSort('az'); } },
-      { text: `Z - A${this.sortMode === 'za' ? ' ✓' : ''}`, icon: 'swap-vertical-outline', handler: () => { this.setSort('za'); } },
-    ];
+  // Open custom filter popover (styled like the provided example)
+  showFilter = false;
+  async openFilterSheet(): Promise<void> { this.showFilter = true; }
+  closeFilter(): void { this.showFilter = false; }
 
-    // Category options (remove 'Umum' as requested)
-    const catItems: Array<{ key: string; label: string }> = [
-      { key: 'semua', label: 'Semua' },
-      { key: 'teknologi', label: 'Teknologi' },
-      { key: 'kesehatan', label: 'Kesehatan' },
-      { key: 'panduan', label: 'Panduan' },
-    ];
-    const catButtons = catItems.map(it => ({
-      text: `${it.label}${this.currentFilter === it.key ? ' ✓' : ''}`,
-      handler: () => this.filterNews(it.key)
-    }));
+  chooseSort(mode: 'terbaru'|'terlama'|'az'|'za'): void {
+    this.setSort(mode);
+    this.closeFilter();
+  }
 
-    const buttons = [
-      { text: 'Urutkan Berdasarkan', role: 'selected' } as any,
-      ...sortButtons,
-      { text: 'Filter Kategori', role: 'selected' } as any,
-      ...catButtons,
-      { text: 'Batal', role: 'cancel' } as any,
-    ];
-
-    const sheet = await this.actionSheetCtrl.create({
-      header: 'Filter & Urutkan',
-      subHeader: `Filter: ${catItems.find(i => i.key === this.currentFilter)?.label || 'Semua'} • Urutan: ${this.getSortLabel(this.sortMode)}`,
-      buttons
-    });
-    await sheet.present();
+  chooseCategory(key: 'semua'|'teknologi'|'kesehatan'|'panduan'): void {
+    this.filterNews(key);
+    this.closeFilter();
   }
 
   formatDate(ts?: number): string {

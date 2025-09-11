@@ -107,24 +107,48 @@
       </form>
       
       <!-- Modal Kebijakan Privasi -->
-      <ion-modal [isOpen]="showPolicyModal" (didDismiss)="onPolicyDismiss()">
+      <ion-modal [isOpen]="showPolicyModal" (didDismiss)="onPolicyDismiss()" cssClass="puriva-policy-modal">
         <ng-template>
-          <ion-header translucent>
+          <ion-header class="policy-header" translucent>
             <ion-toolbar>
-              <ion-title>Kebijakan Privasi (Ringkas)</ion-title>
+              <ion-title>
+                <div class="policy-title">
+                  <ion-icon name="shield-checkmark-outline"></ion-icon>
+                  Kebijakan Privasi
+                </div>
+                <div class="policy-subtitle">Ringkasan singkat & mudah dipahami</div>
+              </ion-title>
               <ion-buttons slot="end">
-                <ion-button (click)="declinePolicy()">Tutup</ion-button>
+                <ion-button fill="clear" (click)="declinePolicy()">
+                  <ion-icon name="close-outline"></ion-icon>
+                </ion-button>
               </ion-buttons>
             </ion-toolbar>
           </ion-header>
-          <ion-content class="ion-padding">
-            <p class="ion-text-wrap" style="font-size: 14px; line-height: 1.6; color: #334155;">
-              Kami menyimpan username dan email Anda untuk autentikasi serta dukungan layanan Puriva. Data dikelola secara aman dan tidak dibagikan ke pihak ketiga kecuali diwajibkan oleh hukum. Dengan melanjutkan, Anda menyetujui ketentuan ini.
-            </p>
+          <ion-content class="policy-content ion-padding">
+            <div class="policy-card">
+              <ul class="policy-list">
+                <li>
+                  <ion-icon name="person-outline"></ion-icon>
+                  Kami menyimpan username dan email Anda hanya untuk autentikasi dan dukungan layanan Puriva.
+                </li>
+                <li>
+                  <ion-icon name="lock-closed-outline"></ion-icon>
+                  Data diamankan dan tidak dibagikan ke pihak ketiga, kecuali diwajibkan oleh hukum.
+                </li>
+                <li>
+                  <ion-icon name="time-outline"></ion-icon>
+                  Anda dapat mengajukan penghapusan akun & data melalui menu Profil kapan saja.
+                </li>
+              </ul>
+              <ion-note color="medium" class="policy-note">
+                Dengan melanjutkan, Anda menyetujui ketentuan di atas dan Syarat Layanan Puriva.
+              </ion-note>
+            </div>
 
-            <div class="ion-text-center" style="margin-top: 16px;">
-              <ion-button color="primary" (click)="acceptPolicy()">Setuju</ion-button>
-              <ion-button fill="outline" color="medium" (click)="declinePolicy()">Tidak Setuju</ion-button>
+            <div class="policy-actions">
+              <ion-button expand="block" class="policy-accept" (click)="acceptPolicy()">Saya Setuju</ion-button>
+              <ion-button expand="block" fill="outline" class="policy-decline" (click)="declinePolicy()">Tidak Setuju</ion-button>
             </div>
           </ion-content>
         </ng-template>

@@ -750,20 +750,26 @@ ion-item.puriva-form-item {
   padding: 0;
   
   ion-label {
-    font-weight: $font-weight-bold;
-    color: $color-text-primary;
+    font-weight: $font-weight-extrabold;
+    color: #0f172a;
     margin-bottom: $space-md;
-    font-size: $font-size-base;
+    font-size: $font-size-base + 1;
     display: block;
     transform: none;
     transition: $transition-curve;
-    position: static;
+    position: relative;
+    z-index: 1;
     max-width: 100%;
     pointer-events: none;
+    padding-left: 44px;
   }
   
   ion-input {
     --padding-start: #{$space-base};
+    /* extra room for leading icon so text isn't cut */
+    @media (min-width: 0) {
+      --padding-start: 44px; /* match label padding-left */
+    }
     --padding-end: #{$space-base};
     --padding-top: #{$space-md};
     --padding-bottom: #{$space-md};
@@ -773,16 +779,24 @@ ion-item.puriva-form-item {
     --border-style: solid;
     --border-width: 1px;
     --box-shadow: #{$shadow-sm};
+    --color: #0f172a; /* ionic text color */
+    --placeholder-color: #64748b; /* ionic placeholder color */
     font-size: $font-size-lg;
     font-weight: $font-weight-semibold;
-    color: $color-text-primary;
+    color: #0f172a;
     transition: $transition-curve;
     min-height: 60px;
     
     &::part(native) {
       border-radius: $border-radius-medium;
       background: $color-bg-secondary;
+      color: #0f172a;
       transition: $transition-curve;
+    }
+
+    &::part(placeholder) {
+      color: $color-text-placeholder;
+      opacity: 1;
     }
     
     &.ion-focused {

@@ -77,7 +77,7 @@ ion-fab.fab-above-bottom-nav ion-fab-button {
   border-radius: 25px;
   margin-bottom: 25px;
   position: relative;
-  overflow: hidden;
+  overflow: visible; // allow popovers to extend outside header
   
   &::before {
     content: '';
@@ -175,6 +175,92 @@ ion-fab.fab-above-bottom-nav ion-fab-button {
     align-items: center;
     justify-content: center;
     background: rgba(255,255,255,0.12);
+  }
+}
+
+// Custom filter popover styles
+.filter-popover-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 999; // above cards
+}
+
+.filter-popover {
+  position: fixed;
+  top: 88px; // below header title area
+  right: 24px;
+  left: 24px;
+  margin: 0 auto;
+  max-width: 420px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 24px 48px rgba(0,0,0,0.18);
+  padding: 16px;
+  border: 1px solid #eef2ff;
+  max-height: 70vh;            // prevent clipping; enable scroll within
+  overflow: auto;
+  z-index: 1000;
+}
+
+.filter-header {
+  font-weight: 700;
+  font-size: 13px;
+  color: #6b7cff; /* accent */
+  margin: 6px 6px 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.divider {
+  height: 1px;
+  background: #eef2ff;
+  margin: 8px 4px 12px;
+}
+
+.option-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #f7f8ff;
+  border: none;
+  text-align: left;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.option .icon { width: 22px; text-align: center; }
+.option .label { flex: 1; font-size: 13px; }
+.option .check { color: #ffffff; }
+
+.option.active {
+  background: linear-gradient(135deg, #6b7cff, #8f63ff);
+  color: #ffffff;
+  box-shadow: 0 10px 24px rgba(107,124,255,0.35);
+}
+
+.close-btn {
+  --background: linear-gradient(135deg, #ff5fa3, #ff7b7b);
+  --border-radius: 12px;
+  margin-top: 12px;
+}
+
+@media (max-width: 430px) {
+  .filter-popover {
+    left: 12px;
+    right: 12px;
+    top: 84px;
+    max-height: calc(100vh - 120px);
   }
 }
 

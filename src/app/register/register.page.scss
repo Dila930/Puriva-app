@@ -545,6 +545,82 @@ ion-content.puriva-register-page {
 }
 
 // ======================================
+// 📌 Privacy Policy Modal Styles
+// ======================================
+.puriva-policy-modal::part(content) {
+  --height: auto;
+  --border-radius: 20px;
+}
+
+.policy-header ion-toolbar {
+  @include gradient-primary();
+  color: #fff;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.policy-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+}
+
+.policy-subtitle {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.9);
+}
+
+.policy-content {
+  background: #f8fafc;
+}
+
+.policy-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+}
+
+.policy-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.policy-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: $color-text-gray;
+  font-weight: 600;
+}
+
+.policy-list ion-icon { color: $color-icon; font-size: 18px; margin-top: 2px; }
+
+.policy-note { display: block; margin-top: 4px; }
+
+.policy-actions {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.policy-accept {
+  --background: linear-gradient(135deg, $color-primary-start, $color-secondary-start);
+  --border-radius: 14px;
+}
+
+.policy-decline {
+  --border-radius: 14px;
+}
+
+// ======================================
 // 📌 Animations
 // ======================================
 @keyframes materialIn {

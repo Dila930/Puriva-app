@@ -6,6 +6,40 @@
     --padding-top: 0;
     --padding-start: 0;
     --padding-end: 0;
+    
+    // Floating Chat Button
+    .floating-chat-btn {
+      position: fixed;
+      bottom: calc(80px + env(safe-area-inset-bottom)); // Above bottom nav
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(79, 70, 229, 0.3);
+      z-index: 999;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      
+      ion-icon {
+        color: white;
+        font-size: 28px;
+      }
+      
+      &:active {
+        transform: scale(0.95);
+      }
+      
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 25px rgba(79, 70, 229, 0.4);
+      }
+    }
+    
+    /* Floating animation removed */
   }
 
   // Smooth fade out effect at the bottom
@@ -127,8 +161,46 @@ $sayur-gradient: linear-gradient(135deg, #d299c2 0%, $puriva-yellow 100%);
 /* Right block: notification + avatar grouped tighter */
 .header-actions {
   display: flex;
+  gap: 12px;
   align-items: center;
-  gap: 8px; /* make bell and avatar close */
+  
+  .chat-ai-btn, .notification-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    
+    ion-icon {
+      color: white;
+      font-size: 20px;
+    }
+    
+    &:active {
+      transform: scale(0.95);
+    }
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  }
+  
+  .notification-dot {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 8px;
+    height: 8px;
+    background: #ff6b6b;
+    border-radius: 50%;
+    border: 2px solid #4f46e5;
+  }
 }
 
 .user-info {

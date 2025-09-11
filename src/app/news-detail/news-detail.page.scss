@@ -81,17 +81,64 @@
           }
         }
         
-        .news-category-badge {
-          background: rgba(255, 255, 255, 0.95);
-          padding: 0.75rem 1.25rem;
-          border-radius: 25px;
-          font-size: 0.8rem;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 1px;
-          backdrop-filter: blur(15px);
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-          border: 1px solid rgba(255, 255, 255, 0.4);
+        .badge-container {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin-top: 10px;
+          
+          .news-category-badge {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 0.6rem 1rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            display: inline-flex;
+            align-items: center;
+            white-space: nowrap;
+          }
+          
+          .news-badge {
+            padding: 0.5rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+            
+            ion-icon {
+              font-size: 0.9rem;
+            }
+            
+            &.popular {
+              background: linear-gradient(45deg, #FF6B6B, #FF8E53);
+              &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+              }
+            }
+            
+            &.new {
+              background: linear-gradient(45deg, #4ECDC4, #556270);
+              animation-delay: 1s;
+              &:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(78, 205, 196, 0.4);
+              }
+            }
+          }
           
           &.category-technology {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);

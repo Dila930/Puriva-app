@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, ToastController } from '@ionic/angular';
-import { Auth, createUserWithEmailAndPassword, updateProfile } from '@angular/fire/auth';
+import { NavController, ToastController, Platform } from '@ionic/angular';
+import { Auth, createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, signInWithPopup } from '@angular/fire/auth';
 import { Firestore, doc, setDoc, serverTimestamp, collection, addDoc, getDoc } from '@angular/fire/firestore';
 import { Database, ref, set as rtdbSet, serverTimestamp as rtdbServerTimestamp } from '@angular/fire/database';
+import { Router, NavigationExtras } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -21,13 +22,30 @@ export class RegisterPage implements OnInit {
   isLoading = false;
   showPolicyModal = false;
 
+  isGoogleSignUp = false;
+  googleUserData: any = null;
+
   constructor(
     private navCtrl: NavController,
     private toastCtrl: ToastController,
     private auth: Auth,
     private firestore: Firestore,
     private rtdb: Database,
-  ) {}
+    private router: Router,
+    private platform: Platform
+  ) {
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras.state as {
+      googleUser: any;
+      isGoogleSignUp: boolean;
+    };
+
+    if (state?.isGoogleSignUp && state.googleUser) {
+      this.isGoogleSignUp = true;
+      this.googleUserData = state.googleUser;
+      this.email = this.googleUserData.email;
+    }
+  }
 
   ngOnInit() {}
 
@@ -38,7 +56,7 @@ export class RegisterPage implements OnInit {
     return `${first}***@${domain}`;
   }
 
-  private withTimeout<T>(p: Promise<T>, ms = 8000, label = 'Operasi'): Promise<T> {
+  private withTimeout<T>(p: Promise<T>, ms = 30000, label = 'Operasi'): Promise<T> {
     return new Promise<T>((resolve, reject) => {
       const t = setTimeout(() => reject(new Error(`${label} timeout. Periksa koneksi Anda dan coba lagi.`)), ms);
       p.then(v => { clearTimeout(t); resolve(v); }).catch(e => { clearTimeout(t); reject(e); });
@@ -102,12 +120,12 @@ export class RegisterPage implements OnInit {
     }
 
     // Basic validation
-    if (!this.username || !this.email || !this.password) {
+    if ((!this.isGoogleSignUp && !this.password) || !this.username || !this.email) {
       this.presentToast('Harap isi semua field', 'danger');
       return;
     }
 
-    if (this.password.length < 6) {
+    if (!this.isGoogleSignUp && this.password.length < 6) {
       this.presentToast('Password minimal 6 karakter', 'danger');
       return;
     }
@@ -119,163 +137,151 @@ export class RegisterPage implements OnInit {
     }
 
     this.isLoading = true;
+    const form = document.querySelector('.puriva-form-section');
+    form?.classList.add('form-loading');
 
     try {
-      // 1) Create user in Firebase Auth
-      const cred = await this.withTimeout(createUserWithEmailAndPassword(this.auth, this.email, this.password), 8000, 'Pendaftaran');
+      let uid: string;
+      let emailVerified = false;
 
-      // 2) Update display name
-      if (cred.user) {
-        await updateProfile(cred.user, { displayName: this.username });
+      if (this.isGoogleSignUp && this.googleUserData) {
+        // For Google sign-up, use the existing Google user
+        const provider = new GoogleAuthProvider();
+        provider.addScope('email');
+        provider.addScope('profile');
+        
+        const result = await signInWithPopup(this.auth, provider);
+        const user = result.user;
+        uid = user.uid;
+        emailVerified = user.emailVerified;
+      } else {
+        // Regular email/password sign-up
+        const result = await this.withTimeout(
+          createUserWithEmailAndPassword(this.auth, this.email, this.password),
+          8000,
+          'Pendaftaran'
+        );
+        
+        uid = result.user.uid;
+        emailVerified = result.user.emailVerified;
+        
+        // Update display name for email/password sign-up
+        await updateProfile(result.user, { displayName: this.username });
       }
 
-      // 3) Save user profile to Firestore (best-effort, NON-BLOCKING)
-      const uid = cred.user?.uid as string;
-      const userRef = doc(this.firestore, 'users', uid);
+      // Get the next sequential user ID
+      const counterRef = doc(this.firestore, 'counters', 'users');
+      const counterSnap = await getDoc(counterRef);
+      let nextId = 1000; // Starting ID
       
-      try {
-        // Get the next sequential user ID
-        const counterRef = doc(this.firestore, 'counters', 'users');
-        const counterSnap = await getDoc(counterRef);
-        let nextId = 1000; // Starting ID
-        
-        if (counterSnap.exists()) {
-          nextId = (counterSnap.data()['count'] || 1000) + 1;
-        }
-        
-        // Update the counter for next time
-        await setDoc(counterRef, { count: nextId }, { merge: true });
-        
-        // Format the sequential ID with leading zeros (e.g., UID1000, UID1001, etc.)
-        const sequentialId = `UID${nextId.toString().padStart(4, '0')}`;
-        
-        await this.withTimeout(setDoc(userRef, {
-          uid,
-          sequentialId,
-          username: this.username,
-          email: this.email,
-          kodeAkses: this.password, // app-internal access code
-          // consent status can be audited here if needed
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
-          lastLoginAt: serverTimestamp(),
-          lastActive: serverTimestamp(),
-        }), 8000, 'Menyimpan profil');
-      } catch (e: any) {
-        // Jangan blokir pendaftaran jika gagal simpan profil (mis. permission-denied)
-        // Lanjutkan navigasi agar user tetap login dan masuk aplikasi.
-        // Opsional: bisa log atau tampilkan toast non-kritis jika diperlukan.
+      if (counterSnap.exists()) {
+        nextId = (counterSnap.data()['count'] || 1000) + 1;
+      }
+      
+      // Update the counter for next time
+      await setDoc(counterRef, { count: nextId }, { merge: true });
+      
+      // Format the sequential ID with leading zeros (e.g., UID1000, UID1001, etc.)
+      const sequentialId = `UID${nextId.toString().padStart(4, '0')}`;
+
+      // Prepare user data for Firestore
+      const userData: any = {
+        uid,
+        sequentialId,
+        username: this.username,
+        email: this.email,
+        displayName: this.username,
+        emailVerified: this.isGoogleSignUp || emailVerified,
+        isGoogleSignUp: this.isGoogleSignUp,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        lastLoginAt: serverTimestamp(),
+        lastActive: serverTimestamp(),
+      };
+
+      // Add Google-specific fields if available
+      if (this.isGoogleSignUp && this.googleUserData) {
+        userData.photoURL = this.googleUserData.photoURL || null;
+        userData.providerData = ['google'];
+      } else {
+        userData.kodeAkses = this.password; // Only store password for email/password users
       }
 
-      // 3a) Create/overwrite register record at register/{uid}
+      // Save user profile to Firestore
+      const userRef = doc(this.firestore, 'users', uid);
+      await setDoc(userRef, userData, { merge: true });
+
+      // Create/update register record
       try {
         const regDoc = doc(this.firestore, 'register', uid);
-        await this.withTimeout(setDoc(regDoc, {
+        await setDoc(regDoc, {
           uid,
           username: this.username,
           email: this.email,
-          kodeAkses: this.password, // app-internal access code
           createdAt: serverTimestamp(),
-        }), 8000, 'Menyimpan register');
+          ...(this.isGoogleSignUp ? {} : { kodeAkses: this.password })
+        }, { merge: true });
       } catch (e: any) {
-        // Surface non-blocking warning if register write fails
-        this.presentToast('Peringatan: gagal menyimpan ke koleksi register.', 'warning');
+        console.warn('Failed to update register collection:', e);
       }
 
-      // 3b) Mirror essential profile to Realtime Database keyed by UID (NON-BLOCKING)
+      // Update Realtime Database
       try {
-        await this.withTimeout(
-          rtdbSet(ref(this.rtdb, `users/${uid}`), {
-            uid,
-            username: this.username,
-            email: this.email,
-            kodeAkses: this.password, // WARNING: app-internal code only
-            provider: 'password',
-            createdAt: rtdbServerTimestamp(),
-            updatedAt: rtdbServerTimestamp(),
-          }),
-          8000,
-          'Menyimpan profil (Realtime DB)'
-        );
-      } catch {}
-
-      // 4) Registration history (Firestore and Realtime DB) - do NOT store password
-      try {
-        const regHist = collection(this.firestore, 'registerHistory');
-        await addDoc(regHist, {
+        const userRtdbRef = ref(this.rtdb, `users/${uid}`);
+        await rtdbSet(userRtdbRef, {
           uid,
           email: this.email,
           username: this.username,
-          method: 'password',
-          at: serverTimestamp(),
-          clientAt: new Date().toISOString(),
-        } as any);
-      } catch {}
+          displayName: this.username,
+          photoURL: this.googleUserData?.photoURL || null,
+          provider: this.isGoogleSignUp ? 'google' : 'password',
+          lastActive: rtdbServerTimestamp(),
+          createdAt: this.isGoogleSignUp ? rtdbServerTimestamp() : rtdbServerTimestamp(),
+          updatedAt: rtdbServerTimestamp(),
+        });
+      } catch (e) {
+        console.warn('Failed to update Realtime Database:', e);
+      }
 
+      // Log the registration
       try {
-        const key = Date.now();
-        await this.withTimeout(
-          rtdbSet(ref(this.rtdb, `registerHistory/${uid}/${key}`), {
-            uid,
-            email: this.email,
-            username: this.username,
-            method: 'password',
-            at: rtdbServerTimestamp(),
-            clientAt: new Date().toISOString(),
-          }),
-          8000,
-          'Menyimpan riwayat register (Realtime DB)'
-        );
-      } catch {}
-
-      // 5) Audit log for registration (do NOT store password)
-      try {
-        const logsCol = collection(this.firestore, 'loginLogs');
-        await addDoc(logsCol, {
+        const authLogsCol = collection(this.firestore, 'authLogs');
+        await addDoc(authLogsCol, {
           action: 'register',
           uid,
           email: this.email,
           byEmailMasked: this.maskEmail(this.email),
-          method: 'password',
-          at: serverTimestamp(),
-        } as any);
-      } catch {}
-
-      // Additional audit logs similar to sterilisasi pattern
-      try {
-        const authLogs = collection(this.firestore, 'authLogs');
-        await addDoc(authLogs, {
-          action: 'register',
-          uid,
-          email: this.email,
-          byEmailMasked: this.maskEmail(this.email),
+          method: this.isGoogleSignUp ? 'google' : 'email',
           at: serverTimestamp(),
           source: 'register_page'
-        } as any);
-      } catch {}
+        });
+      } catch (e) {
+        console.warn('Failed to log registration:', e);
+      }
 
-      try {
-        const perUser = collection(this.firestore, `authLogsByUser/${uid}/events`);
-        await addDoc(perUser, {
-          action: 'register',
-          uid,
-          email: this.email,
-          byEmailMasked: this.maskEmail(this.email),
-          at: serverTimestamp(),
-          source: 'register_page'
-        } as any);
-      } catch {}
-
+      // Show success message and navigate
       await this.presentToast('Pendaftaran berhasil!', 'success');
-      // Navigasi SELALU dilakukan setelah akun berhasil dibuat,
-      // terlepas dari status penulisan profil Firestore.
+
+      // Navigate to home page
       this.navCtrl.navigateRoot('/home');
-    } catch (err: any) {
-      const code = err?.code as string | undefined;
-      const translated = this.translateFirebaseError(code, err?.message);
-      this.presentToast(translated, 'danger');
+    } catch (error: any) {
+      console.error('Registration error:', error);
+      let errorMessage = 'Terjadi kesalahan saat mendaftar. Silakan coba lagi.';
+
+      if (error.code === 'auth/email-already-in-use') {
+        errorMessage = 'Email sudah terdaftar. Silakan gunakan email lain.';
+      } else if (error.code === 'auth/weak-password') {
+        errorMessage = 'Password terlalu lemah. Gunakan minimal 6 karakter.';
+      } else if (error.code === 'auth/invalid-email') {
+        errorMessage = 'Format email tidak valid.';
+      } else if (error.code === 'auth/account-exists-with-different-credential') {
+        errorMessage = 'Akun sudah terdaftar dengan metode login yang berbeda.';
+      }
+
+      this.presentToast(errorMessage, 'danger');
     } finally {
       this.isLoading = false;
+      form?.classList.remove('form-loading');
     }
   }
 

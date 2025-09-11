@@ -25,36 +25,14 @@
 
     <!-- Menu Items -->
     <div class="menu-section">
-      <div class="menu-item" (click)="onMenuClick(menuItems[0])">
+      <div class="menu-item" *ngFor="let item of menuItems; let i = index" (click)="onMenuClick(item)">
         <a class="menu-link">
-          <div class="menu-icon icon-settings">⚙</div>
+          <ion-icon [name]="item.icon" class="menu-icon"></ion-icon>
           <div class="menu-content">
-            <div class="menu-title">Pengaturan Akun</div>
-            <div class="menu-subtitle">Ubah data sandi & informasi pribadi</div>
+            <div class="menu-title">{{item.title}}</div>
+            <div class="menu-subtitle">{{item.subtitle}}</div>
           </div>
-          <div class="menu-arrow">›</div>
-        </a>
-      </div>
-
-      <div class="menu-item" (click)="onMenuClick(menuItems[1])">
-        <a class="menu-link">
-          <div class="menu-icon icon-activity">📊</div>
-          <div class="menu-content">
-            <div class="menu-title">Riwayat Aktivitas</div>
-            <div class="menu-subtitle">Lihat riwayat sterilisasi & interaksi</div>
-          </div>
-          <div class="menu-arrow">›</div>
-        </a>
-      </div>
-
-      <div class="menu-item" (click)="onMenuClick(menuItems[2])">
-        <a class="menu-link">
-          <div class="menu-icon icon-help">❓</div>
-          <div class="menu-content">
-            <div class="menu-title">Pusat Bantuan</div>
-            <div class="menu-subtitle">FAQ, hubungi CS & panduan</div>
-          </div>
-          <div class="menu-arrow">›</div>
+          <div class="menu-arrow" *ngIf="item.title !== 'Keluar'">›</div>
         </a>
       </div>
 
@@ -62,11 +40,8 @@
 
     </div>
 
-    <!-- Refresh + Logout Buttons -->
+    <!-- Logout Button -->
     <div class="logout-section">
-      <button class="refresh-btn" (click)="refreshApp()">
-        🔄 Refresh Aplikasi
-      </button>
       <button class="logout-btn" (click)="logout()">
         🚪 Keluar dari Akun
       </button>

@@ -48,6 +48,9 @@ export class HomePage implements OnInit, OnDestroy {
   recentActivities: Activity[] = [];
   visibleActivities: number = 5; // Show 5 activities by default
   showAllActivities: boolean = false;
+  
+  // Notifications
+  notifications: string[] = [];
 
   /**
    * Toggle between showing all activities or just the first few
@@ -56,8 +59,18 @@ export class HomePage implements OnInit, OnDestroy {
     this.showAllActivities = !this.showAllActivities;
     this.visibleActivities = this.showAllActivities ? this.recentActivities.length : 5;
   }
-  // Notifications (for badge demo; replace with real data source as needed)
-  notifications: string[] = [];
+
+  // Ambil kata pertama dari nama/teks untuk ditampilkan di greeting
+  private getFirstWord(name: string | null | undefined): string {
+    const s = (name || '').toString().trim();
+    if (!s) return 'Pengguna';
+    // Jika ini email, ambil bagian sebelum '@'
+    const base = s.includes('@') ? s.split('@')[0] : s;
+    // Split berdasarkan spasi atau pemisah umum
+    const first = base.split(/[\s._-]+/).filter(Boolean)[0] || base;
+    // Kapitalisasi huruf pertama
+    return first.charAt(0).toUpperCase() + first.slice(1);
+  }
   
   // Timers
   private realtimeTimer: any;
@@ -201,7 +214,8 @@ export class HomePage implements OnInit, OnDestroy {
     try {
       const cu = this.auth.currentUser as User | null;
       if (cu) {
-        this.userName = cu.displayName || cu.email || 'Pengguna';
+        const baseName = cu.displayName || cu.email || 'Pengguna';
+        this.userName = this.getFirstWord(baseName);
         this.userEmail = cu.email || null;
         this.userPhotoUrl = cu.photoURL || null;
       } else {
@@ -323,6 +337,12 @@ export class HomePage implements OnInit, OnDestroy {
     this.activeTab = 'home';
   }
 
+  // Navigate to chat page when floating button is clicked
+  goToChat() {
+    this.router.navigate(['/chat']);
+    this.activeTab = 'chat';
+  }
+
   goToControl(): void {
     this.router.navigate(['/control']);
   }
@@ -340,25 +360,20 @@ export class HomePage implements OnInit, OnDestroy {
     this.router.navigate(['/profile']);
   }
 
+  goToNotifications(): void {
+    // Navigate to notifications page or show notifications
+    console.log('Navigating to notifications');
+    // this.router.navigate(['/notifications']); // Uncomment when notifications page is available
+  }
+
   showSettings(): void {
     // Navigate to settings or show settings modal
     console.log('Showing settings');
     // this.router.navigate(['/settings']); // Uncomment when settings page is available
   }
 
-  // Navigation to existing notifications page
-  goToNotifications(): void {
-    // Consider all notifications as read when opening the page
-    this.hasUnread = false;
-    this.notificationCount = 0;
-    this.router.navigate(['/notifikasi']);
-  }
 
-  // Backward compatibility: keep existing method name
-  showNotifications(): void {
-    this.goToNotifications();
-  }
-
+  // View all activities
   viewAllActivities(): void {
     // Navigate to activities page or show all activities
     console.log('Viewing all activities');
@@ -380,6 +395,17 @@ export class HomePage implements OnInit, OnDestroy {
     this.selectedStatusFilter = value ?? 'total';
     this.generateStats();
   }
+
+  // Update efficiency based on current data
+  private updateEfficiency(): void {
+    if (this.statsTotals.total === 0) {
+      this.efficiency = '0%';
+      return;
+    }
+    const efficiency = Math.round((this.statsTotals.berhasil / this.statsTotals.total) * 100);
+    this.efficiency = `${efficiency}%`;
+  }
+
 
   private generateStats(): void {
     // Build last 4-month totals (current month included), not filtered by UI range
@@ -444,16 +470,6 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   // ===== Efficiency helpers & detail popup =====
-  private updateEfficiency(): void {
-    const total = this.totalToday || 0;
-    if (total <= 0) {
-      this.efficiency = '100%';
-      return;
-    }
-    const completed = this.recentActivities.filter(a => a.status === 'completed').length;
-    const pct = Math.max(0, Math.min(100, Math.round((completed / total) * 100)));
-    this.efficiency = `${pct}%`;
-  }
 
   async showEfficiencyDetail(): Promise<void> {
     const total = this.totalToday || 0;
@@ -594,22 +610,27 @@ export class HomePage implements OnInit, OnDestroy {
 
       if (userDocSnap.exists()) {
         const userData = userDocSnap.data();
-        this.userName = userData['name'] || user.displayName || user.email?.split('@')[0] || 'Pengguna';
+        const baseName = userData['name'] || user.displayName || user.email?.split('@')[0] || 'Pengguna';
+        this.userName = this.getFirstWord(baseName);
         this.userPhotoUrl = userData['photoURL'] || user.photoURL || null;
       } else {
         // Fallback ke data dari Firebase Auth jika data di Firestore belum ada
-        this.userName = user.displayName || user.email?.split('@')[0] || 'Pengguna';
+        const baseName = user.displayName || user.email?.split('@')[0] || 'Pengguna';
+        this.userName = this.getFirstWord(baseName);
         this.userPhotoUrl = user.photoURL || null;
       }
     } catch (error) {
       console.error("Gagal mengambil data profil dari Firestore:", error);
       // Fallback jika terjadi error pada Firestore
-      this.userName = user.displayName || user.email?.split('@')[0] || 'Pengguna';
+      const baseName = user.displayName || user.email?.split('@')[0] || 'Pengguna';
+      this.userName = this.getFirstWord(baseName);
       this.userPhotoUrl = user.photoURL || null;
     }
 
     this.userEmail = user.email || null;
   }
+
+  
 
   private detachDatabaseListeners(): void {
     try {
@@ -622,7 +643,8 @@ export class HomePage implements OnInit, OnDestroy {
 
   // Fully reset UI state so old account data does not leak into new session
   private resetHomeState(): void {
-    this.userName = 'Pengguna';
+    this.userName = this.getFirstWord('Pengguna');
+
     this.userEmail = null;
     this.userPhotoUrl = null;
     this.notificationCount = 0;

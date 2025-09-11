@@ -1,12 +1,48 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Allow preflight requests for CORS
+    match /{document=**} {
+      allow read, write: if request.method == 'OPTIONS';
+    }
+    
+    // Allow read access to all users for public data
+    match /public/{document=**} {
+      allow read: if true;
+    }
 
     // Users can read/write only their own profile document
     match /users/{userId} {
-      allow create: if request.auth != null && request.auth.uid == userId;
-      allow read, update: if request.auth != null && request.auth.uid == userId;
-      allow delete: if false; // prevent deletes for safety (adjust as needed)
+      // Allow creation of user document during sign-up (including Google sign-in)
+      allow create: if request.auth != null && 
+                  request.auth.uid == userId && 
+                  request.resource.data.uid == userId &&
+                  (request.resource.data.email == request.auth.token.email ||
+                   request.resource.data.email == request.auth.token.email.toLowerCase() ||
+                   // Allow Google sign-in email matching
+                   request.auth.token.email_verified == true);
+                   
+      // Allow read/update of own document
+      allow read: if request.auth != null && 
+                 (request.auth.uid == userId || 
+                  request.auth.token.email == resource.data.email ||
+                  request.auth.token.email.toLowerCase() == resource.data.email ||
+                  // Allow Google sign-in email matching
+                  (request.auth.token.email_verified == true && request.auth.token.email == resource.data.email));
+                  
+      allow update: if request.auth != null && 
+                   request.auth.uid == userId &&
+                   request.resource.data.uid == userId;
+                   
+      allow delete: if false; // prevent deletes for safety
+      
+      // Allow checking if user exists during sign-in (including Google sign-in)
+      allow get: if request.auth != null && 
+                (request.auth.uid == userId || 
+                 request.auth.token.email == resource.data.email ||
+                 request.auth.token.email.toLowerCase() == resource.data.email ||
+                 // Allow Google sign-in email matching
+                 (request.auth.token.email_verified == true && request.auth.token.email == resource.data.email));
     }
 
     // Login logs: authenticated users can create a log for themselves

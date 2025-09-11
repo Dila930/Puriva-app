@@ -14,15 +14,11 @@
         <div class="nav-label">Admin</div>
       </div>
       
-      <div class="nav-item" [class.active]="activeTab === 'chat'" (click)="goToChat()">
-        <ion-icon name="chatbubbles-outline" class="nav-icon"></ion-icon>
-        <div class="nav-label">Chat AI</div>
-      </div>
-
       <div class="nav-item" [class.active]="activeTab === 'news'" (click)="goToNews()">
         <ion-icon name="newspaper-outline" class="nav-icon"></ion-icon>
         <div class="nav-label">Berita</div>
       </div>
+
       <div class="nav-item" [class.active]="activeTab === 'forum'" (click)="goToForum()">
         <ion-icon name="chatbubbles-outline" class="nav-icon"></ion-icon>
         <div class="nav-label">Forum</div>

@@ -1,74 +1,159 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>{{ isEdit ? 'Edit Berita' : 'Tambah Berita' }}</ion-title>
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="cancel()" class="back-button">
+        <ion-icon slot="icon-only" name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">{{ isEdit ? 'Edit Berita' : 'Buat Berita Baru' }}</ion-title>
   </ion-toolbar>
-  
 </ion-header>
 
-<ion-content class="ion-padding">
-  <div [ngClass]="{ 'form-field-error': touchedTitle && !titleValid, 'form-field-success': touchedTitle && titleValid }">
-    <ion-item>
-      <ion-label position="stacked">Judul</ion-label>
-      <ion-input [(ngModel)]="title" (ionBlur)="touchedTitle = true" placeholder="Judul berita"></ion-input>
-    </ion-item>
-  </div>
-
-  <div [ngClass]="{ 'form-field-error': touchedCategory && !categoryValid, 'form-field-success': touchedCategory && categoryValid }">
-    <ion-item>
-      <ion-label position="stacked">Kategori</ion-label>
-      <ion-select [(ngModel)]="category" (ionBlur)="touchedCategory = true">
-        <ion-select-option *ngFor="let c of categories" [value]="c">{{ c }}</ion-select-option>
-      </ion-select>
-    </ion-item>
-  </div>
-
-  <ion-item lines="full">
-    <ion-label position="stacked">URL Gambar (opsional)</ion-label>
-    <ion-input [(ngModel)]="imageUrl" placeholder="https://..."></ion-input>
-  </ion-item>
-
-  <div class="image-preview-container" *ngIf="imageUrl">
-    <img [src]="imageUrl" alt="Preview Gambar" />
-  </div>
-
-  <!-- Local upload -->
-  <div class="divider-container">
-    <div class="divider-line"></div>
-    <div class="divider-text">atau</div>
-    <div class="divider-line"></div>
-  </div>
-  <input #fileChooser type="file" accept="image/jpeg,image/png,image/webp" hidden (change)="onFileSelected($event)" />
-  <ion-button class="upload-button" expand="block" fill="outline" (click)="fileChooser.click()" [disabled]="isUploading || isSaving">
-    <ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
-    Unggah Gambar dari Perangkat
-  </ion-button>
-  <div class="upload-info">Maksimal 1 foto, ukuran ≤ 1MB (JPG/PNG/WebP)</div>
-  <div class="upload-progress-container" *ngIf="isUploading">
-    <ion-progress-bar [value]="uploadProgress / 100"></ion-progress-bar>
-    <div class="progress-text">{{ uploadProgress | number:'1.0-0' }}%</div>
-  </div>
-
-  <div [ngClass]="{ 'form-field-error': touchedContent && !contentValid, 'form-field-success': touchedContent && contentValid }">
-    <ion-item lines="full">
-      <ion-label position="stacked">Konten</ion-label>
-      <ion-textarea [(ngModel)]="content" (ionBlur)="touchedContent = true" auto-grow="true" rows="8" placeholder="Tulis isi berita..."></ion-textarea>
-    </ion-item>
-  </div>
-
-  <ion-row class="action-buttons">
-    <ion-col size="6">
-      <ion-button class="cancel-button" expand="block" color="medium" (click)="cancel()" [disabled]="isSaving">Batal</ion-button>
-    </ion-col>
-    <ion-col size="6">
-      <ion-button class="save-button" expand="block" color="primary" (click)="onSubmit()" [disabled]="isSaving || !formValid">{{ isEdit ? 'Perbarui' : 'Simpan' }}</ion-button>
-    </ion-col>
-  </ion-row>
-
-  <!-- Loading overlay -->
-  <div class="loading-overlay fade-in" *ngIf="isSaving">
-    <div class="loading-content">
-      <ion-spinner name="crescent"></ion-spinner>
-      <div class="loading-text">Menyimpan...</div>
+<ion-content class="ion-padding form-container">
+  <form (ngSubmit)="onSubmit()" #newsForm="ngForm">
+    <!-- Header with Gradient -->
+    <div class="form-header">
+      <div class="form-icon">
+        <ion-icon name="newspaper-outline"></ion-icon>
+      </div>
+      <h2>{{ isEdit ? 'Perbarui Berita' : 'Buat Berita Baru' }}</h2>
+      <p>Isi formulir di bawah untuk {{ isEdit ? 'memperbarui' : 'membuat' }} berita</p>
     </div>
-  </div>
+
+    <!-- Main Form Card -->
+    <div class="form-card">
+      <!-- Title Field -->
+      <div class="form-group" [class.has-error]="touchedTitle && !titleValid" [class.has-success]="touchedTitle && titleValid">
+        <label>Judul Berita</label>
+        <div class="input-wrapper">
+          <ion-input 
+            [(ngModel)]="title" 
+            name="title" 
+            (ionBlur)="touchedTitle = true" 
+            placeholder="Masukkan judul berita"
+            required>
+          </ion-input>
+          <div class="input-icon">
+            <ion-icon *ngIf="touchedTitle && titleValid" name="checkmark-circle" color="success"></ion-icon>
+            <ion-icon *ngIf="touchedTitle && !titleValid" name="alert-circle" color="danger"></ion-icon>
+          </div>
+        </div>
+        <div class="error-message" *ngIf="touchedTitle && !titleValid">Judul berita harus diisi</div>
+      </div>
+
+      <!-- Category Field -->
+      <div class="form-group" [class.has-error]="touchedCategory && !categoryValid" [class.has-success]="touchedCategory && categoryValid">
+        <label>Kategori</label>
+        <div class="input-wrapper">
+          <ion-select 
+            [(ngModel)]="category" 
+            name="category" 
+            (ionBlur)="touchedCategory = true"
+            interface="action-sheet"
+            placeholder="Pilih kategori"
+            required>
+            <ion-select-option *ngFor="let c of categories" [value]="c">{{ c }}</ion-select-option>
+          </ion-select>
+          <div class="input-icon">
+            <ion-icon *ngIf="touchedCategory && categoryValid" name="checkmark-circle" color="success"></ion-icon>
+            <ion-icon *ngIf="touchedCategory && !categoryValid" name="alert-circle" color="danger"></ion-icon>
+          </div>
+        </div>
+        <div class="error-message" *ngIf="touchedCategory && !categoryValid">Silakan pilih kategori</div>
+      </div>
+
+      <!-- Image URL Field -->
+      <div class="form-group">
+        <label>URL Gambar (opsional)</label>
+        <div class="input-wrapper">
+          <ion-input 
+            [(ngModel)]="imageUrl" 
+            name="imageUrl" 
+            placeholder="https://contoh.com/gambar.jpg">
+          </ion-input>
+          <div class="input-icon">
+            <ion-icon name="image-outline"></ion-icon>
+          </div>
+        </div>
+      </div>
+
+      <!-- Image Preview -->
+      <div class="image-preview-container" *ngIf="imageUrl">
+        <img [src]="imageUrl" alt="Preview Gambar" (error)="imageUrl = ''" />
+        <ion-button fill="clear" color="danger" (click)="imageUrl = ''" class="remove-image">
+          <ion-icon slot="icon-only" name="close"></ion-icon>
+        </ion-button>
+      </div>
+
+      <!-- Divider -->
+      <div class="divider">
+        <span>atau</span>
+      </div>
+
+      <!-- File Upload -->
+      <div class="upload-section">
+        <input #fileChooser type="file" accept="image/jpeg,image/png,image/webp" hidden (change)="onFileSelected($event)" />
+        <ion-button 
+          class="upload-button" 
+          expand="block" 
+          fill="outline" 
+          (click)="fileChooser.click()" 
+          [disabled]="isUploading || isSaving">
+          <ion-icon name="cloud-upload-outline" slot="start"></ion-icon>
+          Unggah Gambar dari Perangkat
+        </ion-button>
+        <div class="upload-info">Maksimal 1 foto, ukuran ≤ 1MB (JPG/PNG/WebP)</div>
+        
+        <!-- Upload Progress -->
+        <div class="upload-progress-container" *ngIf="isUploading">
+          <div class="progress-header">
+            <span>Mengunggah...</span>
+            <span>{{ uploadProgress | number:'1.0-0' }}%</span>
+          </div>
+          <ion-progress-bar [value]="uploadProgress / 100" color="primary"></ion-progress-bar>
+        </div>
+      </div>
+
+      <!-- Content Field -->
+      <div class="form-group content-group" [class.has-error]="touchedContent && !contentValid" [class.has-success]="touchedContent && contentValid">
+        <label>Konten Berita</label>
+        <div class="input-wrapper">
+          <ion-textarea 
+            [(ngModel)]="content" 
+            name="content" 
+            (ionBlur)="touchedContent = true" 
+            autoGrow="true" 
+            rows="8" 
+            placeholder="Tulis isi berita di sini..."
+            required>
+          </ion-textarea>
+          <div class="input-icon">
+            <ion-icon *ngIf="touchedContent && contentValid" name="checkmark-circle" color="success"></ion-icon>
+            <ion-icon *ngIf="touchedContent && !contentValid" name="alert-circle" color="danger"></ion-icon>
+          </div>
+        </div>
+        <div class="error-message" *ngIf="touchedContent && !contentValid">Konten berita harus diisi</div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="form-actions">
+      <ion-button 
+        expand="block" 
+        class="cancel-button" 
+        fill="outline" 
+        (click)="cancel()" 
+        [disabled]="isSaving">
+        Batal
+      </ion-button>
+      <ion-button 
+        expand="block" 
+        class="submit-button" 
+        type="submit"
+        [disabled]="isSaving || !formValid">
+        <ion-spinner name="crescent" *ngIf="isSaving"></ion-spinner>
+        <span *ngIf="!isSaving">{{ isEdit ? 'Perbarui' : 'Simpan' }}</span>
+      </ion-button>
+    </div>
+  </form>
 </ion-content>

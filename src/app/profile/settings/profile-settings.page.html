@@ -39,6 +39,29 @@
         <ion-button slot="end" size="small" (click)="changeDisplayName()">Ubah</ion-button>
       </ion-item>
       
+      <!-- Tambah/Info Password (khusus user Google) -->
+      <ng-container *ngIf="isGoogleUser">
+        <ion-item class="card" detail="false">
+          <ion-label>
+            <div style="display:flex; flex-direction:column; gap:6px;">
+              <div style="font-weight:600;">Kata Sandi Akun</div>
+              <div *ngIf="hasPassword; else addPwBlock" style="font-size:14px; color:#374151;">
+                Password saya: <span style="font-family:monospace;">{{ maskedPassword }}</span>
+              </div>
+              <ng-template #addPwBlock>
+                <div style="font-size:13px; color:#6b7280;">Anda login dengan Google dan belum menambahkan password. Tambahkan password agar bisa login dengan email & password juga.</div>
+                <div style="display:flex; gap:8px; align-items:center; margin-top:8px;">
+                  <ion-input [type]="'password'" placeholder="Minimal 6 karakter" [(ngModel)]="newPassword" [disabled]="isSavingPassword"></ion-input>
+                  <ion-button size="small" [disabled]="isSavingPassword || (newPassword?.length||0) < 6" (click)="addPassword()">
+                    {{ isSavingPassword ? 'Menyimpan...' : 'Tambah' }}
+                  </ion-button>
+                </div>
+              </ng-template>
+            </div>
+          </ion-label>
+        </ion-item>
+      </ng-container>
+      
       <ion-item class="card" detail="false" [class.loading]="isSaving">
         <ion-label>Preferensi Notifikasi</ion-label>
         <ion-spinner slot="end" name="crescent" *ngIf="isSaving"></ion-spinner>

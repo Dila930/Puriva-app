@@ -5,31 +5,17 @@
       <div class="page-title">📰 Berita & Update</div>
       <div class="header-subtitle">Informasi terbaru seputar PURIVA</div>
       
-      <!-- Category Filter (synced with create page) -->
-      <div class="news-categories">
-        <button class="category-btn" 
-                [class.active]="currentFilter === 'semua'"
-                (click)="filterNews('semua')">Semua</button>
-        <button class="category-btn" 
-                [class.active]="currentFilter === 'umum'"
-                (click)="filterNews('umum')">Umum</button>
-        <button class="category-btn" 
-                [class.active]="currentFilter === 'teknologi'"
-                (click)="filterNews('teknologi')">Teknologi</button>
-        <button class="category-btn" 
-                [class.active]="currentFilter === 'kesehatan'"
-                (click)="filterNews('kesehatan')">Kesehatan</button>
-        <button class="category-btn" 
-                [class.active]="currentFilter === 'panduan'"
-                (click)="filterNews('panduan')">Panduan</button>
+      <!-- Search + Filter (categories moved into filter icon) -->
+      <div class="search-row">
+        <input type="text" 
+               class="search-bar" 
+               placeholder="🔍 Cari berita..." 
+               [(ngModel)]="searchQuery"
+               (input)="searchNews($event)">
+        <ion-button class="filter-btn" fill="clear" (click)="openFilterSheet()" aria-label="Filter kategori">
+          <ion-icon name="options-outline"></ion-icon>
+        </ion-button>
       </div>
-      
-      <!-- Search Bar -->
-      <input type="text" 
-             class="search-bar" 
-             placeholder="🔍 Cari berita..." 
-             [(ngModel)]="searchQuery"
-             (input)="searchNews($event)">
     </div>
     
     <!-- Main Content -->

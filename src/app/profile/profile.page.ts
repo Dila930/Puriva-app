@@ -34,18 +34,60 @@ export class ProfilePage implements OnInit, OnDestroy {
     return !!this.profilePhotoUrl;
   }
 
-  // Refresh aplikasi dari halaman Profile: arahkan ke Home bila login, jika tidak ke Login; lalu reload penuh
-  refreshApp(): void {
+  // ===== Refresh state =====
+  isRefreshing = false;
+
+  // Refresh aplikasi dari halaman Profile dengan improved error handling dan user feedback
+  async refreshApp(): Promise<void> {
+    // Prevent multiple refresh attempts
+    if (this.isRefreshing) {
+      await this.presentToast('Penyegaran sedang berlangsung...', 'warning');
+      return;
+    }
+    
+    this.isRefreshing = true;
+    
     try {
+      // Show loading feedback to user
+      await this.presentToast('Memulai penyegaran aplikasi...', 'warning');
+      
+      // Check if user is logged in
       const isLoggedIn = !!this.auth.currentUser;
       const target = isLoggedIn ? '/home' : '/login';
-      this.router.navigate([target]).then(() => {
-        setTimeout(() => {
-          try { window.location.reload(); } catch {}
-        }, 50);
-      });
-    } catch {
-      try { window.location.reload(); } catch {}
+      
+      // Navigate to appropriate page first
+      await this.router.navigate([target]);
+      
+      // Add a small delay to ensure navigation completes
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      // Clear any cached data and force reload
+      if ('caches' in window) {
+        try {
+          const cacheNames = await caches.keys();
+          await Promise.all(cacheNames.map(name => caches.delete(name)));
+        } catch (cacheError) {
+          console.warn('Failed to clear caches:', cacheError);
+        }
+      }
+      
+      // Force reload
+      window.location.reload();
+      
+    } catch (error) {
+      console.error('Refresh error:', error);
+      
+      // Fallback: direct reload if navigation fails
+      try {
+        await this.presentToast('Penyegaran gagal, mencoba ulang...', 'danger');
+        window.location.reload();
+      } catch (fallbackError) {
+        console.error('Fallback refresh failed:', fallbackError);
+        await this.presentToast('Gagal menyegarkan aplikasi. Silakan tutup dan buka kembali aplikasi.', 'danger');
+      }
+    } finally {
+      // Reset refresh state (though this may not execute due to page reload)
+      this.isRefreshing = false;
     }
   }
 
@@ -72,6 +114,13 @@ export class ProfilePage implements OnInit, OnDestroy {
 
   menuItems = [
     {
+      title: 'Chat AI',
+      subtitle: 'Tanya jawab dengan AI',
+      icon: 'chatbubbles-outline',
+      details:
+        'Berinteraksi dengan asisten AI untuk mendapatkan informasi dan bantuan seputar sterilisasi dan perawatan hewan peliharaan.'
+    },
+    {
       title: 'Pengaturan Akun',
       subtitle: 'Ubah informasi pribadi',
       icon: 'settings-outline',
@@ -93,11 +142,10 @@ export class ProfilePage implements OnInit, OnDestroy {
         'Temukan jawaban cepat di FAQ, baca panduan penggunaan aplikasi, atau hubungi layanan pelanggan jika membutuhkan bantuan lebih lanjut.'
     },
     {
-      title: 'Keluar',
-      subtitle: 'Keluar dari akun Anda',
-      icon: 'log-out-outline',
-      details:
-        'Akhiri sesi saat ini pada perangkat ini. Anda dapat login kembali kapan saja menggunakan email dan kata sandi yang terdaftar.'
+      title: 'Segarkan Aplikasi',
+      subtitle: 'Muat ulang aplikasi',
+      icon: 'refresh-outline',
+      action: 'refresh'
     }
   ];
 
@@ -112,21 +160,31 @@ export class ProfilePage implements OnInit, OnDestroy {
     'Masukan dan saran fitur baru',
   ];
 
-  onMenuClick(menu: any) {
-    if (menu.title === 'Keluar') {
-      this.logout();
+  async onMenuClick(menu: any) {
+    if (menu.action === 'refresh') {
+      await this.refreshApp();
       return;
     }
+    
+    // Prevent navigation during refresh
+    if (this.isRefreshing) {
+      await this.presentToast('Tunggu hingga penyegaran selesai...', 'warning');
+      return;
+    }
+    
     // Navigate to profile detail pages
     switch (menu.title) {
+      case 'Chat AI':
+        await this.router.navigate(['/chat']);
+        break;
       case 'Pengaturan Akun':
-        this.router.navigate(['/profile/settings']);
+        await this.router.navigate(['/profile/settings']);
         break;
       case 'Riwayat Aktivitas':
-        this.router.navigate(['/profile/activity']);
+        await this.router.navigate(['/profile/activity']);
         break;
       case 'Pusat Bantuan':
-        this.router.navigate(['/profile/help']);
+        await this.router.navigate(['/profile/help']);
         break;
       default:
         console.log('Clicked menu:', menu.title);

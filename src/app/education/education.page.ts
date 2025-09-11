@@ -166,8 +166,8 @@ export class EducationPage implements OnInit, OnDestroy {
   newsItems: Array<{ id: string; title: string; category: string; content: string; createdAt: number; authorUid: string; authorEmail?: string; authorMaskedEmail?: string }>= [];
 
   // UI-model list consumed by template
-  filteredNews: Array<{ id: string; title: string; description: string; category: string; categoryLabel: string; icon: string; date: string; readTime: number; isNew: boolean; thumbnail?: string }>= [];
-  featuredNews: { id: string; title: string; description: string; category: string; categoryLabel: string; icon: string; date: string; readTime: number; isNew: boolean; thumbnail?: string } = {
+  filteredNews: Array<{ id: string; title: string; description: string; category: string; categoryLabel: string; icon: string; date: string; readTime: number; isNew: boolean; thumbnail?: string; createdAt?: number }>= [];
+  featuredNews: { id: string; title: string; description: string; category: string; categoryLabel: string; icon: string; date: string; readTime: number; isNew: boolean; thumbnail?: string; createdAt?: number } = {
     id: '', title: '', description: '', category: 'semua', categoryLabel: 'Umum', icon: '📰', date: '', readTime: 1, isNew: false, thumbnail: ''
   };
   private unsubscribeFn?: () => void;
@@ -238,6 +238,44 @@ export class EducationPage implements OnInit, OnDestroy {
     this.applyFilters();
   }
 
+  // Open filter categories inside an Action Sheet (triggered by filter icon)
+  async openFilterSheet(): Promise<void> {
+    // Sorting options
+    const sortButtons: any[] = [
+      { text: `Terbaru${this.sortMode === 'terbaru' ? ' ✓' : ''}`, icon: 'arrow-down', handler: () => { this.setSort('terbaru'); } },
+      { text: `Terlama${this.sortMode === 'terlama' ? ' ✓' : ''}`, icon: 'arrow-up', handler: () => { this.setSort('terlama'); } },
+      { text: `A - Z${this.sortMode === 'az' ? ' ✓' : ''}`, icon: 'swap-vertical-outline', handler: () => { this.setSort('az'); } },
+      { text: `Z - A${this.sortMode === 'za' ? ' ✓' : ''}`, icon: 'swap-vertical-outline', handler: () => { this.setSort('za'); } },
+    ];
+
+    // Category options (remove 'Umum' as requested)
+    const catItems: Array<{ key: string; label: string }> = [
+      { key: 'semua', label: 'Semua' },
+      { key: 'teknologi', label: 'Teknologi' },
+      { key: 'kesehatan', label: 'Kesehatan' },
+      { key: 'panduan', label: 'Panduan' },
+    ];
+    const catButtons = catItems.map(it => ({
+      text: `${it.label}${this.currentFilter === it.key ? ' ✓' : ''}`,
+      handler: () => this.filterNews(it.key)
+    }));
+
+    const buttons = [
+      { text: 'Urutkan Berdasarkan', role: 'selected' } as any,
+      ...sortButtons,
+      { text: 'Filter Kategori', role: 'selected' } as any,
+      ...catButtons,
+      { text: 'Batal', role: 'cancel' } as any,
+    ];
+
+    const sheet = await this.actionSheetCtrl.create({
+      header: 'Filter & Urutkan',
+      subHeader: `Filter: ${catItems.find(i => i.key === this.currentFilter)?.label || 'Semua'} • Urutan: ${this.getSortLabel(this.sortMode)}`,
+      buttons
+    });
+    await sheet.present();
+  }
+
   formatDate(ts?: number): string {
     if (!ts) return '';
     const d = new Date(ts);
@@ -285,7 +323,7 @@ export class EducationPage implements OnInit, OnDestroy {
   }
 
   // Internal helpers
-  private toUiNews(it: any): { id: string; title: string; description: string; category: string; categoryLabel: string; icon: string; date: string; readTime: number; isNew: boolean; thumbnail?: string } {
+  private toUiNews(it: any): { id: string; title: string; description: string; category: string; categoryLabel: string; icon: string; date: string; readTime: number; isNew: boolean; thumbnail?: string; createdAt?: number } {
     const cat = (it.category || 'Umum').toString().toLowerCase();
     const map: Record<string, { label: string; icon: string }> = {
       'teknologi': { label: 'Teknologi', icon: '💻' },
@@ -314,20 +352,53 @@ export class EducationPage implements OnInit, OnDestroy {
       date: this.formatDate(it.createdAt),
       readTime,
       isNew,
-      thumbnail: (it.thumbnail || '').toString()
+      thumbnail: (it.thumbnail || '').toString(),
+      createdAt
     };
   }
 
-  private applyFilters(source?: Array<{ id: string; title: string; description: string; category: string; categoryLabel: string; icon: string; date: string; readTime: number; isNew: boolean; thumbnail?: string }>): void {
+  // Sorting state
+  sortMode: 'terbaru' | 'terlama' | 'az' | 'za' = 'terbaru';
+  private getSortLabel(m: 'terbaru' | 'terlama' | 'az' | 'za'): string {
+    switch (m) {
+      case 'terbaru': return 'Terbaru';
+      case 'terlama': return 'Terlama';
+      case 'az': return 'A - Z';
+      case 'za': return 'Z - A';
+    }
+  }
+  private setSort(m: 'terbaru' | 'terlama' | 'az' | 'za'): void {
+    this.sortMode = m;
+    this.applyFilters();
+  }
+
+  private applyFilters(source?: Array<{ id: string; title: string; description: string; category: string; categoryLabel: string; icon: string; date: string; readTime: number; isNew: boolean; thumbnail?: string; createdAt?: number }>): void {
     const base = source || this.newsItems.map((it: any) => this.toUiNews(it));
     const q = (this.searchQuery || '').toLowerCase();
     const cat = this.currentFilter;
-    this.filteredNews = base.filter(n => {
+    const filtered = base.filter(n => {
       const catOk = cat === 'semua' || n.category === cat;
       if (!q) return catOk;
       const hay = `${n.title} ${n.description} ${n.categoryLabel}`.toLowerCase();
       return catOk && hay.includes(q);
     });
+    // apply sorting
+    const sorted = [...filtered];
+    switch (this.sortMode) {
+      case 'terbaru':
+        sorted.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+        break;
+      case 'terlama':
+        sorted.sort((a, b) => (a.createdAt || 0) - (b.createdAt || 0));
+        break;
+      case 'az':
+        sorted.sort((a, b) => a.title.localeCompare(b.title));
+        break;
+      case 'za':
+        sorted.sort((a, b) => b.title.localeCompare(a.title));
+        break;
+    }
+    this.filteredNews = sorted;
   }
 
   // Bottom nav navigations

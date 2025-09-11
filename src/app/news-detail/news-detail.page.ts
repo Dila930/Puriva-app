@@ -15,6 +15,9 @@ interface NewsItem {
   category: string;
   categoryLabel: string;
   content: string;
+  likes?: { [key: string]: boolean };
+  likeCount?: number;
+  createdAt: number; // Timestamp
 }
 
 @Component({
@@ -45,6 +48,18 @@ export class NewsDetailPage implements OnInit {
     if (!this.newsData) {
       this.goBack();
     }
+  }
+
+  // Check if news is popular (more than 50 likes)
+  get isPopular(): boolean {
+    return (this.newsData?.likeCount || 0) > 50;
+  }
+
+  // Check if news is new (less than 7 days old)
+  get isNew(): boolean {
+    if (!this.newsData?.createdAt) return false;
+    const oneWeekAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+    return this.newsData.createdAt > oneWeekAgo;
   }
 
   goBack() {

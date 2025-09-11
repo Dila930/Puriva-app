@@ -1,10 +1,10 @@
 export const environment = {
   production: true,
+  geminiApiKey: "AIzaSyB9hgE80gd4geu2TJtaNA6-NU8PPs4WIno",
   firebase: {
-    apiKey: "AIzaSyCCxjwyjK_OEQDbbsfrWeXnPSaYyJ1p5k",
+    apiKey: "AIzaSyCCxjwjylK_OEQDhbsfrWeXnPSaYyJ1p5k",
     authDomain: "puriva-75321.firebaseapp.com",
     projectId: "puriva-75321",
-    storageBucket: "puriva-75321.firebasestorage.app",
     messagingSenderId: "1067990406899",
     appId: "1:1067990406899:web:d578f2056945e4d9c90986",
     databaseURL: "https://puriva-75321-default-rtdb.asia-southeast1.firebasedatabase.app/"

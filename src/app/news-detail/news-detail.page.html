@@ -12,8 +12,16 @@
         <button class="back-button" (click)="goBack()">
           <ion-icon name="arrow-back"></ion-icon>
         </button>
-        <div class="news-category-badge" [ngClass]="'category-' + newsData?.category">
-          {{ newsData?.categoryLabel }}
+        <div class="badge-container">
+          <div class="news-category-badge" [ngClass]="'category-' + newsData?.category">
+            {{ newsData?.categoryLabel }}
+          </div>
+          <div class="news-badge popular" *ngIf="isPopular">
+            <ion-icon name="flame"></ion-icon> Populer
+          </div>
+          <div class="news-badge new" *ngIf="isNew">
+            <ion-icon name="star"></ion-icon> Baru
+          </div>
         </div>
       </div>
     </div>

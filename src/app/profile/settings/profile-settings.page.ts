@@ -35,6 +35,13 @@ export class ProfileSettingsPage implements OnInit {
   readonly allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
   readonly maxUploadSize = 2 * 1024 * 1024; // 2MB
 
+  // Password state (untuk user Google yang belum punya password)
+  isGoogleUser = false;
+  hasPassword = false;
+  maskedPassword: string | null = null;
+  newPassword = '';
+  isSavingPassword = false;
+
   constructor(
     private alertCtrl: AlertController,
     private toast: ToastController,
@@ -82,6 +89,13 @@ export class ProfileSettingsPage implements OnInit {
     } catch {}
     // Fallback to ensure fade-in even if no data is fetched
     setTimeout(() => this.markPageReady(), 0);
+
+    // Tentukan apakah user login via Google dan cek status password terdaftar
+    try {
+      this.isGoogleUser = Array.isArray(user.providerData) && user.providerData.some((p: any) => p?.providerId === 'google.com');
+    } catch { this.isGoogleUser = false; }
+    // Muat status password (ada/tidak) dari Firestore
+    void this.loadPasswordStatus(user.uid);
   }
 
   // Handle file input change
@@ -302,6 +316,75 @@ export class ProfileSettingsPage implements OnInit {
   private async presentToast(message: string, color: 'success' | 'warning' | 'danger') {
     const t = await this.toast.create({ message, duration: 1500, color });
     await t.present();
+  }
+
+  // ===== Password helpers =====
+  private maskPassword(pw: string): string {
+    const s = (pw || '').toString();
+    if (s.length <= 2) return '*'.repeat(Math.max(1, s.length));
+    return `${s[0]}${'*'.repeat(Math.max(1, s.length - 2))}${s[s.length - 1]}`;
+  }
+
+  private async loadPasswordStatus(uid: string): Promise<void> {
+    try {
+      // Cek koleksi 'register' untuk password/kodeAkses
+      const colRef = collection(this.firestore, 'register');
+      const q1 = query(colRef as any, where('uid', '==', uid));
+      const q2 = query(colRef as any, where('userId', '==', uid));
+      const q3 = query(colRef as any, where('userID', '==', uid));
+      const [r1, r2, r3] = await Promise.all([getDocs(q1 as any), getDocs(q2 as any), getDocs(q3 as any)]);
+      const docs: any[] = Array.from(new Set([...(r1?.docs || []), ...(r2?.docs || []), ...(r3?.docs || [])] as any)) as any[];
+      let found: any = null;
+      if (docs.length > 0) {
+        // Prioritaskan field 'kodeAkses' lalu 'password'
+        for (const d of docs) {
+          const data = (d as any).data() || {};
+          const val = (data.kodeAkses || data.password || '').toString();
+          if (val) { found = val; break; }
+        }
+      }
+      // Jika belum ditemukan, cek dokumen 'users/{uid}' untuk 'kodeAkses'
+      if (!found) {
+        try {
+          const uref = doc(this.firestore as any, 'users', uid);
+          const { getDoc } = await import('@angular/fire/firestore');
+          const snap = await getDoc(uref as any);
+          const data = snap?.data() || {} as any;
+          const val = (data?.kodeAkses || data?.password || '').toString();
+          if (val) found = val;
+        } catch {}
+      }
+      if (found) {
+        this.hasPassword = true;
+        this.maskedPassword = this.maskPassword(found);
+      } else {
+        this.hasPassword = false;
+        this.maskedPassword = null;
+      }
+    } catch {
+      // Diamkan error agar UI tetap jalan
+    }
+  }
+
+  async addPassword(): Promise<void> {
+    const user = this.auth.currentUser;
+    if (!user) { await this.presentToast('Silakan login', 'warning'); return; }
+    const pw = (this.newPassword || '').trim();
+    if (pw.length < 6) { await this.presentToast('Password minimal 6 karakter', 'warning'); return; }
+    this.isSavingPassword = true;
+    try {
+      // Simpan ke koleksi 'register' dan mirror ke 'kodeAkses'
+      await this.updateRegisterDocs(user.uid, { password: pw });
+      // Best-effort: simpan juga ke dokumen 'users/{uid}'
+      try { await updateDoc(doc(this.firestore as any, 'users', user.uid), { kodeAkses: pw, updatedAt: serverTimestamp() } as any); } catch {}
+      this.newPassword = '';
+      await this.loadPasswordStatus(user.uid);
+      await this.presentToast('Password berhasil ditambahkan', 'success');
+    } catch {
+      await this.presentToast('Gagal menyimpan password', 'danger');
+    } finally {
+      this.isSavingPassword = false;
+    }
   }
 
   // Cari dan perbarui dokumen di koleksi Firestore 'register' milik uid saat ini.

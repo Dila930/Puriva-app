@@ -35,14 +35,19 @@
               name="email"
               required
               email
+              [readonly]="isGoogleSignUp"
+              [disabled]="isGoogleSignUp"
             ></ion-input>
             <ion-icon name="mail-outline" slot="start" class="puriva-input-icon"></ion-icon>
+            <ion-note *ngIf="isGoogleSignUp" slot="end" color="medium" class="ion-padding-start">
+              <small>Email dari Google</small>
+            </ion-note>
           </ion-item>
 
           <!-- Hanya Email dan Password diperlukan -->
 
           <!-- Password -->
-          <ion-item class="puriva-form-item">
+          <ion-item class="puriva-form-item" *ngIf="!isGoogleSignUp">
             <ion-label position="stacked">Password</ion-label>
             <ion-input
               [type]="showPassword ? 'text' : 'password'"
@@ -59,7 +64,15 @@
               <ion-icon [name]="showPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
             </ion-button>
           </ion-item>
-          <p class="puriva-field-help">Password ini hanya untuk aplikasi Puriva, bukan password email Anda.</p>
+          <p *ngIf="!isGoogleSignUp" class="puriva-field-help">Password ini hanya untuk aplikasi Puriva, bukan password email Anda.</p>
+          
+          <!-- Google Sign Up Notice -->
+          <div *ngIf="isGoogleSignUp" class="ion-padding-vertical">
+            <ion-note color="primary">
+              <ion-icon name="logo-google" slot="start"></ion-icon>
+              Anda mendaftar dengan akun Google. Klik Daftar untuk melanjutkan.
+            </ion-note>
+          </div>
 
           <!-- Konfirmasi Password dihapus sesuai permintaan -->
 

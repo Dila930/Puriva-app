@@ -1,17 +1,88 @@
 /* =========================================================
-   PURIVA - News Page Enhanced SCSS
-   Modern & Responsive Design
-   ========================================================= */
+  PURIVA - News Create/Edit Page
+  Modern & Responsive Form Design
+  ========================================================= */
 
 // ==========================================
 // DESIGN TOKENS & VARIABLES
 // ==========================================
+
+// Import shared theme variables
+@import '../../theme/_shared-theme.scss';
+
+// --- VARIABEL YANG DIPERBAIKI (Sebelumnya tidak terdefinisi) ---
+$bg-primary: #f8fafc; // Menambahkan definisi
+$light-blue: #89cff0; // Menambahkan definisi
+$light-blue-accent: #65b8e0; // Menambahkan definisi (nilai contoh)
+$shadow-base: 0 2px 4px rgba(0, 0, 0, 0.1); // Menambahkan definisi (nilai contoh)
+$font-3xl: 1.875rem; // Menambahkan definisi (nilai contoh)
+$gray-900: #111827; // Menambahkan definisi (nilai contoh)
+$gray-300: #d1d5db; // Menambahkan definisi (nilai contoh)
+
+// Additional local variables
+$radius-base: 0.5rem;
+$radius-xs: 0.25rem;
+$radius-md: 0.75rem;
+$font-xs: 0.75rem;
+$font-md: 1rem;
+$font-xl: 1.25rem;
+$danger: #ef4444;
+$gray-100: #f3f4f6;
+$gray-600: #4a5568;
+$gray-800: #1f2937;
+$white: #ffffff;
 
 // Brand Colors
 $puriva-primary: #4169e1;
 $puriva-secondary: #667eea;
 $puriva-accent: #764ba2;
 $puriva-light: #89cff0;
+$puriva-gradient: linear-gradient(135deg, $puriva-primary, $puriva-accent);
+
+// Text Colors
+$text-primary: #1a202c;
+$text-secondary: #4a5568;
+$text-muted: #718096;
+$text-light: #a0aec0;
+$text-on-primary: #ffffff;
+
+// Background Colors
+$bg-light: #f8fafc;
+$bg-white: #ffffff;
+$bg-gray-50: #f9fafb;
+$bg-gray-100: #f3f4f6;
+$bg-gray-200: #e5e7eb;
+
+// Border Colors
+$border-color: #e2e8f0;
+
+// Border Radius
+$border-radius-sm: 0.375rem;
+$border-radius: 0.5rem;
+$border-radius-md: 0.75rem;
+$border-radius-lg: 1rem;
+$border-radius-full: 9999px;
+
+// Spacing
+$spacing-1: 0.25rem;
+$spacing-2: 0.5rem;
+$spacing-3: 0.75rem;
+$spacing-4: 1rem;
+$spacing-5: 1.25rem;
+$spacing-6: 1.5rem;
+$spacing-8: 2rem;
+
+// Shadows
+$shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+// Transitions
+$transition-base: 0.2s ease;
+$transition-fast: 0.15s ease;
+$transition-normal: 0.3s ease;
+$transition-slow: 0.5s ease;
 
 // Category Colors
 $tech-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -19,75 +90,6 @@ $program-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
 $update-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 $cert-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
 $tips-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-
-// Semantic Colors
-$success: #43e97b;
-$warning: #fee140;
-$danger: #ff3b30;
-$info: #4facfe;
-
-// Neutral Colors
-$white: #ffffff;
-$gray-50: #f8fafc;
-$gray-100: #f1f5f9;
-$gray-200: #e2e8f0;
-$gray-300: #cbd5e1;
-$gray-400: #94a3b8;
-$gray-500: #64748b;
-$gray-600: #475569;
-$gray-700: #334155;
-$gray-800: #1e293b;
-$gray-900: #0f172a;
-
-// Light variants
-$light-blue: #e3f2fd;
-$light-blue-accent: #f8fbff;
-
-// Shadows & Effects
-$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-$shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-$shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-$shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-$shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-
-// Special shadows
-$shadow-news: 0 6px 25px rgba(0, 0, 0, 0.1);
-$shadow-news-hover: 0 8px 30px rgba(0, 0, 0, 0.15);
-$shadow-fab: 0 10px 24px rgba(65, 105, 225, 0.35);
-
-// Border Radius
-$radius-xs: 6px;
-$radius-sm: 8px;
-$radius-base: 12px;
-$radius-md: 16px;
-$radius-lg: 20px;
-$radius-xl: 25px;
-$radius-full: 50%;
-
-// Spacing
-$space-1: 4px;
-$space-2: 8px;
-$space-3: 12px;
-$space-4: 15px;
-$space-5: 16px;
-$space-6: 20px;
-$space-8: 25px;
-
-// Typography
-$font-xs: 8px;
-$font-sm: 10px;
-$font-base: 11px;
-$font-md: 12px;
-$font-lg: 13px;
-$font-xl: 14px;
-$font-2xl: 16px;
-$font-3xl: 20px;
-$font-4xl: 22px;
-
-// Transitions
-$transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-$transition-base: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-$transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 
 // ==========================================
 // MIXINS
@@ -99,142 +101,439 @@ $transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   border: 2px solid rgba(255, 255, 255, 0.3);
 }
 
+@mixin card-style {
+  background: $bg-white;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-md;
+  padding: $spacing-6;
+  margin-bottom: $spacing-6;
+  transition: transform $transition-normal, box-shadow $transition-normal;
+
+  &:hover {
+    box-shadow: $shadow-lg;
+    transform: translateY(-2px);
+  }
+}
+
 @mixin card-hover {
-  transition: all $transition-base;
+  transition: transform $transition-normal, box-shadow $transition-normal;
+
   &:hover {
     transform: translateY(-2px);
-    box-shadow: $shadow-news-hover;
+    box-shadow: $shadow-lg;
   }
 }
 
-@mixin button-hover {
-  transition: all $transition-base;
-  &:hover {
-    transform: translateY(-1px);
+@mixin input-style {
+  --background: #f8fafc;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+  --border-radius: 10px;
+  --border-color: $border-color;
+  --border-style: solid;
+  --border-width: 1px;
+  --color: $text-primary;
+  --placeholder-color: #a0aec0;
+  --placeholder-opacity: 1;
+  font-size: 15px;
+  font-weight: 400;
+  transition: all $transition-fast;
+
+  &:focus {
+    --border-color: $puriva-primary;
+    --background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(65, 105, 225, 0.1);
+  }
+
+  &.ion-valid {
+    --border-color: #48bb78;
+  }
+
+  &.ion-invalid {
+    --border-color: #f56565;
   }
 }
 
-@mixin text-truncate($lines: 3) {
-  display: -webkit-box;
-  -webkit-line-clamp: $lines;
-  -webkit-box-orient: vertical;
-  line-clamp: $lines;
-  overflow: hidden;
-  text-overflow: ellipsis;
+@mixin button-style($bg: $puriva-primary, $color: white) {
+  --background: #{$bg};
+  --color: #{$color};
+  --border-radius: 10px;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+  --box-shadow: none;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-transform: none;
+  transition: all $transition-normal;
+
+  &:hover:not(:disabled) {
+    --background: #{darken($bg, 8%)};
+    --box-shadow: 0 4px 12px rgba(65, 105, 225, 0.15);
+  }
+
+  &:active:not(:disabled) {
+    --background: #{darken($bg, 12%)};
+    transform: translateY(1px);
+  }
+
+  &:disabled {
+    opacity: 0.7;
+  }
 }
 
 @mixin focus-ring {
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba($puriva-primary, 0.3);
-  }
+  outline: 2px solid $puriva-primary;
+  outline-offset: 2px;
 }
 
 // ==========================================
 // BASE STYLES
 // ==========================================
 
-// Bottom navigation spacing
-:host ion-content {
-  --padding-bottom: 88px;
+ion-content {
+  --background: #f8fafc;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
 }
 
-// News page background
-.news-content {
-  --background: linear-gradient(135deg, $light-blue 0%, $light-blue-accent 100%);
-  
-  .container {
-    max-width: 420px;
-    margin: 0 auto;
-    padding: $space-6;
+ion-toolbar {
+  --background: #ffffff;
+  --border-style: none;
+  --border-width: 0;
+  --min-height: 60px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+
+  ion-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: $text-primary;
+    padding: 0 16px;
+  }
+
+  .back-button {
+    --color: #4a5568;
+    --padding-start: 8px;
+    --padding-end: 8px;
+    --ripple-color: transparent;
   }
 }
 
 // ==========================================
-// FAB POSITIONING
+// FORM CONTAINER
 // ==========================================
 
-ion-fab.fab-above-bottom-nav {
-  position: fixed;
-  right: $space-5;
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 88px) !important;
-  z-index: 11;
+.form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 16px;
 
-  ion-fab-button {
-    box-shadow: $shadow-fab;
-    transition: all $transition-base;
+  @media (min-width: 768px) {
+    padding: 24px;
+  }
+}
 
-    &:hover {
-      transform: scale(1.1);
-      box-shadow: 0 15px 35px rgba(65, 105, 225, 0.4);
+.form-header {
+  text-align: center;
+  margin-bottom: 32px;
+
+  .form-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 16px;
+    background: linear-gradient(135deg, rgba(65, 105, 225, 0.1), rgba(118, 75, 162, 0.1));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    ion-icon {
+      font-size: 32px;
+      color: $puriva-primary;
+    }
+  }
+
+  h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: $text-primary;
+    margin: 0 0 8px;
+  }
+
+  p {
+    color: $text-muted;
+    margin: 0;
+    font-size: 15px;
+  }
+}
+
+.form-card {
+  @include card-style;
+  padding: 24px;
+  margin-bottom: 32px;
+
+  @media (min-width: 768px) {
+    padding: 32px;
+  }
+}
+
+// Form Group Styles
+.form-group {
+  margin-bottom: 24px;
+  position: relative;
+
+  label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: $text-secondary;
+    margin-bottom: 8px;
+  }
+
+  .input-wrapper {
+    position: relative;
+
+    ion-input, ion-select, ion-textarea {
+      @include input-style;
+      width: 100%;
+    }
+
+    .input-icon {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+
+      ion-icon {
+        font-size: 20px;
+      }
+    }
+  }
+
+  // Error and Success States
+  &.has-error {
+    ion-input, ion-select, ion-textarea {
+      --border-color: #f56565;
+    }
+
+    .error-message {
+      color: #e53e3e;
+      font-size: 13px;
+      margin-top: 6px;
+      display: block;
+    }
+  }
+
+  &.has-success {
+    ion-input, ion-select, ion-textarea {
+      --border-color: #48bb78;
+    }
+  }
+
+  // Special styles for content textarea
+  &.content-group {
+    ion-textarea {
+      --padding-top: 16px;
+      --padding-bottom: 16px;
+      min-height: 200px;
+      line-height: 1.6;
     }
   }
 }
 
-// ==========================================
-// ANIMATIONS
-// ==========================================
+// Image Preview
+.image-preview-container {
+  margin: 16px 0;
+  border-radius: $border-radius;
+  overflow: hidden;
+  position: relative;
+  box-shadow: $shadow-sm;
 
-@keyframes fadeInUp {
-  0% {
-    opacity: 0;
-    transform: translateY(30px);
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    object-fit: cover;
   }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
+
+  .remove-image {
+    --padding-start: 0;
+    --padding-end: 0;
+    --background: rgba(0, 0, 0, 0.6);
+    --border-radius: 50%;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    margin: 0;
+    --color: white;
+    --background-hover: rgba(0, 0, 0, 0.8);
+
+    ion-icon {
+      font-size: 20px;
+    }
   }
 }
 
-@keyframes slideInCard {
-  0% {
-    opacity: 0;
-    transform: translateY(20px) scale(0.98);
+// Divider
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 24px 0;
+  color: $text-muted;
+  font-size: 14px;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid $border-color;
   }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
+
+  span {
+    padding: 0 16px;
   }
 }
 
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
+// Upload Section
+.upload-section {
+  margin: 24px 0;
+
+  .upload-button {
+    --border-style: dashed;
+    --border-width: 2px;
+    --border-color: #cbd5e0;
+    --color: #4a5568;
+    --background: #f8fafc;
+    --background-hover: #f1f5f9;
+    --padding-top: 16px;
+    --padding-bottom: 16px;
+    --border-radius: 12px;
+    font-weight: 500;
+    margin-bottom: 8px;
+
+    ion-icon {
+      font-size: 20px;
+      margin-right: 8px;
+    }
   }
-  50% {
-    transform: scale(1.05);
-    opacity: 0.9;
+
+  .upload-info {
+    font-size: 13px;
+    color: $text-muted;
+    text-align: center;
+    margin-top: 8px;
+  }
+
+  .upload-progress-container {
+    margin-top: 16px;
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 13px;
+      color: $text-secondary;
+    }
+
+    ion-progress-bar {
+      --background: #e2e8f0;
+      --progress-background: $puriva-primary;
+      height: 6px;
+      border-radius: 3px;
+    }
   }
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: -200px 0;
-  }
-  100% {
-    background-position: calc(200px + 100%) 0;
+// Form Actions
+.form-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 32px;
+
+  ion-button {
+    flex: 1;
+    margin: 0;
+    height: 48px;
+    font-weight: 600;
+    font-size: 15px;
+    --border-radius: 12px;
+
+    &.cancel-button {
+      --background: #ffffff;
+      --color: #4a5568;
+      --border-color: #e2e8f0;
+      --border-width: 1px;
+      --border-style: solid;
+      --background-hover: #f8fafc;
+      --background-activated: #f1f5f9;
+    }
+
+    &.submit-button {
+      --background: #{$puriva-primary};
+      --background-hover: #{adjust-color($puriva-primary, $lightness: -8%)};
+      --background-activated: #{adjust-color($puriva-primary, $lightness: -12%)};
+      --box-shadow: 0 4px 12px rgba(65, 105, 225, 0.15);
+
+      &:disabled {
+        --background: #a0aec0;
+        --box-shadow: none;
+      }
+    }
+
+    ion-spinner {
+      margin-right: 8px;
+    }
   }
 }
 
-@keyframes bounce {
-  0%, 100% {
-    transform: translateY(0);
+// Responsive Adjustments
+@media (max-width: 480px) {
+  .form-actions {
+    flex-direction: column;
+    gap: 12px;
+
+    ion-button {
+      width: 100%;
+    }
   }
-  50% {
-    transform: translateY(-4px);
+
+  .form-container {
+    padding: 12px;
+  }
+
+  .form-card {
+    padding: 20px 16px;
   }
 }
 
-// Animation classes
-.fade-in-up {
-  animation: fadeInUp $transition-slow ease-out forwards;
+// Animation for form elements
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// Apply animation to form elements
+ion-input, ion-select, ion-textarea, .form-group, .upload-section {
+  animation: fadeIn 0.3s ease-out forwards;
   opacity: 0;
-}
 
-.slide-in-card {
-  animation: slideInCard $transition-slow ease-out forwards;
-  opacity: 0;
+  @for $i from 1 through 10 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.05}s;
+    }
+  }
 }
 
 // ==========================================
@@ -243,13 +542,13 @@ ion-fab.fab-above-bottom-nav {
 
 .header {
   background: linear-gradient(159deg, $puriva-primary 0%, $puriva-light 100%);
-  padding: $space-8;
-  border-radius: $radius-xl;
-  margin-bottom: $space-8;
+  padding: $spacing-8;
+  border-radius: $border-radius-lg;
+  margin-bottom: $spacing-8;
   position: relative;
   overflow: hidden;
   box-shadow: $shadow-lg;
-  
+
   // Animated background orb
   &::before {
     content: '';
@@ -259,85 +558,91 @@ ion-fab.fab-above-bottom-nav {
     width: 200px;
     height: 200px;
     background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
-    border-radius: $radius-full;
+    border-radius: 50%;
     animation: pulse 4s ease-in-out infinite;
   }
-  
+
   // Title section
   .page-title {
-    color: $white;
-    font-size: $font-4xl;
+    color: white;
+    font-size: 2.5rem;
     font-weight: 800;
-    margin-bottom: $space-4;
+    margin-bottom: $spacing-4;
     text-align: center;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: relative;
     z-index: 2;
   }
-  
+
   .header-subtitle {
     text-align: center;
     color: rgba(255, 255, 255, 0.9);
-    font-size: $font-xl;
-    margin-bottom: $space-4;
+    font-size: 1.25rem;
+    margin-bottom: $spacing-4;
     font-weight: 500;
     position: relative;
     z-index: 2;
   }
-  
+
   // Category buttons
   .news-categories {
     display: flex;
-    gap: $space-2;
+    gap: $spacing-2;
     justify-content: center;
     flex-wrap: wrap;
-    margin-bottom: $space-4;
+    margin-bottom: $spacing-4;
     position: relative;
     z-index: 2;
   }
-  
+
   .category-btn {
-    padding: $space-2 $space-4;
+    padding: $spacing-2 $spacing-4;
     @include glass-morphism(0.1);
-    color: $white;
-    border-radius: $radius-base;
+    color: white;
+    border-radius: $border-radius;
     cursor: pointer;
-    font-size: $font-base;
+    font-size: 0.875rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    @include button-hover;
-    @include focus-ring;
     border: none;
-    
+    transition: all $transition-normal;
+
+    &:hover, &:focus {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
     &.active {
-      background: $white;
+      background: white;
       color: $puriva-primary;
       box-shadow: 0 4px 12px rgba(255, 255, 255, 0.4);
       transform: translateY(-2px);
     }
-    
+
     &:not(.active):hover {
       @include glass-morphism(0.2);
       transform: translateY(-2px);
     }
   }
-  
+
   // Search bar
   .search-bar {
     @include glass-morphism(0.1);
-    border-radius: $radius-base;
-    padding: $space-3 $space-4;
-    color: $white;
-    font-size: $font-lg;
+    border-radius: $border-radius;
+    padding: $spacing-3 $spacing-4;
+    color: white;
+    font-size: 1rem;
     width: 100%;
     position: relative;
     z-index: 2;
-    
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all $transition-normal;
+
     &::placeholder {
       color: rgba(255, 255, 255, 0.7);
     }
-    
+
     &:focus {
       outline: none;
       border-color: rgba(255, 255, 255, 0.8);
@@ -354,7 +659,8 @@ ion-fab.fab-above-bottom-nav {
 .main-content {
   display: flex;
   flex-direction: column;
-  gap: $space-4;
+  gap: $spacing-4;
+  margin-top: $spacing-6;
 }
 
 // ==========================================
@@ -367,23 +673,23 @@ ion-fab.fab-above-bottom-nav {
   z-index: 10;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
-  padding: $space-3;
-  border-radius: $radius-sm;
+  padding: $spacing-3;
+  border-radius: $border-radius;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: $space-2;
+  margin-bottom: $spacing-2;
   box-shadow: $shadow-sm;
-  border: 1px solid $gray-200;
+  border: 1px solid #e2e8f0;
 
   .selection-count {
     font-weight: 600;
-    color: $gray-700;
+    color: #4a5568;
   }
 
   .selection-actions {
     display: flex;
-    gap: $space-2;
+    gap: $spacing-2;
     align-items: center;
   }
 }
@@ -393,25 +699,31 @@ ion-fab.fab-above-bottom-nav {
 // ==========================================
 
 .featured-news {
-  background: $white;
-  border-radius: $radius-lg;
+  background: white;
+  border-radius: $border-radius-lg;
   overflow: hidden;
-  box-shadow: $shadow-news;
+  box-shadow: $shadow-md;
   position: relative;
   cursor: pointer;
-  @include card-hover;
+  transition: transform $transition-normal, box-shadow $transition-normal;
   border: 1px solid rgba(255, 255, 255, 0.8);
-  
+  margin-bottom: $spacing-6;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: $shadow-lg;
+  }
+
   .featured-image {
     width: 100%;
-    height: 180px;
+    height: 200px;
     background: $tech-gradient;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 48px;
-    color: $white;
+    font-size: 2.5rem;
+    color: white;
     overflow: hidden;
 
     img {
@@ -419,87 +731,92 @@ ion-fab.fab-above-bottom-nav {
       height: 100%;
       object-fit: cover;
       display: block;
-      transition: transform $transition-base;
+      transition: transform $transition-normal;
     }
 
     &:hover img {
       transform: scale(1.05);
     }
   }
-  
+
   // NEW badge
   .new-badge {
     position: absolute;
-    top: $space-4;
-    right: $space-4;
-    background: $danger;
-    color: $white;
-    padding: $space-2 $space-3;
-    border-radius: $radius-base;
-    font-size: $font-sm;
+    top: $spacing-4;
+    right: $spacing-4;
+    background: #e53e3e;
+    color: white;
+    padding: $spacing-2 $spacing-3;
+    border-radius: $border-radius;
+    font-size: 0.75rem;
     font-weight: 800;
     letter-spacing: 0.5px;
     text-transform: uppercase;
-    box-shadow: 0 4px 12px rgba($danger, 0.4);
+    box-shadow: 0 4px 12px rgba(229, 62, 62, 0.4);
     animation: pulse 2s infinite;
   }
-  
+
   // Featured badge
   .featured-badge {
     position: absolute;
-    top: $space-4;
-    left: $space-4;
+    top: $spacing-4;
+    left: $spacing-4;
     background: rgba(255, 255, 255, 0.95);
     color: $puriva-primary;
-    padding: $space-2 $space-3;
-    border-radius: $radius-base;
-    font-size: $font-sm;
-    font-weight: 700;
+    padding: $spacing-2 $spacing-3;
+    border-radius: $border-radius;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
     text-transform: uppercase;
+    box-shadow: 0 4px 12px rgba(65, 105, 225, 0.2);
     backdrop-filter: blur(10px);
-    box-shadow: $shadow-sm;
   }
-  
+
   // Content area
   .featured-content {
-    padding: $space-6;
+    padding: $spacing-6;
   }
-  
+
   .featured-title {
-    font-size: $font-2xl;
+    font-size: 1.5rem;
     font-weight: 700;
-    color: $gray-800;
-    margin-bottom: $space-2;
+    color: #2d3748;
+    margin-bottom: 0.5rem;
     line-height: 1.3;
   }
-  
+
   .featured-excerpt {
-    font-size: $font-lg;
-    color: $gray-600;
+    font-size: 1rem;
+    color: #4a5568;
     line-height: 1.4;
-    margin-bottom: $space-3;
-    @include text-truncate(3);
+    margin-bottom: 0.75rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
-  
+
   .featured-meta {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: $font-base;
-    color: $gray-500;
+    font-size: 0.875rem;
+    color: #718096;
   }
-  
+
   .read-more {
-    background: linear-gradient(135deg, $puriva-primary, $puriva-secondary);
-    color: $white;
-    padding: $space-2 $space-5;
+    background: $puriva-gradient;
+    color: $bg-primary;
+    padding: 0.5rem 1.25rem;
     border-radius: $radius-base;
     text-decoration: none;
-    font-size: $font-base;
+    font-size: 0.875rem;
     font-weight: 600;
     transition: all $transition-base;
     box-shadow: $shadow-sm;
-    
+
     &:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 20px rgba($puriva-primary, 0.4);
@@ -514,26 +831,26 @@ ion-fab.fab-above-bottom-nav {
 .news-list {
   display: flex;
   flex-direction: column;
-  gap: $space-5;
+  gap: $spacing-5;
 }
 
 .news-item {
   background: $white;
   border-radius: $radius-md;
-  padding: $space-4;
+  padding: $spacing-4;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   display: flex;
-  gap: $space-3;
+  gap: $spacing-3;
   @include card-hover;
   cursor: pointer;
   position: relative;
   border: 1px solid $gray-100;
-  
+
   // Selection overlay
   .selection-overlay {
     position: absolute;
-    top: $space-2;
-    left: $space-2;
+    top: $spacing-2;
+    left: $spacing-2;
     z-index: 5;
     cursor: pointer;
 
@@ -551,11 +868,11 @@ ion-fab.fab-above-bottom-nav {
   // Admin actions
   .admin-actions {
     position: absolute;
-    top: $space-2;
-    right: $space-2;
+    top: $spacing-2;
+    right: $spacing-2;
     z-index: 5;
   }
-  
+
   // Thumbnail
   .news-thumbnail {
     width: 60px;
@@ -565,12 +882,12 @@ ion-fab.fab-above-bottom-nav {
     align-items: center;
     justify-content: center;
     font-size: 24px;
-    color: $white;
+    color: $bg-primary;
     flex-shrink: 0;
     position: relative;
     overflow: hidden;
     box-shadow: $shadow-sm;
-    
+
     img {
       width: 100%;
       height: 100%;
@@ -587,7 +904,7 @@ ion-fab.fab-above-bottom-nav {
     &.umum { background: $tech-gradient; }
     &.kesehatan { background: $cert-gradient; }
     &.panduan { background: $tips-gradient; }
-    
+
     // Category label
     .category-label {
       position: absolute;
@@ -595,22 +912,22 @@ ion-fab.fab-above-bottom-nav {
       right: -6px;
       background: rgba(255, 255, 255, 0.95);
       color: $puriva-primary;
-      padding: 2px $space-2;
+      padding: 2px $spacing-2;
       border-radius: $radius-xs;
       font-size: $font-xs;
       font-weight: 700;
       text-transform: uppercase;
       box-shadow: $shadow-sm;
     }
-    
+
     // NEW badge on thumbnail
     .new-badge {
       position: absolute;
       bottom: -6px;
       right: -6px;
       background: $danger;
-      color: $white;
-      padding: 2px $space-2;
+      color: $bg-primary;
+      padding: 2px $spacing-2;
       border-radius: $radius-xs;
       font-size: $font-xs;
       font-weight: 800;
@@ -619,54 +936,58 @@ ion-fab.fab-above-bottom-nav {
       animation: bounce 2s infinite;
     }
   }
-  
+
   // Content area
   .news-content {
     flex: 1;
     display: flex;
     flex-direction: column;
-    
+
     .news-title {
       font-size: $font-xl;
       font-weight: 600;
       color: $gray-800;
-      margin-bottom: $space-2;
+      margin-bottom: $spacing-2;
       line-height: 1.3;
     }
-    
+
     .news-excerpt {
       font-size: $font-md;
       color: $gray-600;
       line-height: 1.4;
-      margin-bottom: $space-2;
+      margin-bottom: $spacing-2;
       flex: 1;
-      @include text-truncate(3);
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
-    
+
     .news-meta {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: $font-sm;
-      color: $gray-500;
-      margin-bottom: $space-2;
-      
+      font-size: 0.75rem;
+      color: #718096;
+      margin-bottom: $spacing-2;
+
       .news-date,
       .read-time {
         display: flex;
         align-items: center;
-        gap: $space-1;
+        gap: 0.25rem;
       }
     }
 
     // News reactions
     .news-reactions {
       display: flex;
-      gap: $space-3;
-      margin-top: $space-2;
+      gap: $spacing-3;
+      margin-top: $spacing-2;
 
       ion-button {
-        font-size: $font-sm;
+        font-size: 0.75rem;
         --padding-start: 8px;
         --padding-end: 8px;
         --padding-top: 4px;
@@ -692,15 +1013,15 @@ ion-fab.fab-above-bottom-nav {
   background: $white;
   border: 2px solid $light-blue;
   color: $puriva-primary;
-  padding: $space-4;
+  padding: $spacing-4;
   border-radius: $radius-md;
   text-align: center;
   cursor: pointer;
   font-weight: 600;
   transition: all $transition-base;
-  margin-top: $space-3;
+  margin-top: $spacing-3;
   box-shadow: $shadow-sm;
-  
+
   &:hover {
     background: $light-blue-accent;
     border-color: $puriva-primary;
@@ -720,29 +1041,29 @@ ion-fab.fab-above-bottom-nav {
 // Large mobile devices
 @media (max-width: 430px) {
   .container {
-    padding: $space-4;
+    padding: $spacing-4;
   }
-  
+
   .header {
-    padding: $space-6;
-    
+    padding: $spacing-6;
+
     .page-title {
       font-size: $font-3xl;
     }
-    
+
     .header-subtitle {
-      font-size: $font-lg;
+      font-size: 1.125rem;
     }
-    
+
     .category-btn {
-      padding: $space-1 $space-3;
-      font-size: $font-sm;
+      padding: $spacing-1 $spacing-3;
+      font-size: 0.75rem;
     }
   }
-  
+
   .news-item {
-    padding: $space-3;
-    
+    padding: $spacing-3;
+
     .news-thumbnail {
       width: 50px;
       height: 50px;
@@ -751,23 +1072,23 @@ ion-fab.fab-above-bottom-nav {
 
     .news-content {
       .news-title {
-        font-size: $font-lg;
+        font-size: 1.125rem;
       }
 
       .news-excerpt {
-        font-size: $font-base;
+        font-size: 0.875rem;
       }
     }
   }
-  
+
   .featured-news {
     .featured-image {
       height: 160px;
       font-size: 40px;
     }
-    
+
     .featured-content {
-      padding: $space-5;
+      padding: $spacing-5;
     }
 
     .featured-title {
@@ -780,32 +1101,32 @@ ion-fab.fab-above-bottom-nav {
   }
 
   ion-fab.fab-above-bottom-nav {
-    right: $space-3;
+    right: $spacing-3;
   }
 }
 
 // Small mobile devices
 @media (max-width: 360px) {
   .header {
-    padding: $space-5;
-    
+    padding: $spacing-5;
+
     .page-title {
       font-size: $font-xl;
     }
-    
+
     .news-categories {
-      gap: $space-1;
+      gap: 0.25rem;
     }
-    
+
     .category-btn {
-      padding: $space-1 $space-2;
+      padding: $spacing-1 $spacing-2;
       font-size: 9px;
     }
   }
-  
+
   .news-item {
-    gap: $space-2;
-    
+    gap: $spacing-2;
+
     .news-thumbnail {
       width: 45px;
       height: 45px;
@@ -834,7 +1155,7 @@ ion-fab.fab-above-bottom-nav {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
-  
+
   .pulse,
   .bounce {
     animation: none;
@@ -846,16 +1167,16 @@ ion-fab.fab-above-bottom-nav {
   .header {
     background: $gray-900;
   }
-  
+
   .category-btn {
     border: 2px solid $white;
-    
+
     &.active {
       background: $white;
       color: $gray-900;
     }
   }
-  
+
   .news-item,
   .featured-news {
     border: 2px solid $gray-300;
@@ -874,7 +1195,7 @@ ion-fab.fab-above-bottom-nav {
 .loading {
   opacity: 0.6;
   pointer-events: none;
-  
+
   &::after {
     content: '';
     position: absolute;

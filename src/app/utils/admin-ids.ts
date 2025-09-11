@@ -9,6 +9,7 @@ const ADMIN_UIDS = new Set<string>([
 const ADMIN_EMAILS = new Set<string>([
   'fadhilahnormaghfiroh@gmail.com',
   'mayjesty@gmail.com',
+  'mayjesty07@gmail.com',
   'calyakaisha804@gmail.com',
 ]);
 
